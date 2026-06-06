@@ -22,7 +22,7 @@ services:
   - type: web
     name: vitanudge
     runtime: static
-    buildCommand: cd frontend && npm install && npm run build && ls -la dist
+    buildCommand: npm install --prefix frontend && npm run build --prefix frontend
     staticPublishPath: frontend/dist
     routes:
       - type: rewrite
