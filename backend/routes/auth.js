@@ -94,6 +94,29 @@ router.get('/me', require('../middleware/auth').authMiddleware, (req, res) => {
 // PUT /api/auth/profile
 router.put('/profile', require('../middleware/auth').authMiddleware, (req, res) => {
   const { name, age, gender, weight_kg, height_cm, condition, diet_preference, country, state_region, city, timezone } = req.body;
+
+  // Validate name
+  const trimmedName = String(name || '').trim();
+  if (!trimmedName) return res.status(400).json({ error: 'Name is required' });
+  if (trimmedName.length < 2) return res.status(400).json({ error: 'Name must be at least 2 characters' });
+  if (trimmedName.length > 100) return res.status(400).json({ error: 'Name must be less than 100 characters' });
+  if (!/^[a-zA-Z\s\-\.]+$/.test(trimmedName)) return res.status(400).json({ error: 'Name can only contain letters, spaces, hyphens and periods' });
+
+  // Validate age
+  const numAge = Number(age);
+  if (!Number.isInteger(numAge) || numAge < 1 || numAge > 150) return res.status(400).json({ error: 'Age must be between 1 and 150' });
+
+  // Validate weight
+  const numWeight = Number(weight_kg);
+  if (isNaN(numWeight) || numWeight < 1 || numWeight > 500) return res.status(400).json({ error: 'Weight must be between 1 and 500 kg' });
+
+  // Validate height
+  const numHeight = Number(height_cm);
+  if (isNaN(numHeight) || numHeight < 50 || numHeight > 300) return res.status(400).json({ error: 'Height must be between 50 and 300 cm' });
+
+  // Validate condition (optional)
+  const safeCondition = condition ? String(condition).trim().slice(0, 500) : '';
+
   const safeDietPreference = ['', 'vegan', 'veg', 'non_veg'].includes(diet_preference) ? diet_preference : '';
   const safeGender = ['male', 'female'].includes(gender) ? gender : 'male';
   const safeCountry = cleanText(country);
@@ -106,7 +129,7 @@ router.put('/profile', require('../middleware/auth').authMiddleware, (req, res) 
     UPDATE users SET name=?, age=?, gender=?, weight_kg=?, height_cm=?, condition=?, diet_preference=?,
       country=?, state_region=?, city=?, timezone=?, updated_at=datetime('now')
     WHERE id=?
-  `).run(name, age, safeGender, weight_kg, height_cm, condition, safeDietPreference, safeCountry, safeState, safeCity, safeTimeZone, req.userId);
+  `).run(trimmedName, numAge, safeGender, numWeight, numHeight, safeCondition, safeDietPreference, safeCountry, safeState, safeCity, safeTimeZone, req.userId);
   const user = db.prepare(`SELECT ${USER_SELECT} FROM users WHERE id = ?`).get(req.userId);
   res.json({ user });
 });

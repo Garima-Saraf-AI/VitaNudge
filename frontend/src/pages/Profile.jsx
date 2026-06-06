@@ -165,6 +165,44 @@ export default function Profile() {
 
   async function saveProfile() {
     setErr('')
+
+    // Frontend validation
+    const trimmedName = String(profile.name || '').trim()
+    if (!trimmedName) {
+      setErr('Name is required')
+      return
+    }
+    if (trimmedName.length < 2) {
+      setErr('Name must be at least 2 characters')
+      return
+    }
+    if (trimmedName.length > 100) {
+      setErr('Name must be less than 100 characters')
+      return
+    }
+    if (!/^[a-zA-Z\s\-\.]+$/.test(trimmedName)) {
+      setErr('Name can only contain letters, spaces, hyphens and periods')
+      return
+    }
+
+    const age = Number(profile.age)
+    if (!Number.isInteger(age) || age < 1 || age > 150) {
+      setErr('Age must be between 1 and 150')
+      return
+    }
+
+    const weight = Number(profile.weight_kg)
+    if (isNaN(weight) || weight < 1 || weight > 500) {
+      setErr('Weight must be between 1 and 500 kg')
+      return
+    }
+
+    const height = Number(profile.height_cm)
+    if (isNaN(height) || height < 50 || height > 300) {
+      setErr('Height must be between 50 and 300 cm')
+      return
+    }
+
     try {
       const editableProfile = { ...profile }
       delete editableProfile.email
