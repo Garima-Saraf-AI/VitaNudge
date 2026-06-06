@@ -1888,21 +1888,22 @@ textarea {
 .profile-toast {
   position: fixed;
   left: 50%;
-  top: 178px;
+  top: 100px;
   transform: translateX(-50%);
-  z-index: 900;
+  z-index: 9999;
   display: grid;
   grid-template-columns: 34px minmax(0, 1fr);
   align-items: center;
   gap: 11px;
-  min-width: 300px;
-  max-width: min(430px, calc(100vw - 32px));
+  min-width: 320px;
+  max-width: min(480px, calc(100vw - 32px));
   border-radius: 18px;
-  padding: 12px 14px;
+  padding: 16px 18px;
   text-align: left;
   backdrop-filter: blur(22px);
   box-shadow:
-    0 22px 52px rgba(18,32,24,.18),
+    0 12px 40px rgba(18,32,24,.25),
+    0 4px 12px rgba(18,32,24,.15),
     inset 0 1px 0 rgba(255,255,255,.86);
   animation: toastDrop .16s ease;
 }
