@@ -74,15 +74,11 @@ app.use('/api/coach',     coachLimiter, require('./routes/coach'));
 app.use('/api/export',    require('./routes/export'));
 app.use('/api/billing',   require('./routes/billing'));
 
-// ── SERVE FRONTEND in production ──
-if (process.env.NODE_ENV === 'production') {
-  const fp = path.join(__dirname, '../frontend/dist');
-  app.use(express.static(fp));
-  app.get('*', (req, res) => res.sendFile(path.join(fp, 'index.html')));
-}
-
 // ── HEALTH CHECK ──
 app.get('/api/ping', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
+
+// ── 404 for undefined routes ──
+app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
 
 // ── ERROR HANDLER ──
 app.use((err, req, res, next) => {
