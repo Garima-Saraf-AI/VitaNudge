@@ -26,7 +26,6 @@ services:
     name: vitanudge
     runtime: static
     region: oregon
-    plan: free
     buildCommand: npm --prefix frontend install && npm --prefix frontend run build
     staticPublishPath: ./frontend/dist
     routes:
