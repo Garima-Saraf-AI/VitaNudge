@@ -1,0 +1,38 @@
+services:
+  # Backend API
+  - type: web
+    name: vitanudge-api
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm --prefix backend install
+    startCommand: npm --prefix backend start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://vitanudge.onrender.com
+    disk:
+      name: vitanudge-data
+      mountPath: /data
+      sizeGB: 1
+
+  # Frontend
+  - type: web
+    name: vitanudge
+    runtime: static
+    region: oregon
+    plan: free
+    buildCommand: npm --prefix frontend install && npm --prefix frontend run build
+    staticPublishPath: ./frontend/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://vitanudge-api.onrender.com
