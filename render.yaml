@@ -7,6 +7,7 @@ services:
     plan: free
     buildCommand: npm install && npm --prefix backend install
     startCommand: npm --prefix backend start
+    nodeVersion: "20.18.0"
     envVars:
       - key: NODE_ENV
         value: production
