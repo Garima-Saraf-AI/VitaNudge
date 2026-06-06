@@ -104,15 +104,15 @@ router.put('/profile', require('../middleware/auth').authMiddleware, (req, res) 
 
   // Validate age
   const numAge = Number(age);
-  if (!Number.isInteger(numAge) || numAge < 1 || numAge > 150) return res.status(400).json({ error: 'Age must be between 1 and 150' });
+  if (!age || !Number.isInteger(numAge) || numAge < 1 || numAge > 150) return res.status(400).json({ error: 'Age is required and must be between 1 and 150' });
 
   // Validate weight
   const numWeight = Number(weight_kg);
-  if (isNaN(numWeight) || numWeight < 1 || numWeight > 500) return res.status(400).json({ error: 'Weight must be between 1 and 500 kg' });
+  if (!weight_kg || isNaN(numWeight) || numWeight < 1 || numWeight > 500) return res.status(400).json({ error: 'Weight is required and must be between 1 and 500 kg' });
 
   // Validate height
   const numHeight = Number(height_cm);
-  if (isNaN(numHeight) || numHeight < 50 || numHeight > 300) return res.status(400).json({ error: 'Height must be between 50 and 300 cm' });
+  if (!height_cm || isNaN(numHeight) || numHeight < 50 || numHeight > 300) return res.status(400).json({ error: 'Height is required and must be between 50 and 300 cm' });
 
   // Validate condition (optional)
   const safeCondition = condition ? String(condition).trim().slice(0, 500) : '';

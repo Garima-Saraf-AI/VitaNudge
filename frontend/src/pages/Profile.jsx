@@ -71,11 +71,11 @@ export default function Profile() {
   const [profile, setProfile] = useState({
     name: '',
     email: '',
-    age: 40,
+    age: '',
     gender: 'male',
-    weight_kg: 95,
-    height_cm: 175,
-    condition: 'Diabetic, vegetarian',
+    weight_kg: '',
+    height_cm: '',
+    condition: '',
     diet_preference: '',
     country: '',
     state_region: '',
@@ -141,11 +141,11 @@ export default function Profile() {
     setProfile({
       name: user.name || '',
       email: user.email || '',
-      age: user.age || 40,
+      age: user.age || '',
       gender: user.gender === 'female' ? 'female' : 'male',
-      weight_kg: user.weight_kg || 95,
-      height_cm: user.height_cm || 175,
-      condition: user.condition || 'Diabetic, vegetarian',
+      weight_kg: user.weight_kg || '',
+      height_cm: user.height_cm || '',
+      condition: user.condition || '',
       diet_preference: normalizeDietPreference(user.diet_preference),
       country: user.country || '',
       state_region: user.state_region || '',
@@ -186,20 +186,20 @@ export default function Profile() {
     }
 
     const age = Number(profile.age)
-    if (!Number.isInteger(age) || age < 1 || age > 150) {
-      setErr('Age must be between 1 and 150')
+    if (!profile.age || !Number.isInteger(age) || age < 1 || age > 150) {
+      setErr('Age is required and must be between 1 and 150')
       return
     }
 
     const weight = Number(profile.weight_kg)
-    if (isNaN(weight) || weight < 1 || weight > 500) {
-      setErr('Weight must be between 1 and 500 kg')
+    if (!profile.weight_kg || isNaN(weight) || weight < 1 || weight > 500) {
+      setErr('Weight is required and must be between 1 and 500 kg')
       return
     }
 
     const height = Number(profile.height_cm)
-    if (isNaN(height) || height < 50 || height > 300) {
-      setErr('Height must be between 50 and 300 cm')
+    if (!profile.height_cm || isNaN(height) || height < 50 || height > 300) {
+      setErr('Height is required and must be between 50 and 300 cm')
       return
     }
 
@@ -220,6 +220,7 @@ export default function Profile() {
 
   function flash(m) {
     setMsg(m)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     setTimeout(() => setMsg(''), 2500)
   }
 
