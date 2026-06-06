@@ -1,0 +1,12 @@
+{
+  "name": "nutritrack",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix frontend install && npm --prefix frontend run build",
+    "start": "npm --prefix backend run start",
+    "test": "npm run test:frontend && npm run test:backend",
+    "test:frontend": "npm --prefix frontend run test:build",
+    "test:backend": "npm --prefix backend run test:regression"
+  }
+}
