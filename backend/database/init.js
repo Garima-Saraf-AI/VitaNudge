@@ -2,10 +2,9 @@ const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
 
-// Use /data/nutritrack.db on Render (persistent disk), fallback to local for dev/test
-const DB_PATH = process.env.NODE_ENV === 'production'
-  ? '/data/nutritrack.db'
-  : path.join(__dirname, 'nutritrack.db');
+// Use local path - free tier doesn't support persistent disk
+// Note: DB will reset on restart (fine for demo/testing)
+const DB_PATH = path.join(__dirname, 'nutritrack.db');
 
 function initDatabase() {
   const db = new Database(DB_PATH);

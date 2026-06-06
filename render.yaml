@@ -16,16 +16,11 @@ services:
         generateValue: true
       - key: FRONTEND_URL
         value: https://vitanudge.onrender.com
-    disk:
-      name: vitanudge-data
-      mountPath: /data
-      sizeGB: 1
 
   # Frontend
   - type: web
     name: vitanudge
     runtime: static
-    region: oregon
     buildCommand: npm --prefix frontend install && npm --prefix frontend run build
     staticPublishPath: ./frontend/dist
     routes:
