@@ -220,8 +220,7 @@ export default function Profile() {
 
   function flash(m) {
     setMsg(m)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-    setTimeout(() => setMsg(''), 2500)
+    setTimeout(() => setMsg(''), 3500)
   }
 
   function updateCountry(country) {

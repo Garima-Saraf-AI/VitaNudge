@@ -1867,6 +1867,7 @@ textarea {
 @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes toastDrop { from { opacity: 0; transform: translate(-50%, -6px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes toastSlideUp { from { opacity: 0; transform: translate(-50%, 30px); } to { opacity: 1; transform: translate(-50%, 0); } }
 .main-content { animation: fadeUp .28s cubic-bezier(.22,1,.36,1) both; }
 
 /* ── NOTICES ── */
@@ -1888,7 +1889,7 @@ textarea {
 .profile-toast {
   position: fixed;
   left: 50%;
-  top: 100px;
+  bottom: 80px;
   transform: translateX(-50%);
   z-index: 9999;
   display: grid;
@@ -1905,7 +1906,7 @@ textarea {
     0 12px 40px rgba(18,32,24,.25),
     0 4px 12px rgba(18,32,24,.15),
     inset 0 1px 0 rgba(255,255,255,.86);
-  animation: toastDrop .16s ease;
+  animation: toastSlideUp .25s ease;
 }
 .profile-toast.success {
   background:
