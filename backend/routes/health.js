@@ -939,8 +939,8 @@ router.get('/steps/range', authMiddleware, (req, res) => {
 router.post('/steps', authMiddleware, (req, res) => {
   const { steps, log_date, source = 'manual' } = req.body;
   const db = getDb();
-  const s = parseInt(steps);
-  if (!s || s < 0 || s > 100000) return res.status(400).json({ error: 'Steps must be 0–100000' });
+  const s = Number(steps);
+  if (!Number.isInteger(s) || s < 0 || s > 100000) return res.status(400).json({ error: 'Steps must be 0–100000' });
   const date = log_date || today();
   db.prepare(`INSERT INTO steps_logs (id,user_id,log_date,steps,source)
     VALUES (?,?,?,?,?) ON CONFLICT(user_id,log_date) DO UPDATE SET steps=excluded.steps, source=excluded.source, logged_at=datetime('now')`)
