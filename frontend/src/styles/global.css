@@ -5437,3 +5437,28 @@ textarea {
   overflow: hidden;
   transition: border-color .2s, background .2s;
 }
+
+
+/* ── FIELD VALIDATION STYLES ── */
+.field-hint {
+  display: block;
+  font-size: 11px;
+  color: var(--hint);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.field-error {
+  display: block;
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+input.error,
+select.error {
+  border-color: var(--red) !important;
+  background: var(--red-l) !important;
+}
+

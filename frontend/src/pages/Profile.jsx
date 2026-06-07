@@ -86,6 +86,7 @@ export default function Profile() {
   const [locationApi, setLocationApi] = useState(null)
   const [msg, setMsg] = useState('')
   const [err, setErr] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
   const [billingStatus, setBillingStatus] = useState(null)
   const [showUpgrade, setShowUpgrade] = useState(false)
 
@@ -166,41 +167,46 @@ export default function Profile() {
   async function saveProfile() {
     setErr('')
     setMsg('')
+    setFieldErrors({})
+
+    const errors = {}
 
     // Frontend validation
     const trimmedName = String(profile.name || '').trim()
     if (!trimmedName) {
-      flashError('Name is required')
-      return
-    }
-    if (trimmedName.length < 2) {
-      flashError('Name must be at least 2 characters')
-      return
-    }
-    if (trimmedName.length > 100) {
-      flashError('Name must be less than 100 characters')
-      return
-    }
-    if (!/^[a-zA-Z\s\-\.]+$/.test(trimmedName)) {
-      flashError('Name can only contain letters, spaces, hyphens and periods')
-      return
+      errors.name = 'Name is required'
+    } else if (trimmedName.length < 2) {
+      errors.name = 'Must be at least 2 characters'
+    } else if (trimmedName.length > 100) {
+      errors.name = 'Must be less than 100 characters'
+    } else if (!/^[a-zA-Z\s\-\.]+$/.test(trimmedName)) {
+      errors.name = 'Only letters, spaces, hyphens and periods allowed'
     }
 
     const age = Number(profile.age)
-    if (!profile.age || !Number.isInteger(age) || age < 1 || age > 150) {
-      flashError('Age is required and must be between 1 and 150')
-      return
+    if (!profile.age) {
+      errors.age = 'Age is required'
+    } else if (!Number.isInteger(age) || age < 1 || age > 150) {
+      errors.age = 'Must be between 1 and 150'
     }
 
     const weight = Number(profile.weight_kg)
-    if (!profile.weight_kg || isNaN(weight) || weight < 1 || weight > 500) {
-      flashError('Weight is required and must be between 1 and 500 kg')
-      return
+    if (!profile.weight_kg) {
+      errors.weight_kg = 'Weight is required'
+    } else if (isNaN(weight) || weight < 1 || weight > 500) {
+      errors.weight_kg = 'Must be between 1 and 500 kg'
     }
 
     const height = Number(profile.height_cm)
-    if (!profile.height_cm || isNaN(height) || height < 50 || height > 300) {
-      flashError('Height is required and must be between 50 and 300 cm')
+    if (!profile.height_cm) {
+      errors.height_cm = 'Height is required'
+    } else if (isNaN(height) || height < 50 || height > 300) {
+      errors.height_cm = 'Must be between 50 and 300 cm'
+    }
+
+    // If there are errors, show them and stop
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors)
       return
     }
 
@@ -394,7 +400,17 @@ export default function Profile() {
         <div className="form-grid">
           <div className="form-group">
             <label>Name</label>
-            <input value={profile.name} onChange={e => setProfile(p => ({ ...p, name: e.target.value }))} placeholder="Your name" />
+            <input
+              value={profile.name}
+              onChange={e => {
+                setProfile(p => ({ ...p, name: e.target.value }))
+                setFieldErrors(e => ({ ...e, name: '' }))
+              }}
+              placeholder="Your name"
+              className={fieldErrors.name ? 'error' : ''}
+            />
+            {fieldErrors.name && <span className="field-error">{fieldErrors.name}</span>}
+            <span className="field-hint">Letters, spaces, hyphens and periods only</span>
           </div>
           <div className="form-group">
             <label>Email</label>
@@ -404,7 +420,19 @@ export default function Profile() {
         <div className="form-grid profile-measure-grid">
           <div className="form-group">
             <label>Age</label>
-            <input type="number" min="1" max="150" value={profile.age} onChange={e => setProfile(p => ({ ...p, age: +e.target.value }))} />
+            <input
+              type="number"
+              min="1"
+              max="150"
+              value={profile.age}
+              onChange={e => {
+                setProfile(p => ({ ...p, age: +e.target.value }))
+                setFieldErrors(e => ({ ...e, age: '' }))
+              }}
+              className={fieldErrors.age ? 'error' : ''}
+            />
+            {fieldErrors.age && <span className="field-error">{fieldErrors.age}</span>}
+            <span className="field-hint">1-150 years</span>
           </div>
           <div className="form-group">
             <label>Gender</label>
@@ -414,11 +442,35 @@ export default function Profile() {
           </div>
           <div className="form-group">
             <label>Weight (kg)</label>
-            <input type="number" min="1" max="500" value={profile.weight_kg} onChange={e => setProfile(p => ({ ...p, weight_kg: +e.target.value }))} />
+            <input
+              type="number"
+              min="1"
+              max="500"
+              value={profile.weight_kg}
+              onChange={e => {
+                setProfile(p => ({ ...p, weight_kg: +e.target.value }))
+                setFieldErrors(e => ({ ...e, weight_kg: '' }))
+              }}
+              className={fieldErrors.weight_kg ? 'error' : ''}
+            />
+            {fieldErrors.weight_kg && <span className="field-error">{fieldErrors.weight_kg}</span>}
+            <span className="field-hint">1-500 kg</span>
           </div>
           <div className="form-group">
             <label>Height (cm)</label>
-            <input type="number" min="1" max="300" value={profile.height_cm} onChange={e => setProfile(p => ({ ...p, height_cm: +e.target.value }))} />
+            <input
+              type="number"
+              min="1"
+              max="300"
+              value={profile.height_cm}
+              onChange={e => {
+                setProfile(p => ({ ...p, height_cm: +e.target.value }))
+                setFieldErrors(e => ({ ...e, height_cm: '' }))
+              }}
+              className={fieldErrors.height_cm ? 'error' : ''}
+            />
+            {fieldErrors.height_cm && <span className="field-error">{fieldErrors.height_cm}</span>}
+            <span className="field-hint">50-300 cm</span>
           </div>
         </div>
         <div className="form-grid full">
