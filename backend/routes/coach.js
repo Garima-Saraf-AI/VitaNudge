@@ -63,6 +63,10 @@ async function callGemini(question, ctx) {
 Use the user's logs only as clues. Do not diagnose or replace medical advice.
 Answer in 4-6 concise bullet points with practical next steps.
 
+IMPORTANT: Each meal entry has a "meal_type" field (breakfast, lunch, dinner, or snack).
+When referring to specific foods, ALWAYS cite the correct meal_type from the log data.
+Never assume or hallucinate which meal a food was logged under.
+
 User question: ${question}
 
 Logs JSON:

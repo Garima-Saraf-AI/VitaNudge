@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { v4: uuidv4 } = require('uuid');
 const { getDb } = require('../database/db');
 const { authMiddleware } = require('../middleware/auth');
+const { requireTier } = require('../middleware/tier');
 const { addDays, today } = require('../utils/date');
 
 const DEFAULT_GOALS = {
@@ -612,14 +613,14 @@ router.delete('/bp/:id', authMiddleware, (req, res) => {
   res.json({ success: true });
 });
 
-// ── MEDICATIONS ──
-router.get('/medications', authMiddleware, (req, res) => {
+// ── MEDICATIONS ── (Pro feature)
+router.get('/medications', authMiddleware, requireTier('pro'), (req, res) => {
   const db = getDb();
   const meds = db.prepare('SELECT * FROM medications WHERE user_id = ? ORDER BY active DESC, time_of_day, name').all(req.userId);
   res.json({ medications: meds });
 });
 
-router.post('/medications', authMiddleware, (req, res) => {
+router.post('/medications', authMiddleware,requireTier('pro'), (req, res) => {
   const { name, dose, time_of_day, notes, active = 1 } = req.body;
   if (!name || !name.trim()) return res.status(400).json({ error: 'Medication name required' });
   const db = getDb();
@@ -632,7 +633,7 @@ router.post('/medications', authMiddleware, (req, res) => {
   res.status(201).json({ medication });
 });
 
-router.put('/medications/:id', authMiddleware, (req, res) => {
+router.put('/medications/:id', authMiddleware,requireTier('pro'), (req, res) => {
   const db = getDb();
   const existing = db.prepare('SELECT * FROM medications WHERE id = ?').get(req.params.id);
   if (!existing) return res.status(404).json({ error: 'Not found' });
@@ -646,7 +647,7 @@ router.put('/medications/:id', authMiddleware, (req, res) => {
   res.json({ medication });
 });
 
-router.delete('/medications/:id', authMiddleware, (req, res) => {
+router.delete('/medications/:id', authMiddleware,requireTier('pro'), (req, res) => {
   const db = getDb();
   const existing = db.prepare('SELECT * FROM medications WHERE id = ?').get(req.params.id);
   if (!existing) return res.status(404).json({ error: 'Not found' });
@@ -669,7 +670,7 @@ router.get('/medications/logs', authMiddleware, (req, res) => {
   res.json({ date, logs });
 });
 
-router.post('/medications/:id/taken', authMiddleware, (req, res) => {
+router.post('/medications/:id/taken', authMiddleware,requireTier('pro'), (req, res) => {
   const { log_date, status = 'taken' } = req.body;
   if (!log_date) return res.status(400).json({ error: 'log_date required' });
   const db = getDb();

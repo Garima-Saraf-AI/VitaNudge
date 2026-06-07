@@ -363,37 +363,43 @@ export default function Goals() {
   }, [user?.weight_kg])
 
   async function saveGoals() {
-    const payload = {
-      ...goals,
-      target_weight_kg: goals.target_weight_kg === '' ? null : Number(goals.target_weight_kg),
-      target_muscle_gain_kg: Number(goals.target_muscle_gain_kg) || 0,
-    }
+    try {
+      const payload = {
+        ...goals,
+        target_weight_kg: goals.target_weight_kg === '' ? null : Number(goals.target_weight_kg),
+        target_muscle_gain_kg: Number(goals.target_muscle_gain_kg) || 0,
+      }
 
-    if (user) {
-      const profileData = await api.put('/auth/profile', {
-        name: user.name || profile.name || 'User',
-        age: Number(profile.age),
-        gender: normalizeGender(profile.gender),
-        weight_kg: Number(profile.weight_kg),
-        height_cm: Number(profile.height_cm),
-        condition: profile.condition || user.condition || '',
-        diet_preference: user.diet_preference || '',
-        country: user.country || '',
-        state_region: user.state_region || '',
-        city: user.city || '',
-        timezone: user.timezone || '',
-      })
-      setUser(profileData.user)
-    }
+      if (user) {
+        const profileData = await api.put('/auth/profile', {
+          name: user.name || profile.name || 'User',
+          age: Number(profile.age),
+          gender: normalizeGender(profile.gender),
+          weight_kg: Number(profile.weight_kg),
+          height_cm: Number(profile.height_cm),
+          condition: profile.condition || user.condition || '',
+          diet_preference: user.diet_preference || '',
+          country: user.country || '',
+          state_region: user.state_region || '',
+          city: user.city || '',
+          timezone: user.timezone || '',
+        })
+        setUser(profileData.user)
+      }
 
-    const d = await api.put('/health/goals', payload)
-    setGoals({ ...DEFAULT_GOALS, ...(d.goals || {}) })
-    setHasPreviewed(true)
-    setPlanSaved(true)
-    setTargetsEditable(false)
-    setWizardOpen(false)   // collapse wizard after saving
-    flash('✓ Goal targets saved successfully!')
-    window.scrollTo({ top: 0, behavior: 'smooth' })  // Scroll to top to show success
+      const d = await api.put('/health/goals', payload)
+      setGoals({ ...DEFAULT_GOALS, ...(d.goals || {}) })
+      setHasPreviewed(true)
+      setPlanSaved(true)
+      setTargetsEditable(false)
+      setWizardOpen(false)   // collapse wizard after saving
+      flash('✓ Goal targets saved successfully!')
+      window.scrollTo({ top: 0, behavior: 'smooth' })  // Scroll to top to show success
+    } catch (err) {
+      const errorMsg = err.error || err.message || 'Failed to save goals. Please check your inputs and try again.'
+      flash('⚠️ ' + errorMsg)
+      console.error('Goals save error:', err)
+    }
   }
 
   function flash(m) {

@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { v4: uuidv4 } = require('uuid');
 const { getDb } = require('../database/db');
 const { authMiddleware } = require('../middleware/auth');
+const { requireTier } = require('../middleware/tier');
 
 function loadTemplate(db, userId, id) {
   const template = db.prepare('SELECT * FROM meal_templates WHERE id = ? AND user_id = ?').get(id, userId);
@@ -46,13 +47,13 @@ function insertTemplate(db, userId, { name, meal_type, items }) {
   return templateId;
 }
 
-router.get('/', authMiddleware, (req, res) => {
+router.get('/', authMiddleware, requireTier('pro'), (req, res) => {
   const db = getDb();
   const rows = db.prepare('SELECT id FROM meal_templates WHERE user_id = ? ORDER BY updated_at DESC, created_at DESC').all(req.userId);
   res.json({ templates: rows.map(r => loadTemplate(db, req.userId, r.id)).filter(Boolean) });
 });
 
-router.post('/', authMiddleware, (req, res) => {
+router.post('/', authMiddleware, requireTier('pro'), (req, res) => {
   const { name, meal_type, items } = req.body;
   if (!name || !name.trim()) return res.status(400).json({ error: 'Template name required' });
   if (!Array.isArray(items) || items.length === 0) return res.status(400).json({ error: 'At least one item required' });
@@ -62,7 +63,7 @@ router.post('/', authMiddleware, (req, res) => {
   res.status(201).json({ template: loadTemplate(db, req.userId, templateId) });
 });
 
-router.post('/from-date', authMiddleware, (req, res) => {
+router.post('/from-date', authMiddleware, requireTier('pro'), (req, res) => {
   const { name, date, meal_type } = req.body;
   if (!name || !date) return res.status(400).json({ error: 'name and date required' });
 
@@ -83,7 +84,7 @@ router.post('/from-date', authMiddleware, (req, res) => {
   res.status(201).json({ template: loadTemplate(db, req.userId, templateId) });
 });
 
-router.post('/:id/log', authMiddleware, (req, res) => {
+router.post('/:id/log', authMiddleware, requireTier('pro'), (req, res) => {
   const { date, meal_type } = req.body;
   if (!date) return res.status(400).json({ error: 'date required' });
   const db = getDb();
@@ -118,7 +119,7 @@ router.post('/:id/log', authMiddleware, (req, res) => {
   res.status(201).json({ logged, template });
 });
 
-router.delete('/:id', authMiddleware, (req, res) => {
+router.delete('/:id', authMiddleware, requireTier('pro'), (req, res) => {
   const db = getDb();
   const template = db.prepare('SELECT * FROM meal_templates WHERE id = ?').get(req.params.id);
   if (!template) return res.status(404).json({ error: 'Template not found' });

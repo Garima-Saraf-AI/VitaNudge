@@ -39,11 +39,20 @@ export default function Weight() {
 
   async function save() {
     const value = parseFloat(weight)
-    if (!value || value < 20 || value > 400) return
-    await api.post('/health/weight', { weight_kg: value, log_date: date, notes })
-    setMsg('Weight saved')
-    setTimeout(() => setMsg(''), 1800)
-    load()
+    if (!value || value < 20 || value > 400) {
+      setMsg('⚠️ Weight must be between 20-400 kg')
+      setTimeout(() => setMsg(''), 2500)
+      return
+    }
+    try {
+      await api.post('/health/weight', { weight_kg: value, log_date: date, notes })
+      setMsg('Weight saved')
+      setTimeout(() => setMsg(''), 1800)
+      load()
+    } catch (err) {
+      setMsg(err.error || 'Failed to save weight')
+      setTimeout(() => setMsg(''), 2500)
+    }
   }
 
   async function del(id) {
