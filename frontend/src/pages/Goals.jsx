@@ -23,11 +23,11 @@ const DEFAULT_GOALS = {
 
 const DEFAULT_PROFILE = {
   name: '',
-  age: 40,
+  age: null,
   gender: 'male',
-  weight_kg: 95,
-  height_cm: 175,
-  condition: 'Diabetic, vegetarian',
+  weight_kg: null,
+  height_cm: null,
+  condition: '',
 }
 
 const GOAL_OPTIONS = [
@@ -191,9 +191,9 @@ function buildQuantitativeTarget(profile, answers) {
 }
 
 function buildGoalRecommendation(profile, answers) {
-  const weight = Number(profile.weight_kg) || 75
-  const height = Number(profile.height_cm) || 170
-  const age = Number(profile.age) || 40
+  const weight = Number(profile.weight_kg) || 0
+  const height = Number(profile.height_cm) || 0
+  const age = Number(profile.age) || 0
   const gender = normalizeGender(profile.gender)
   const activity = getOption(ACTIVITY_OPTIONS, normalizeActivity(answers.activity))
   const diabetesStatus = normalizeDiabetesStatus(answers.diabetesStatus)
@@ -336,11 +336,11 @@ export default function Goals() {
     if (!user) return
     setProfile({
       name: user.name || '',
-      age: user.age || 40,
+      age: user.age || null,
       gender: normalizeGender(user.gender),
-      weight_kg: user.weight_kg || 95,
-      height_cm: user.height_cm || 175,
-      condition: user.condition || 'Diabetic, vegetarian',
+      weight_kg: user.weight_kg || null,
+      height_cm: user.height_cm || null,
+      condition: user.condition || '',
     })
     setAnswers(a => ({
       ...a,
@@ -372,10 +372,10 @@ export default function Goals() {
     if (user) {
       const profileData = await api.put('/auth/profile', {
         name: user.name || profile.name || 'User',
-        age: Number(profile.age) || 40,
+        age: Number(profile.age),
         gender: normalizeGender(profile.gender),
-        weight_kg: Number(profile.weight_kg) || 75,
-        height_cm: Number(profile.height_cm) || 170,
+        weight_kg: Number(profile.weight_kg),
+        height_cm: Number(profile.height_cm),
         condition: profile.condition || user.condition || '',
         diet_preference: user.diet_preference || '',
         country: user.country || '',

@@ -432,7 +432,7 @@ export default function Profile() {
               className={fieldErrors.age ? 'error' : ''}
             />
             {fieldErrors.age && <span className="field-error">{fieldErrors.age}</span>}
-            <span className="field-hint">1-150 years</span>
+            <span className="field-hint">Enter your age in years</span>
           </div>
           <div className="form-group">
             <label>Gender</label>
