@@ -32,7 +32,10 @@ export default function Templates() {
   }
 
   async function saveFromDate() {
-    if (!name.trim()) return
+    if (!name.trim()) {
+      flash('⚠️ Template name is required')
+      return
+    }
     await api.post('/templates/from-date', {
       name,
       date,
@@ -97,7 +100,7 @@ export default function Templates() {
         <div className="info-box">
           {selectedEntries.length} item(s) from {mealType === 'all' ? 'the whole day' : mealType} will be saved.
         </div>
-        <button className="btn btn-green btn-full" disabled={selectedEntries.length === 0} onClick={saveFromDate}>Save template</button>
+        <button className="btn btn-green btn-full" disabled={selectedEntries.length === 0 || !name.trim()} onClick={saveFromDate}>Save template</button>
       </div>
 
       <div className="card">

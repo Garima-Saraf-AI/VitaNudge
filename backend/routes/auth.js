@@ -30,6 +30,15 @@ router.post('/register', async (req, res) => {
     if (password.length < 6)
       return res.status(400).json({ error: 'Password must be at least 6 characters' });
 
+    // Validate name (same rules as profile update)
+    const trimmedName = String(name).trim();
+    if (trimmedName.length < 2)
+      return res.status(400).json({ error: 'Name must be at least 2 characters' });
+    if (trimmedName.length > 100)
+      return res.status(400).json({ error: 'Name must be less than 100 characters' });
+    if (!/^[a-zA-Z\s\-\.]+$/.test(trimmedName))
+      return res.status(400).json({ error: 'Name can only contain letters, spaces, hyphens and periods' });
+
     const db = getDb();
     const existing = db.prepare('SELECT id FROM users WHERE email = ?').get(email.toLowerCase());
     if (existing) return res.status(409).json({ error: 'Email already registered' });
@@ -39,7 +48,7 @@ router.post('/register', async (req, res) => {
 
     db.prepare(`
       INSERT INTO users (id, name, email, password, diet_preference) VALUES (?, ?, ?, ?, ?)
-    `).run(userId, name, email.toLowerCase(), hash, '');
+    `).run(userId, trimmedName, email.toLowerCase(), hash, '');
 
     // Create default goals
     db.prepare(`

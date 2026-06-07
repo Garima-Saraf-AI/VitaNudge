@@ -175,9 +175,13 @@ router.post('/', authMiddleware, (req, res) => {
   if (parseFloat(qty) <= 0)
     return res.status(400).json({ error: 'qty must be greater than 0' });
 
+  // Validate food name is not empty
+  if (!food_id && (!food_name || String(food_name).trim() === ''))
+    return res.status(400).json({ error: 'Food name is required' });
+
   const db = getDb();
   let macros = { cal: 0, protein_g: 0, fiber_g: 0, carbs_g: 0, fat_g: 0 };
-  let finalFoodName = food_name || 'Unknown';
+  let finalFoodName = food_name ? String(food_name).trim() : 'Unknown';
 
   if (food_id) {
     const food = db.prepare('SELECT * FROM foods WHERE id = ?').get(food_id);
@@ -187,13 +191,20 @@ router.post('/', authMiddleware, (req, res) => {
       if (!food_name) finalFoodName = food.name;
     }
   } else {
-    macros = {
-      cal:       req.body.cal       || 0,
-      protein_g: req.body.protein_g || 0,
-      fiber_g:   req.body.fiber_g   || 0,
-      carbs_g:   req.body.carbs_g   || 0,
-      fat_g:     req.body.fat_g     || 0,
-    };
+    // Validate manual macros (no negative values)
+    const cal = Number(req.body.cal) || 0;
+    const protein_g = Number(req.body.protein_g) || 0;
+    const fiber_g = Number(req.body.fiber_g) || 0;
+    const carbs_g = Number(req.body.carbs_g) || 0;
+    const fat_g = Number(req.body.fat_g) || 0;
+
+    if (cal < 0) return res.status(400).json({ error: 'Calories cannot be negative' });
+    if (protein_g < 0) return res.status(400).json({ error: 'Protein cannot be negative' });
+    if (fiber_g < 0) return res.status(400).json({ error: 'Fiber cannot be negative' });
+    if (carbs_g < 0) return res.status(400).json({ error: 'Carbs cannot be negative' });
+    if (fat_g < 0) return res.status(400).json({ error: 'Fat cannot be negative' });
+
+    macros = { cal, protein_g, fiber_g, carbs_g, fat_g };
   }
 
   const id = uuidv4();

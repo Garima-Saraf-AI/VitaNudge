@@ -722,6 +722,12 @@ router.put('/goals', authMiddleware, (req, res) => {
   if (rawFib  !== undefined && Number(rawFib)  < 0) return res.status(400).json({ error: 'Fiber goal cannot be negative' });
   if (rawCarbs!== undefined && Number(rawCarbs)< 0) return res.status(400).json({ error: 'Carbs goal cannot be negative' });
 
+  // Reject 0 or very low calorie goals (minimum survival = 500 kcal)
+  if (rawCal !== undefined && Number(rawCal) > 0 && Number(rawCal) < 500)
+    return res.status(400).json({ error: 'Calorie goal must be at least 500 kcal (minimum for survival)' });
+  if (rawCal !== undefined && Number(rawCal) === 0)
+    return res.status(400).json({ error: 'Calorie goal cannot be 0' });
+
   const current = normalizeGoals(req.body);
   const goal_type = current.goal_type || DEFAULT_GOALS.goal_type;
   const activity_level = current.activity_level || DEFAULT_GOALS.activity_level;

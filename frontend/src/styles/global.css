@@ -1400,7 +1400,7 @@ textarea {
 .today-sticky-summary {
   position: sticky;
   top: 72px;
-  z-index: 500;
+  z-index: 100;  /* Reduced from 500 to prevent overlaying food controls */
   margin-bottom: 16px;
   padding: 14px;
   border: 1px solid rgba(158,207,170,.8);

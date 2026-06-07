@@ -838,7 +838,7 @@ export default function Goals() {
           </div>
           <div>
             <span>Current weight</span>
-            <strong>{Number(profile.weight_kg).toFixed(1)}kg</strong>
+            <strong>{profile.weight_kg ? Number(profile.weight_kg).toFixed(1) + 'kg' : 'Not set'}</strong>
           </div>
           <div>
             <span>Target weight</span>
@@ -1066,7 +1066,11 @@ export default function Goals() {
                 <div className="card-title">
                   {planSaved ? 'Modifying your goal' : 'Goal setup'}
                 </div>
-                <p>{profile.age} yrs · {profile.gender} · {profile.weight_kg}kg · {profile.height_cm}cm · BMI {bmi}. These are planning targets, not medical advice.</p>
+                {profile.age && profile.weight_kg && profile.height_cm ? (
+                  <p>{profile.age} yrs · {profile.gender} · {profile.weight_kg}kg · {profile.height_cm}cm · BMI {bmi}. These are planning targets, not medical advice.</p>
+                ) : (
+                  <p style={{ color: 'var(--amber)', fontSize: '13px' }}>⚠️ Complete your profile (age, weight, height) for personalized recommendations.</p>
+                )}
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 {planSaved && (
@@ -1106,7 +1110,18 @@ export default function Goals() {
               <p>{WIZARD_STEPS[wizardStep].copy}</p>
             </div>
 
-            {renderWizardStep()}
+            {/* Profile completion requirement */}
+            {(!profile.age || !profile.weight_kg || !profile.height_cm) ? (
+              <div className="warn-box" style={{ marginTop: '20px' }}>
+                <strong>⚠️ Profile Required</strong>
+                <p>Please complete your profile (age, weight, height) before setting up goals. This ensures accurate calorie and macro calculations.</p>
+                <p style={{ marginTop: '12px', fontSize: '13px' }}>
+                  Update your profile in the form below, then refresh this page.
+                </p>
+              </div>
+            ) : (
+              renderWizardStep()
+            )}
 
             {WIZARD_STEPS[wizardStep].key === 'pace' && showGlucoseWarning && (
               <div className="warn-box goal-inline-warning">

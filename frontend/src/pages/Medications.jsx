@@ -45,7 +45,10 @@ export default function Medications() {
   }
 
   async function addMedication() {
-    if (!form.name.trim()) return
+    if (!form.name.trim()) {
+      flash('⚠️ Medication name is required')
+      return
+    }
     await api.post('/health/medications', form)
     setForm({ name: '', dose: '', time_of_day: '', notes: '' })
     flash('Medication added')
