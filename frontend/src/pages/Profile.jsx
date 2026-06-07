@@ -165,41 +165,42 @@ export default function Profile() {
 
   async function saveProfile() {
     setErr('')
+    setMsg('')
 
     // Frontend validation
     const trimmedName = String(profile.name || '').trim()
     if (!trimmedName) {
-      setErr('Name is required')
+      flashError('Name is required')
       return
     }
     if (trimmedName.length < 2) {
-      setErr('Name must be at least 2 characters')
+      flashError('Name must be at least 2 characters')
       return
     }
     if (trimmedName.length > 100) {
-      setErr('Name must be less than 100 characters')
+      flashError('Name must be less than 100 characters')
       return
     }
     if (!/^[a-zA-Z\s\-\.]+$/.test(trimmedName)) {
-      setErr('Name can only contain letters, spaces, hyphens and periods')
+      flashError('Name can only contain letters, spaces, hyphens and periods')
       return
     }
 
     const age = Number(profile.age)
     if (!profile.age || !Number.isInteger(age) || age < 1 || age > 150) {
-      setErr('Age is required and must be between 1 and 150')
+      flashError('Age is required and must be between 1 and 150')
       return
     }
 
     const weight = Number(profile.weight_kg)
     if (!profile.weight_kg || isNaN(weight) || weight < 1 || weight > 500) {
-      setErr('Weight is required and must be between 1 and 500 kg')
+      flashError('Weight is required and must be between 1 and 500 kg')
       return
     }
 
     const height = Number(profile.height_cm)
     if (!profile.height_cm || isNaN(height) || height < 50 || height > 300) {
-      setErr('Height is required and must be between 50 and 300 cm')
+      flashError('Height is required and must be between 50 and 300 cm')
       return
     }
 
@@ -214,13 +215,20 @@ export default function Profile() {
       setEmailPrefs(data.preferences)
       flash('Profile saved!')
     } catch (e) {
-      setErr(e.error || 'Could not save profile')
+      flashError(e.error || 'Could not save profile')
     }
   }
 
   function flash(m) {
     setMsg(m)
+    setErr('') // Clear any errors
     setTimeout(() => setMsg(''), 3500)
+  }
+
+  function flashError(m) {
+    setErr(m)
+    setMsg('') // Clear any success messages
+    setTimeout(() => setErr(''), 3500)
   }
 
   function updateCountry(country) {
