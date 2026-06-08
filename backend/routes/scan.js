@@ -455,7 +455,7 @@ async function callGeminiVision(imageBase64, mediaType, promptText) {
           { text: promptText }
         ]
       }],
-      generationConfig: { temperature: 0, maxOutputTokens: 1024, responseMimeType: 'application/json' }
+      generationConfig: { temperature: 0, maxOutputTokens: 2048, responseMimeType: 'application/json' }  // Increased for complex plates
     })
     const options = {
       hostname: 'generativelanguage.googleapis.com',
@@ -549,7 +549,7 @@ router.post('/', authMiddleware, checkScanLimit, async (req, res) => {
 // ═══════════════════════════════════════════════════════════
 //  ROUTE 2 — POST /api/scan/plate  (food photo → identify for review)
 // ═══════════════════════════════════════════════════════════
-router.post('/plate', authMiddleware, async (req, res) => {
+router.post('/plate', authMiddleware, checkScanLimit, async (req, res) => {
   const { imageBase64, mediaType, date, meal_type } = req.body
   if (!imageBase64) return res.status(400).json({ error: 'imageBase64 is required' })
 

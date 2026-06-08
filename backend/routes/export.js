@@ -1,10 +1,11 @@
 const router = require('express').Router();
 const { authMiddleware } = require('../middleware/auth');
+const { requireTier } = require('../middleware/tier');
 const { getDb } = require('../database/db');
 
-// GET /api/export
+// GET /api/export (Pro feature)
 // Returns all user data as JSON. Supports ?format=json (default) or ?format=csv
-router.get('/', authMiddleware, (req, res) => {
+router.get('/', authMiddleware, requireTier('pro'), (req, res) => {
   const db = getDb();
   const uid = req.userId;
 

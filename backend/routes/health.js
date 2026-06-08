@@ -532,7 +532,7 @@ router.delete('/weight/:id', authMiddleware, (req, res) => {
 });
 
 // ── HBA1C ──
-router.get('/a1c/range', authMiddleware, (req, res) => {
+router.get('/a1c/range', authMiddleware, requireTier('pro'), (req, res) => {
   const { from, to } = req.query;
   const db = getDb();
   const data = db.prepare(`
@@ -543,7 +543,7 @@ router.get('/a1c/range', authMiddleware, (req, res) => {
   res.json({ data });
 });
 
-router.post('/a1c', authMiddleware, (req, res) => {
+router.post('/a1c', authMiddleware, requireTier('pro'), (req, res) => {
   const { value_pct, log_date, notes } = req.body;
   const value = parseFloat(value_pct);
   if (!value || !log_date) return res.status(400).json({ error: 'value_pct and log_date required' });
@@ -556,7 +556,7 @@ router.post('/a1c', authMiddleware, (req, res) => {
   res.status(201).json({ entry });
 });
 
-router.delete('/a1c/:id', authMiddleware, (req, res) => {
+router.delete('/a1c/:id', authMiddleware, requireTier('pro'), (req, res) => {
   const db = getDb();
   const entry = db.prepare('SELECT * FROM a1c_logs WHERE id = ?').get(req.params.id);
   if (!entry) return res.status(404).json({ error: 'Not found' });
@@ -565,8 +565,8 @@ router.delete('/a1c/:id', authMiddleware, (req, res) => {
   res.json({ success: true });
 });
 
-// ── BLOOD PRESSURE ──
-router.get('/bp', authMiddleware, (req, res) => {
+// ── BLOOD PRESSURE ── (Pro feature)
+router.get('/bp', authMiddleware, requireTier('pro'), (req, res) => {
   const { date } = req.query;
   if (!date) return res.status(400).json({ error: 'date required' });
   const db = getDb();
@@ -574,7 +574,7 @@ router.get('/bp', authMiddleware, (req, res) => {
   res.json({ date, logs });
 });
 
-router.get('/bp/range', authMiddleware, (req, res) => {
+router.get('/bp/range', authMiddleware, requireTier('pro'), (req, res) => {
   const { from, to } = req.query;
   const db = getDb();
   const data = db.prepare(`
@@ -586,7 +586,7 @@ router.get('/bp/range', authMiddleware, (req, res) => {
   res.json({ data });
 });
 
-router.post('/bp', authMiddleware, (req, res) => {
+router.post('/bp', authMiddleware, requireTier('pro'), (req, res) => {
   const { systolic, diastolic, pulse, log_date, notes } = req.body;
   const sys = parseInt(systolic, 10);
   const dia = parseInt(diastolic, 10);
@@ -604,7 +604,7 @@ router.post('/bp', authMiddleware, (req, res) => {
   res.status(201).json({ entry });
 });
 
-router.delete('/bp/:id', authMiddleware, (req, res) => {
+router.delete('/bp/:id', authMiddleware, requireTier('pro'), (req, res) => {
   const db = getDb();
   const entry = db.prepare('SELECT * FROM bp_logs WHERE id = ?').get(req.params.id);
   if (!entry) return res.status(404).json({ error: 'Not found' });
@@ -884,7 +884,7 @@ router.put('/weekly-email', authMiddleware, (req, res) => {
   res.json({ preferences });
 });
 
-router.post('/weekly-email/send', authMiddleware, async (req, res) => {
+router.post('/weekly-email/send', authMiddleware, requireTier('pro'), async (req, res) => {
   const db = getDb();
   const pref = db.prepare('SELECT * FROM weekly_email_prefs WHERE user_id = ?').get(req.userId);
   const summary = buildWeeklyEmailBody(db, req.userId);
