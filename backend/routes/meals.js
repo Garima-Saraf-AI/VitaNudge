@@ -185,11 +185,13 @@ router.post('/', authMiddleware, (req, res) => {
 
   if (food_id) {
     const food = db.prepare('SELECT * FROM foods WHERE id = ?').get(food_id);
-    if (food) {
-      macros = calcMacros(food, qty, unit || food.base_unit);
-      // Auto-fill food name from database if not provided
-      if (!food_name) finalFoodName = food.name;
+    // CRITICAL FIX: Prevent FOREIGN KEY constraint error
+    if (!food) {
+      return res.status(404).json({ error: 'Food not found. Please select a valid food from the library.' });
     }
+    macros = calcMacros(food, qty, unit || food.base_unit);
+    // Auto-fill food name from database if not provided
+    if (!food_name) finalFoodName = food.name;
   } else {
     // Validate manual macros (no negative values)
     const cal = Number(req.body.cal) || 0;

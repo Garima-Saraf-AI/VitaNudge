@@ -56,7 +56,22 @@ const coachLimiter = rateLimit({
 });
 
 // ── MIDDLEWARE ──
-app.use(helmet({ crossOriginEmbedderPolicy: false, contentSecurityPolicy: false }));
+// HIGH PRIORITY FIX: Enable CSP while allowing necessary inline scripts
+app.use(helmet({
+  crossOriginEmbedderPolicy: false,
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],  // Required for React
+      styleSrc: ["'self'", "'unsafe-inline'"],  // Required for styled components
+      imgSrc: ["'self'", "data:", "https:"],  // Allow data URIs and external images
+      connectSrc: ["'self'", process.env.FRONTEND_URL || "http://localhost:3000"],
+      fontSrc: ["'self'", "data:"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? [] : null
+    }
+  }
+}));
 app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true }));
 app.use(express.json({ limit: '20mb' }));  // large for base64 images
 if (process.env.NODE_ENV !== 'test') app.use(morgan('dev'));
@@ -82,8 +97,23 @@ app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
 
 // ── ERROR HANDLER ──
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: err.message || 'Internal server error' });
+  // CRITICAL FIX: Handle malformed JSON without exposing parser details
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    return res.status(400).json({ error: 'Invalid JSON format in request body' });
+  }
+
+  // Log full error for debugging
+  console.error('Error:', {
+    message: err.message,
+    stack: process.env.NODE_ENV === 'production' ? undefined : err.stack
+  });
+
+  // Don't expose internal details in production
+  const errorMessage = process.env.NODE_ENV === 'production'
+    ? 'Internal server error'
+    : err.message || 'Internal server error';
+
+  res.status(err.status || 500).json({ error: errorMessage });
 });
 
 if (require.main === module) {

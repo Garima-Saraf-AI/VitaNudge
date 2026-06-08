@@ -997,11 +997,11 @@ export default function Goals() {
           <div className="goals-head-metrics">
             <div>
               <span>BMI</span>
-              <strong>{bmi}</strong>
+              <strong>{bmi || '–'}</strong>
             </div>
             <div>
               <span>{hasPreviewed && goals.target_weight_kg ? 'Target' : 'Weight'}</span>
-              <strong>{hasPreviewed && goals.target_weight_kg ? `${goals.target_weight_kg}kg` : `${profile.weight_kg}kg`}</strong>
+              <strong>{hasPreviewed && goals.target_weight_kg ? `${goals.target_weight_kg}kg` : (profile.weight_kg ? `${profile.weight_kg}kg` : '–')}</strong>
             </div>
           </div>
         </div>
