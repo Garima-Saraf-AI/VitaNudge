@@ -4,6 +4,8 @@ import { Chart as ChartJS, LineElement, PointElement, CategoryScale, LinearScale
 import api from '../utils/api'
 import { addDays, formatDate, shortDate, today } from '../utils/calc'
 import PageHero from '../components/PageHero'
+import { useAuth } from '../hooks/useAuth'
+import UpgradeModal from '../components/UpgradeModal'
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend)
 
@@ -14,6 +16,12 @@ function daysBack(n, to = today()) {
 }
 
 export default function Vitals() {
+  const { user } = useAuth()
+  const [showUpgrade, setShowUpgrade] = useState(false)
+
+  // Pro tier check
+  const isPro = user?.subscription_tier === 'pro' || user?.subscription_tier === 'clinical'
+
   const [date, setDate] = useState(today())
   const [bp, setBp] = useState({ systolic: '', diastolic: '', pulse: '', notes: '' })
   const [a1c, setA1c] = useState({ value_pct: '', notes: '' })
@@ -21,6 +29,39 @@ export default function Vitals() {
   const [bpRange, setBpRange] = useState([])
   const [a1cLogs, setA1cLogs] = useState([])
   const [msg, setMsg] = useState('')
+
+  // Show upgrade prompt for free users
+  if (!isPro) {
+    return (
+      <div className="page">
+        <div className="page-header">
+          <h1>❤️ Vitals</h1>
+          <p className="page-subtitle">Pro Feature</p>
+        </div>
+        <div className="card">
+          <div className="empty-state">
+            <div className="empty-icon">❤️</div>
+            <h3>Vitals tracking is a Pro feature</h3>
+            <p>Track blood pressure, pulse, and HbA1c levels. Visualize trends over time and monitor your cardiovascular health.</p>
+            <button
+              className="btn btn-green"
+              type="button"
+              onClick={() => setShowUpgrade(true)}
+              style={{ marginTop: '16px' }}
+            >
+              Upgrade to Pro
+            </button>
+          </div>
+        </div>
+        {showUpgrade && (
+          <UpgradeModal
+            feature="vitals"
+            onClose={() => setShowUpgrade(false)}
+          />
+        )}
+      </div>
+    )
+  }
 
   const load = useCallback(async () => {
     const days = daysBack(30, date)

@@ -2,18 +2,59 @@ import { useCallback, useEffect, useState } from 'react'
 import api from '../utils/api'
 import { addDays, formatDate, shortDate, today } from '../utils/calc'
 import PageHero from '../components/PageHero'
+import { useAuth } from '../hooks/useAuth'
+import UpgradeModal from '../components/UpgradeModal'
 
 const MEALS = ['all', 'breakfast', 'lunch', 'dinner', 'snack']
 
 function r1(n) { return Math.round((n || 0) * 10) / 10 }
 
 export default function Templates() {
+  const { user } = useAuth()
+  const [showUpgrade, setShowUpgrade] = useState(false)
+
+  // Pro tier check
+  const isPro = user?.subscription_tier === 'pro' || user?.subscription_tier === 'clinical'
+
   const [date, setDate] = useState(today())
   const [templates, setTemplates] = useState([])
   const [logs, setLogs] = useState({ breakfast: [], lunch: [], dinner: [], snack: [] })
   const [name, setName] = useState('')
   const [mealType, setMealType] = useState('lunch')
   const [msg, setMsg] = useState('')
+
+  // Show upgrade prompt for free users
+  if (!isPro) {
+    return (
+      <div className="page">
+        <div className="page-header">
+          <h1>📋 Meal Templates</h1>
+          <p className="page-subtitle">Pro Feature</p>
+        </div>
+        <div className="card">
+          <div className="empty-state">
+            <div className="empty-icon">📋</div>
+            <h3>Meal templates are a Pro feature</h3>
+            <p>Save your favorite meals as templates and log them instantly. Build a library of go-to meals with complete nutrition data.</p>
+            <button
+              className="btn btn-green"
+              type="button"
+              onClick={() => setShowUpgrade(true)}
+              style={{ marginTop: '16px' }}
+            >
+              Upgrade to Pro
+            </button>
+          </div>
+        </div>
+        {showUpgrade && (
+          <UpgradeModal
+            feature="templates"
+            onClose={() => setShowUpgrade(false)}
+          />
+        )}
+      </div>
+    )
+  }
 
   const load = useCallback(async () => {
     const [t, m] = await Promise.all([

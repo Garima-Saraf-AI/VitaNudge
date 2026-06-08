@@ -4,6 +4,8 @@ import { Chart as ChartJS, LineElement, PointElement, CategoryScale, LinearScale
 import api from '../utils/api'
 import { addDays, formatDate, shortDate, today, last7Days, glucoseZone } from '../utils/calc'
 import PageHero from '../components/PageHero'
+import { useAuth } from '../hooks/useAuth'
+import UpgradeModal from '../components/UpgradeModal'
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Filler, Tooltip, Legend)
 
@@ -24,8 +26,47 @@ const WELLBEING_OPTIONS = [
 const CHART_OPTS = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false }, ticks: { color: '#888', font: { size: 10 } } }, y: { beginAtZero: false, ticks: { color: '#888', font: { size: 10 } }, grid: { color: 'rgba(128,128,128,.08)' } } } }
 
 export default function Clinical() {
+  const { user } = useAuth()
+  const [showUpgrade, setShowUpgrade] = useState(false)
+
+  // Clinical tier check (requires Clinical subscription, not just Pro)
+  const isClinical = user?.subscription_tier === 'clinical'
+
   const [date, setDate] = useState(today())
   const [msg,  setMsg]  = useState('')
+
+  // Show upgrade prompt for non-Clinical users
+  if (!isClinical) {
+    return (
+      <div className="page">
+        <div className="page-header">
+          <h1>🏥 Clinical Dashboard</h1>
+          <p className="page-subtitle">Clinical Tier Feature</p>
+        </div>
+        <div className="card">
+          <div className="empty-state">
+            <div className="empty-icon">🏥</div>
+            <h3>Clinical dashboard is a Clinical tier feature</h3>
+            <p>Advanced health monitoring with glucose tracking, wellbeing logs, medication adherence, and clinician-ready reports.</p>
+            <button
+              className="btn btn-green"
+              type="button"
+              onClick={() => setShowUpgrade(true)}
+              style={{ marginTop: '16px' }}
+            >
+              Upgrade to Clinical
+            </button>
+          </div>
+        </div>
+        {showUpgrade && (
+          <UpgradeModal
+            feature="clinical"
+            onClose={() => setShowUpgrade(false)}
+          />
+        )}
+      </div>
+    )
+  }
 
   // Glucose
   const [glucoseLogs, setGlucoseLogs] = useState([])

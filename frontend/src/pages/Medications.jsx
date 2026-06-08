@@ -2,8 +2,16 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import api from '../utils/api'
 import { addDays, formatDate, shortDate, today } from '../utils/calc'
 import PageHero from '../components/PageHero'
+import { useAuth } from '../hooks/useAuth'
+import UpgradeModal from '../components/UpgradeModal'
 
 export default function Medications() {
+  const { user } = useAuth()
+  const [showUpgrade, setShowUpgrade] = useState(false)
+
+  // Pro tier check
+  const isPro = user?.subscription_tier === 'pro' || user?.subscription_tier === 'clinical'
+
   const [date, setDate] = useState(today())
   const [meds, setMeds] = useState([])
   const [logs, setLogs] = useState([])
@@ -11,6 +19,39 @@ export default function Medications() {
   const [msg, setMsg] = useState('')
 
   const [streak, setStreak] = useState(0)
+
+  // Show upgrade prompt for free users
+  if (!isPro) {
+    return (
+      <div className="page">
+        <div className="page-header">
+          <h1>💊 Medications</h1>
+          <p className="page-subtitle">Pro Feature</p>
+        </div>
+        <div className="card">
+          <div className="empty-state">
+            <div className="empty-icon">💊</div>
+            <h3>Medication tracking is a Pro feature</h3>
+            <p>Track medications, set reminders, monitor daily adherence, and build consistency streaks with VitaNudge Pro.</p>
+            <button
+              className="btn btn-green"
+              type="button"
+              onClick={() => setShowUpgrade(true)}
+              style={{ marginTop: '16px' }}
+            >
+              Upgrade to Pro
+            </button>
+          </div>
+        </div>
+        {showUpgrade && (
+          <UpgradeModal
+            feature="meds"
+            onClose={() => setShowUpgrade(false)}
+          />
+        )}
+      </div>
+    )
+  }
 
   const load = useCallback(async () => {
     const [m, l] = await Promise.all([
