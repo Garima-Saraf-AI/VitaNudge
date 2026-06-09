@@ -27,15 +27,59 @@ const CHART_OPTS = { responsive: true, maintainAspectRatio: false, plugins: { le
 
 export default function Clinical() {
   const { user } = useAuth()
-  const [showUpgrade, setShowUpgrade] = useState(false)
 
   // Clinical tier check (requires Clinical subscription, not just Pro)
   const isClinical = user?.subscription_tier === 'clinical'
 
+  // ALL STATE HOOKS MUST BE DECLARED BEFORE ANY CONDITIONAL RETURN
+  const [showUpgrade, setShowUpgrade] = useState(false)
   const [date, setDate] = useState(today())
   const [msg,  setMsg]  = useState('')
 
-  // Show upgrade prompt for non-Clinical users
+  // Glucose
+  const [glucoseLogs, setGlucoseLogs] = useState([])
+  const [gVal, setGVal]               = useState('')
+  const [gTiming, setGTiming]         = useState('fasting')
+  const [glucoseWeekly, setGlucoseWeekly] = useState([])
+
+  // BP / HbA1c
+  const [bp, setBp]           = useState({ systolic: '', diastolic: '', pulse: '', notes: '' })
+  const [bpLogs, setBpLogs]   = useState([])
+  const [bpRange, setBpRange] = useState([])
+  const [a1c, setA1c]         = useState({ value_pct: '', notes: '' })
+  const [a1cLogs, setA1cLogs] = useState([])
+
+  // Wellbeing
+  const [wellbeing, setWellbeing]     = useState(null)
+  const [wellbeingNote, setWellbeingNote] = useState('')
+
+  const flash = (t) => { setMsg(t); setTimeout(() => setMsg(''), 1800) }
+
+  const load = useCallback(async () => {
+    if (!isClinical) return // Don't load data for non-clinical users
+
+    const days30 = daysBack(30, date)
+    const week   = last7Days()
+    const [g, gW, dayBp, rangeBp, rangeA1c, wb] = await Promise.all([
+      api.get(`/health/glucose?date=${date}`),
+      api.get(`/health/glucose/range?from=${week[0]}&to=${week[6]}`),
+      api.get(`/health/bp?date=${date}`),
+      api.get(`/health/bp/range?from=${days30[0]}&to=${days30[days30.length-1]}`),
+      api.get(`/health/a1c/range?from=${addDays(date,-365)}&to=${date}`),
+      api.get(`/health/wellbeing?date=${date}`),
+    ])
+    setGlucoseLogs(g.logs)
+    setGlucoseWeekly(gW.data)
+    setBpLogs(dayBp.logs)
+    setBpRange(rangeBp.data)
+    setA1cLogs(rangeA1c.data)
+    setWellbeing(wb.log?.status || null)
+    setWellbeingNote(wb.log?.notes || '')
+  }, [date, isClinical])
+
+  useEffect(() => { load() }, [load])
+
+  // Show upgrade prompt for non-Clinical users (AFTER all hooks)
   if (!isClinical) {
     return (
       <div className="page">
@@ -67,47 +111,6 @@ export default function Clinical() {
       </div>
     )
   }
-
-  // Glucose
-  const [glucoseLogs, setGlucoseLogs] = useState([])
-  const [gVal, setGVal]               = useState('')
-  const [gTiming, setGTiming]         = useState('fasting')
-  const [glucoseWeekly, setGlucoseWeekly] = useState([])
-
-  // BP / HbA1c
-  const [bp, setBp]           = useState({ systolic: '', diastolic: '', pulse: '', notes: '' })
-  const [bpLogs, setBpLogs]   = useState([])
-  const [bpRange, setBpRange] = useState([])
-  const [a1c, setA1c]         = useState({ value_pct: '', notes: '' })
-  const [a1cLogs, setA1cLogs] = useState([])
-
-  // Wellbeing
-  const [wellbeing, setWellbeing]     = useState(null)
-  const [wellbeingNote, setWellbeingNote] = useState('')
-
-  const flash = (t) => { setMsg(t); setTimeout(() => setMsg(''), 1800) }
-
-  const load = useCallback(async () => {
-    const days30 = daysBack(30, date)
-    const week   = last7Days()
-    const [g, gW, dayBp, rangeBp, rangeA1c, wb] = await Promise.all([
-      api.get(`/health/glucose?date=${date}`),
-      api.get(`/health/glucose/range?from=${week[0]}&to=${week[6]}`),
-      api.get(`/health/bp?date=${date}`),
-      api.get(`/health/bp/range?from=${days30[0]}&to=${days30[days30.length-1]}`),
-      api.get(`/health/a1c/range?from=${addDays(date,-365)}&to=${date}`),
-      api.get(`/health/wellbeing?date=${date}`),
-    ])
-    setGlucoseLogs(g.logs)
-    setGlucoseWeekly(gW.data)
-    setBpLogs(dayBp.logs)
-    setBpRange(rangeBp.data)
-    setA1cLogs(rangeA1c.data)
-    setWellbeing(wb.log?.status || null)
-    setWellbeingNote(wb.log?.notes || '')
-  }, [date])
-
-  useEffect(() => { load() }, [load])
 
   // Glucose actions
   async function addGlucose() {
