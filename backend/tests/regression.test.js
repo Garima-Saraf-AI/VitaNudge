@@ -27,6 +27,14 @@ function cleanupUser() {
   db.close()
 }
 
+function upgradeUserToClinical() {
+  const dbPath = path.join(__dirname, '../database/nutritrack.db')
+  const db = new Database(dbPath)
+  db.pragma('foreign_keys = ON')
+  db.prepare('UPDATE users SET subscription_tier = ? WHERE email = ?').run('clinical', email)
+  db.close()
+}
+
 function startServer() {
   return new Promise((resolve, reject) => {
     server = app.listen(0, '127.0.0.1', () => {
@@ -84,6 +92,9 @@ test('NutriTrack full API regression suite', async t => {
     assert.ok(reg.token)
     assert.ok(reg.user.id)
     token = reg.token
+
+    // Upgrade to Clinical tier for testing all features
+    upgradeUserToClinical()
 
     const me = await api('GET', '/auth/me')
     assert.equal(me.user.email, email)

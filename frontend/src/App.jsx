@@ -18,6 +18,9 @@ import Coach from './pages/Coach'
 // Consolidated health pages
 import Body from './pages/Body'
 import Clinical from './pages/Clinical'
+// Legal pages
+import Privacy from './pages/Privacy'
+import Terms from './pages/Terms'
 
 const PRIMARY_NAV = [
   { path: '/',          label: 'Today',    icon: <TrackerIcon /> },
@@ -210,6 +213,10 @@ export default function App() {
           <Route path="/goals"    element={<PrivateRoute><Goals /></PrivateRoute>} />
           <Route path="/profile"  element={<PrivateRoute><Profile /></PrivateRoute>} />
           <Route path="/more"     element={<Navigate to="/" replace />} />
+
+          {/* Legal pages - public access */}
+          <Route path="/privacy"  element={<Privacy />} />
+          <Route path="/terms"    element={<Terms />} />
           <Route path="*"         element={<Navigate to="/" replace />} />
         </Routes>
       </main>
