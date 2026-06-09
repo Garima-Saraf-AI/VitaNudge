@@ -285,6 +285,29 @@ function initDatabase() {
     if (!userColumns.has(name)) db.prepare(statement).run();
   }
 
+  // Password reset tokens table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS password_reset_tokens (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      token TEXT UNIQUE NOT NULL,
+      expires_at TEXT NOT NULL,
+      used INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  // Account deletion feedback (optional)
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS account_deletions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT NOT NULL,
+      reason TEXT,
+      feedback TEXT,
+      deleted_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
   db.close();
   console.log('✅ Database initialized at', DB_PATH);
 }

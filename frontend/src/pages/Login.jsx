@@ -45,12 +45,19 @@ export default function Login() {
               <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="you@email.com" required />
             </div>
           </div>
-          <div className="form-grid full" style={{ marginBottom: 16 }}>
+          <div className="form-grid full" style={{ marginBottom: 8 }}>
             <div className="form-group">
               <label>Password</label>
               <input type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} placeholder="Your password" required />
             </div>
           </div>
+
+          <div style={{ textAlign: 'right', marginBottom: 16 }}>
+            <Link to="/forgot-password" style={{ fontSize: 14, color: 'var(--green)' }}>
+              Forgot password?
+            </Link>
+          </div>
+
           <button className="btn btn-green btn-full" type="submit" disabled={loading}>
             {loading ? 'Logging in...' : 'Continue to dashboard'}
           </button>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import api from '../utils/api'
 import { useAuth } from '../hooks/useAuth'
 import PageHero from '../components/PageHero'
@@ -535,6 +536,37 @@ export default function Profile() {
         </div>
         {!profile.email && <div className="warn-box">Add your email above before enabling summaries.</div>}
         <button className="btn btn-green btn-full" onClick={saveProfile}>Save profile</button>
+      </div>
+
+      {/* Account Management Section */}
+      <div className="card">
+        <div className="card-title">Account Management</div>
+        <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 16 }}>
+          Manage your account settings and data.
+        </p>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <Link
+            to="/delete-account"
+            style={{
+              padding: '12px 16px',
+              border: '1px solid var(--red-b)',
+              borderRadius: 'var(--rm)',
+              background: 'var(--red-l)',
+              color: 'var(--red)',
+              textAlign: 'center',
+              textDecoration: 'none',
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            Delete Account
+          </Link>
+
+          <div style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center' }}>
+            Need help? Email <a href="mailto:support@vitanudge.com" style={{ color: 'var(--green)' }}>support@vitanudge.com</a>
+          </div>
+        </div>
       </div>
 
       {showUpgrade && <UpgradeModal feature="export" onClose={() => setShowUpgrade(false)} />}

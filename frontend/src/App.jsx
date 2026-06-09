@@ -21,6 +21,10 @@ import Clinical from './pages/Clinical'
 // Legal pages
 import Privacy from './pages/Privacy'
 import Terms from './pages/Terms'
+// Auth flow pages
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
+import DeleteAccount from './pages/DeleteAccount'
 
 const PRIMARY_NAV = [
   { path: '/',          label: 'Today',    icon: <TrackerIcon /> },
@@ -217,6 +221,13 @@ export default function App() {
           {/* Legal pages - public access */}
           <Route path="/privacy"  element={<Privacy />} />
           <Route path="/terms"    element={<Terms />} />
+
+          {/* Auth flow - public access */}
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+
+          {/* Account management - requires auth */}
+          <Route path="/delete-account" element={<DeleteAccount />} />
           <Route path="*"         element={<Navigate to="/" replace />} />
         </Routes>
       </main>
