@@ -5,8 +5,8 @@ services:
     runtime: node
     region: oregon
     plan: free
-    buildCommand: npm install && npm --prefix backend install
-    startCommand: npm --prefix backend start
+    buildCommand: cd backend && npm ci
+    startCommand: cd backend && npm start
     nodeVersion: "20.18.0"
     envVars:
       - key: NODE_ENV
@@ -22,7 +22,7 @@ services:
   - type: web
     name: vitanudge
     runtime: static
-    buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build
+    buildCommand: cd frontend && npm ci --legacy-peer-deps && npm run build
     staticPublishPath: frontend/dist
     routes:
       - type: rewrite
