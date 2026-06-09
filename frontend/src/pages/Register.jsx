@@ -59,7 +59,7 @@ export default function Register() {
             </div>
           </div>
           <button className="btn btn-green btn-full" type="submit" disabled={loading}>
-            {loading ? 'Creating account...' : 'Create preview account'}
+            {loading ? 'Creating account...' : 'Create account'}
           </button>
         </form>
     </AuthFrame>
