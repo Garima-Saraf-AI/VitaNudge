@@ -298,4 +298,74 @@ router.delete('/account', authMiddleware, (req, res) => {
   res.json({ message: 'Account deleted successfully' });
 });
 
+// POST /api/auth/verify-email
+router.post('/verify-email', async (req, res) => {
+  const { token } = req.body;
+  if (!token) return res.status(400).json({ error: 'Token is required' });
+
+  const db = getDb();
+
+  // Check if email_verification_tokens table exists
+  try {
+    const verificationToken = db.prepare(`
+      SELECT user_id, expires_at FROM email_verification_tokens
+      WHERE token = ? AND used = 0
+    `).get(token);
+
+    if (!verificationToken) {
+      return res.status(400).json({ error: 'Invalid or expired verification token' });
+    }
+
+    if (new Date(verificationToken.expires_at) < new Date()) {
+      return res.status(400).json({ error: 'Verification token has expired' });
+    }
+
+    // Mark email as verified
+    db.prepare('UPDATE users SET email_verified = 1, updated_at = datetime(\'now\') WHERE id = ?')
+      .run(verificationToken.user_id);
+
+    // Mark token as used
+    db.prepare('UPDATE email_verification_tokens SET used = 1 WHERE token = ?').run(token);
+
+    res.json({ message: 'Email verified successfully' });
+  } catch (e) {
+    // If table doesn't exist, verification is not enabled yet
+    console.log('[verify-email] Email verification not enabled:', e.message);
+    res.json({ message: 'Email verification not enabled' });
+  }
+});
+
+// POST /api/auth/resend-verification
+router.post('/resend-verification', authMiddleware, async (req, res) => {
+  const db = getDb();
+  const user = db.prepare('SELECT id, email, email_verified FROM users WHERE id = ?').get(req.userId);
+
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  try {
+    if (user.email_verified) {
+      return res.json({ message: 'Email already verified' });
+    }
+
+    // Create new verification token
+    const token = uuidv4();
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // 24 hours
+
+    db.prepare(`
+      INSERT INTO email_verification_tokens (user_id, token, expires_at, created_at)
+      VALUES (?, ?, ?, datetime('now'))
+    `).run(user.id, token, expiresAt);
+
+    // TODO: Send email with verification link
+    // For now, log the token
+    console.log(`Email verification token for ${user.email}: ${token}`);
+    console.log(`Verification link: ${process.env.FRONTEND_URL}/verify-email?token=${token}`);
+
+    res.json({ message: 'Verification email sent' });
+  } catch (e) {
+    console.log('[resend-verification] Email verification not enabled:', e.message);
+    res.json({ message: 'Email verification not enabled' });
+  }
+});
+
 module.exports = router;

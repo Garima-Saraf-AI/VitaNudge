@@ -28,10 +28,10 @@ export default function Register() {
 
   return (
     <AuthFrame
-      eyebrow="Create free preview"
-      title="Start with Plus preview access"
-      subtitle="Create an account to try the premium scan, recipe, report, and coach workflow."
-      note="Preview access is free now. Billing and plan enforcement can be added before launch."
+      eyebrow="Get started free"
+      title="Create your VitaNudge account"
+      subtitle="Track meals, health metrics, and get AI-powered insights. Start with our free tier."
+      note="Free tier includes core features. Upgrade anytime for Pro features."
       footer={(
         <p className="auth-switch">
           Already have an account? <Link to="/login">Log in</Link>

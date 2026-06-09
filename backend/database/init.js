@@ -297,6 +297,18 @@ function initDatabase() {
     )
   `);
 
+  // Email verification tokens table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS email_verification_tokens (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      token TEXT UNIQUE NOT NULL,
+      expires_at TEXT NOT NULL,
+      used INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
   // Account deletion feedback (optional)
   db.exec(`
     CREATE TABLE IF NOT EXISTS account_deletions (
@@ -307,6 +319,13 @@ function initDatabase() {
       deleted_at TEXT DEFAULT (datetime('now'))
     )
   `);
+
+  // Add email_verified column to users
+  const userCols = db.prepare('PRAGMA table_info(users)').all();
+  const hasEmailVerified = userCols.some(col => col.name === 'email_verified');
+  if (!hasEmailVerified) {
+    db.prepare('ALTER TABLE users ADD COLUMN email_verified INTEGER DEFAULT 0').run();
+  }
 
   db.close();
   console.log('✅ Database initialized at', DB_PATH);

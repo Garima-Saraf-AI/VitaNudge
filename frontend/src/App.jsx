@@ -25,6 +25,7 @@ import Terms from './pages/Terms'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import DeleteAccount from './pages/DeleteAccount'
+import VerifyEmail from './pages/VerifyEmail'
 
 const PRIMARY_NAV = [
   { path: '/',          label: 'Today',    icon: <TrackerIcon /> },
@@ -225,6 +226,7 @@ export default function App() {
           {/* Auth flow - public access */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
 
           {/* Account management - requires auth */}
           <Route path="/delete-account" element={<DeleteAccount />} />

@@ -44,13 +44,19 @@ export default function UpgradeModal({ feature, onClose }) {
     try {
       const data = await api.post('/billing/checkout', { plan })
       if (data.coming_soon) {
-        setErr('Billing is not yet configured. Check back soon!')
+        setErr('💳 Payment processing coming soon! Email support@vitanudge.com to upgrade manually.')
         setBusy(false)
         return
       }
-      window.location.href = data.checkout_url
+      if (data.checkout_url) {
+        window.location.href = data.checkout_url
+      }
     } catch (e) {
-      setErr(e.error || 'Could not start checkout. Please try again.')
+      if (e.status === 503 || e.coming_soon) {
+        setErr('💳 Payment processing coming soon! Email support@vitanudge.com to upgrade manually.')
+      } else {
+        setErr(e.error || 'Could not start checkout. Please try again.')
+      }
       setBusy(false)
     }
   }

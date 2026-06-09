@@ -27,13 +27,13 @@ export default function Login() {
 
   return (
     <AuthFrame
-      eyebrow="Plus preview access"
-      title="Continue your premium workspace"
+      eyebrow="Welcome back"
+      title="Continue tracking your health"
       subtitle="Sign in to review meals, scans, reports, vitals, recipes, and coaching in one place."
-      note="No payment is required during preview."
+      note="Free tier available. Upgrade to Pro for advanced features."
       footer={(
         <p className="auth-switch">
-          New to VitaNudge? <Link to="/register">Start free preview</Link>
+          New to VitaNudge? <Link to="/register">Create free account</Link>
         </p>
       )}
     >
