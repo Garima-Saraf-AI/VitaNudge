@@ -393,6 +393,12 @@ export default function Goals() {
       setPlanSaved(true)
       setTargetsEditable(false)
       setWizardOpen(false)   // collapse wizard after saving
+
+      // Remove onboarding banner by clearing setup parameter
+      if (searchParams.get('setup') === '1') {
+        navigate('/goals', { replace: true })
+      }
+
       flash('✓ Goal targets saved successfully!')
       window.scrollTo({ top: 0, behavior: 'smooth' })  // Scroll to top to show success
     } catch (err) {

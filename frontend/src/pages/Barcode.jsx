@@ -57,8 +57,17 @@ export default function Barcode() {
 
   async function saveFood() {
     if (!product?.food) return
-    await api.post('/foods', product.food)
-    flash('Saved to library')
+    try {
+      await api.post('/foods', product.food)
+      flash('✅ Saved to library')
+    } catch (e) {
+      if (e.status === 409) {
+        flash('ℹ️ This food is already in your library')
+        return
+      }
+      setErr(e.error || 'Failed to save food')
+      setTimeout(() => setErr(''), 2500)
+    }
   }
 
   async function logFood() {

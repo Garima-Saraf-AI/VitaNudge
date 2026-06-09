@@ -77,7 +77,10 @@ export default function Body() {
   // Weight actions
   async function saveWeight() {
     const v = parseFloat(weight)
-    if (!v || v < 20 || v > 400) return
+    if (!v || v < 20 || v > 400) {
+      flash('⚠️ Weight must be between 20-400 kg')
+      return
+    }
     await api.post('/health/weight', { weight_kg: v, log_date: date, notes: wNotes })
     flash('Weight saved'); load()
   }
@@ -95,7 +98,10 @@ export default function Body() {
   // Steps actions
   async function saveSteps() {
     const v = parseInt(steps)
-    if (!v || v < 0) return
+    if (!v || v < 0 || v > 100000) {
+      flash('⚠️ Steps must be between 0-100,000')
+      return
+    }
     await api.post('/health/steps', { steps: v, log_date: date })
     flash('Steps saved'); load()
   }
@@ -224,7 +230,12 @@ export default function Body() {
               <div className="card-title">Daily intake</div>
               <div style={{ textAlign: 'center', marginBottom: 10 }}>
                 <div style={{ fontSize: 32, fontWeight: 800, color: 'var(--blue)', fontFamily: "'Sora',sans-serif", letterSpacing: '-.5px', lineHeight: 1 }}>{waterTotal.toLocaleString()}</div>
-                <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>ml / {waterGoal.toLocaleString()}ml goal · {r1(waterTotal/250)} glasses</div>
+                <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>
+                  ml / {waterGoal.toLocaleString()}ml goal · {(() => {
+                    const glasses = r1(waterTotal/250);
+                    return glasses === 1 ? '1 glass' : `${glasses} glasses`;
+                  })()}
+                </div>
               </div>
               <div style={{ height: 10, background: 'var(--border)', borderRadius: 5, marginBottom: 11, overflow: 'hidden' }}>
                 <div style={{ height: '100%', background: 'var(--blue)', borderRadius: 5, width: waterPct+'%', transition: 'width .5s' }} />

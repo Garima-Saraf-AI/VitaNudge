@@ -213,12 +213,12 @@ export default function CustomFoodModal({
           <div className="ingredient-mode-panel">
             <div className="form-grid">
               <div className="form-group">
-                <label>Food name</label>
-                <input value={food.name} onChange={e => updateFood('name', e.target.value)} placeholder="e.g. Paneer bhurji" />
+                <label htmlFor="estimate-food-name">Food name</label>
+                <input id="estimate-food-name" value={food.name} onChange={e => updateFood('name', e.target.value)} placeholder="e.g. Paneer bhurji" />
               </div>
               <div className="form-group">
-                <label>Portion hint</label>
-                <input value={estimateServing} onChange={e => setEstimateServing(e.target.value)} placeholder="e.g. 1 bowl approx 250g, 100g, 2 pieces" />
+                <label htmlFor="estimate-portion-hint">Portion hint</label>
+                <input id="estimate-portion-hint" value={estimateServing} onChange={e => setEstimateServing(e.target.value)} placeholder="e.g. 1 bowl approx 250g, 100g, 2 pieces" />
               </div>
             </div>
             <div className="estimate-action-row">
@@ -263,12 +263,12 @@ export default function CustomFoodModal({
           <div className="ingredient-mode-panel">
             <div className="form-grid">
               <div className="form-group">
-                <label>Name</label>
-                <input value={food.name} onChange={e => updateFood('name', e.target.value)} placeholder="e.g. Hemp seeds" />
+                <label htmlFor="manual-food-name">Name</label>
+                <input id="manual-food-name" value={food.name} onChange={e => updateFood('name', e.target.value)} placeholder="e.g. Hemp seeds" />
               </div>
               <div className="form-group">
-                <label>Category</label>
-                <select value={food.category} onChange={e => updateFood('category', e.target.value)}>
+                <label htmlFor="manual-food-category">Category</label>
+                <select id="manual-food-category" value={food.category} onChange={e => updateFood('category', e.target.value)}>
                   {FOOD_CATEGORIES.map(category => <option key={category} value={category}>{category}</option>)}
                 </select>
               </div>
@@ -276,12 +276,12 @@ export default function CustomFoodModal({
 
             <div className="form-grid">
               <div className="form-group">
-                <label>Base amount</label>
-                <input type="number" min="1" step="1" value={food.base_amount} onChange={e => updateFood('base_amount', e.target.value)} />
+                <label htmlFor="manual-base-amount">Base amount</label>
+                <input id="manual-base-amount" type="number" min="1" step="1" value={food.base_amount} onChange={e => updateFood('base_amount', e.target.value)} />
               </div>
               <div className="form-group">
-                <label>Base unit</label>
-                <select value={food.base_unit} onChange={e => updateFood('base_unit', e.target.value)}>
+                <label htmlFor="manual-base-unit">Base unit</label>
+                <select id="manual-base-unit" value={food.base_unit} onChange={e => updateFood('base_unit', e.target.value)}>
                   <option value="g">g</option>
                   <option value="ml">ml</option>
                   <option value="piece">piece</option>
@@ -299,8 +299,8 @@ export default function CustomFoodModal({
                 ['fat_g', 'Fat (g)'],
               ].map(([key, label]) => (
                 <div className="form-group" key={key}>
-                  <label>{label}</label>
-                  <input type="number" min="0" step="0.1" value={food[key]} onChange={e => updateFood(key, e.target.value)} />
+                  <label htmlFor={`manual-${key}`}>{label}</label>
+                  <input id={`manual-${key}`} type="number" min="0" step="0.1" value={food[key]} onChange={e => updateFood(key, e.target.value)} />
                 </div>
               ))}
             </div>

@@ -77,7 +77,12 @@ export default function Water() {
           <h3 style={{ fontSize: 13, fontWeight: 600, marginBottom: 12 }}>Daily intake</h3>
           <div style={{ textAlign: 'center', marginBottom: 10 }}>
             <div style={{ fontSize: 32, fontWeight: 700, color: 'var(--blue)', fontFamily: "'JetBrains Mono',monospace", lineHeight: 1 }}>{total.toLocaleString()}</div>
-            <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 3 }}>ml / {goal.toLocaleString()}ml goal · {r1(total / 250)} glasses</div>
+            <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 3 }}>
+              ml / {goal.toLocaleString()}ml goal · {(() => {
+                const glasses = r1(total / 250);
+                return glasses === 1 ? '1 glass' : `${glasses} glasses`;
+              })()}
+            </div>
           </div>
           <div style={{ height: 10, background: 'var(--border)', borderRadius: 5, marginBottom: 11, overflow: 'hidden' }}>
             <div style={{ height: '100%', background: 'var(--blue)', borderRadius: 5, width: pct + '%', transition: 'width .5s' }} />

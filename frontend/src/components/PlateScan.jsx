@@ -61,6 +61,19 @@ function matchFoodByName(name, foods, exactOnly = false) {
   }) || null
 }
 
+function formatAmountLabel(qty, unit) {
+  const q = Number(qty) || 1
+  const u = String(unit || 'g').trim()
+
+  // For g/ml, no space: "100g" not "100 g"
+  if (u === 'g' || u === 'ml') {
+    return `${q}${u}`
+  }
+
+  // For others, use space: "1 piece", "2 servings"
+  return `${q} ${u}`
+}
+
 export default function PlateScan({ date, onLogged }) {
   const [searchParams] = useSearchParams()
   const mealParam = searchParams.get('meal') // Read meal from URL
@@ -207,7 +220,7 @@ export default function PlateScan({ date, onLogged }) {
       food_name: food.name,
       qty: nextQty,
       unit: nextUnit,
-      amt_label: `${nextQty} ${nextUnit}`,
+      amt_label: formatAmountLabel(nextQty, nextUnit),
       ...macros,
       matched: source === 'library',
       match_note: source === 'library'
@@ -259,7 +272,7 @@ export default function PlateScan({ date, onLogged }) {
         log_date: date || today(),
         qty: Number(item.qty) || 1,
         unit: item.unit || 'g',
-        amt_label: `${Number(item.qty) || 1} ${item.unit || 'g'}`,
+        amt_label: formatAmountLabel(item.qty, item.unit),
         cal: Number(item.cal) || 0,
         protein_g: Number(item.protein_g) || 0,
         fiber_g: Number(item.fiber_g) || 0,
