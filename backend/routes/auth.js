@@ -5,6 +5,43 @@ const { getDb } = require('../database/db');
 const { signToken, authMiddleware } = require('../middleware/auth');
 const { normalizeTimeZone } = require('../utils/date');
 
+// Email sending helper using Resend
+async function sendEmail({ to, subject, text, html }) {
+  if (!process.env.RESEND_API_KEY) {
+    console.log('[sendEmail] Resend API key not configured, skipping email');
+    return { skipped: true };
+  }
+
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: process.env.EMAIL_FROM || 'VitaNudge <onboarding@resend.dev>',
+        to: Array.isArray(to) ? to : [to],
+        subject,
+        text,
+        html: html || text,
+      }),
+    });
+
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      console.error('[sendEmail] Resend error:', body);
+      return { error: body.message || 'Email send failed' };
+    }
+
+    console.log('[sendEmail] Email sent successfully:', body.id);
+    return { sent: true, id: body.id };
+  } catch (e) {
+    console.error('[sendEmail] Error:', e.message);
+    return { error: e.message };
+  }
+}
+
 const USER_SELECT = `
   id, name, email, age, gender, weight_kg, height_cm, condition, diet_preference,
   country, state_region, city, timezone
@@ -170,10 +207,33 @@ router.post('/forgot-password', async (req, res) => {
     VALUES (?, ?, ?, datetime('now'))
   `).run(user.id, token, expiresAt);
 
-  // TODO: Send email with reset link
-  // For now, just log the token (in production, send email)
-  console.log(`Password reset token for ${email}: ${token}`);
-  console.log(`Reset link: ${process.env.FRONTEND_URL}/reset-password?token=${token}`);
+  // Send password reset email
+  const resetLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/reset-password?token=${token}`;
+  const emailResult = await sendEmail({
+    to: user.email,
+    subject: 'Reset Your VitaNudge Password',
+    text: `Hello,\n\nYou requested to reset your VitaNudge password.\n\nClick here to reset: ${resetLink}\n\nThis link expires in 1 hour.\n\nIf you didn't request this, you can safely ignore this email.\n\nBest,\nVitaNudge Team`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #3a7d44;">Reset Your Password</h2>
+        <p>Hello,</p>
+        <p>You requested to reset your VitaNudge password.</p>
+        <p style="margin: 30px 0;">
+          <a href="${resetLink}" style="background: #3a7d44; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+            Reset Password
+          </a>
+        </p>
+        <p style="color: #666; font-size: 14px;">This link expires in 1 hour.</p>
+        <p style="color: #666; font-size: 14px;">If you didn't request this, you can safely ignore this email.</p>
+        <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+        <p style="color: #999; font-size: 12px;">VitaNudge - Small nudges. Big results.</p>
+      </div>
+    `
+  });
+
+  if (emailResult.skipped) {
+    console.log(`[forgot-password] Email skipped (no API key). Reset link: ${resetLink}`);
+  }
 
   res.json({ message: 'If that email exists, a reset link has been sent' });
 });
@@ -356,10 +416,32 @@ router.post('/resend-verification', authMiddleware, async (req, res) => {
       VALUES (?, ?, ?, datetime('now'))
     `).run(user.id, token, expiresAt);
 
-    // TODO: Send email with verification link
-    // For now, log the token
-    console.log(`Email verification token for ${user.email}: ${token}`);
-    console.log(`Verification link: ${process.env.FRONTEND_URL}/verify-email?token=${token}`);
+    // Send verification email
+    const verifyLink = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/verify-email?token=${token}`;
+    const emailResult = await sendEmail({
+      to: user.email,
+      subject: 'Verify Your VitaNudge Email',
+      text: `Hello,\n\nWelcome to VitaNudge! Please verify your email address.\n\nClick here to verify: ${verifyLink}\n\nThis link expires in 24 hours.\n\nBest,\nVitaNudge Team`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #3a7d44;">Welcome to VitaNudge!</h2>
+          <p>Hello,</p>
+          <p>Thanks for signing up! Please verify your email address to get started.</p>
+          <p style="margin: 30px 0;">
+            <a href="${verifyLink}" style="background: #3a7d44; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+              Verify Email
+            </a>
+          </p>
+          <p style="color: #666; font-size: 14px;">This link expires in 24 hours.</p>
+          <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+          <p style="color: #999; font-size: 12px;">VitaNudge - Small nudges. Big results.</p>
+        </div>
+      `
+    });
+
+    if (emailResult.skipped) {
+      console.log(`[resend-verification] Email skipped (no API key). Verify link: ${verifyLink}`);
+    }
 
     res.json({ message: 'Verification email sent' });
   } catch (e) {
