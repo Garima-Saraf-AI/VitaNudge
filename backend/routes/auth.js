@@ -44,7 +44,7 @@ async function sendEmail({ to, subject, text, html }) {
 
 const USER_SELECT = `
   id, name, email, age, gender, weight_kg, height_cm, condition, diet_preference,
-  country, state_region, city, timezone
+  country, state_region, city, timezone, subscription_tier, subscription_expires_at, subscription_status
 `;
 
 function cleanText(value, max = 80) {

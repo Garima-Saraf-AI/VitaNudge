@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { getDb } = require('../database/db');
 const { authMiddleware } = require('../middleware/auth');
+const { requireTier } = require('../middleware/tier');
 const { addDays, today } = require('../utils/date');
 
 function buildContext(db, userId, from, to) {
@@ -85,7 +86,7 @@ ${JSON.stringify(ctx).slice(0, 20000)}`;
   return body?.candidates?.[0]?.content?.parts?.map(p => p.text).join('\n').trim() || null;
 }
 
-router.post('/', authMiddleware, async (req, res) => {
+router.post('/', authMiddleware, requireTier('pro'), async (req, res) => {
   const { question, from, to } = req.body;
   if (!question || !question.trim()) return res.status(400).json({ error: 'question required' });
 
