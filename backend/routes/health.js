@@ -743,9 +743,17 @@ router.put('/goals', authMiddleware, (req, res) => {
   const target_muscle_gain_kg = toNumber(current.target_muscle_gain_kg, 0);
   const target_date = current.target_date || '';
 
-  // BUG-03 fix: Validate target_date format and validity
-  if (target_date && (!/^\d{4}-\d{2}-\d{2}$/.test(target_date) || isNaN(Date.parse(target_date)))) {
-    return res.status(400).json({ error: 'target_date must be a valid date in YYYY-MM-DD format' });
+  // BUG-03 fix: Validate target_date format and validity (strict check)
+  if (target_date) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(target_date)) {
+      return res.status(400).json({ error: 'target_date must be in YYYY-MM-DD format' });
+    }
+    // Parse and verify the date actually exists (prevents 2026-02-31)
+    const d = new Date(target_date + 'T00:00:00Z');
+    const [year, month, day] = target_date.split('-').map(Number);
+    if (d.getUTCFullYear() !== year || d.getUTCMonth() + 1 !== month || d.getUTCDate() !== day) {
+      return res.status(400).json({ error: 'target_date is not a valid calendar date' });
+    }
   }
 
   const target_summary = current.target_summary || '';
