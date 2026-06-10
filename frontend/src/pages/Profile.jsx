@@ -355,14 +355,14 @@ export default function Profile() {
         <div style={{ display: 'flex', gap: 8 }}>
           <a
             className="btn btn-ghost"
-            href={`${(import.meta.env.VITE_API_URL || '/api').replace(/\/+$/, '')}/export?format=json`}
+            href={`${(import.meta.env.VITE_API_URL || 'https://vitanudge-api.onrender.com').replace(/\/+$/, '')}/api/export?format=json`}
             download="vitanudge-export.json"
             onClick={e => {
               const token = localStorage.getItem('nt_token')
               if (!token) return
               e.preventDefault()
               // Fetch with auth header for download
-              fetch(`${(import.meta.env.VITE_API_URL || '/api').replace(/\/+$/, '')}/export?format=json`, {
+              fetch(`${(import.meta.env.VITE_API_URL || 'https://vitanudge-api.onrender.com').replace(/\/+$/, '')}/api/export?format=json`, {
                 headers: { Authorization: `Bearer ${token}` }
               }).then(r => r.blob()).then(blob => {
                 const a = document.createElement('a')
@@ -381,7 +381,7 @@ export default function Profile() {
               e.preventDefault()
               const token = localStorage.getItem('nt_token')
               if (!token) return
-              fetch(`${(import.meta.env.VITE_API_URL || '/api').replace(/\/+$/, '')}/export?format=csv`, {
+              fetch(`${(import.meta.env.VITE_API_URL || 'https://vitanudge-api.onrender.com').replace(/\/+$/, '')}/api/export?format=csv`, {
                 headers: { Authorization: `Bearer ${token}` }
               }).then(r => r.blob()).then(blob => {
                 const a = document.createElement('a')

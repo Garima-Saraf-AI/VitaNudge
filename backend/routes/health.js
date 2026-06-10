@@ -416,6 +416,16 @@ router.post('/water', authMiddleware, (req, res) => {
   const { ml, log_date } = req.body;
   if (!ml || !log_date) return res.status(400).json({ error: 'ml and log_date required' });
 
+  // Validate log_date format and validity (strict)
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(log_date)) {
+    return res.status(400).json({ error: 'log_date must be in YYYY-MM-DD format' });
+  }
+  const d = new Date(log_date + 'T00:00:00Z');
+  const [year, month, day] = log_date.split('-').map(Number);
+  if (d.getUTCFullYear() !== year || d.getUTCMonth() + 1 !== month || d.getUTCDate() !== day) {
+    return res.status(400).json({ error: 'log_date is not a valid calendar date' });
+  }
+
   // BUG-03 fix: reject zero or negative ml
   if (parseFloat(ml) <= 0)
     return res.status(400).json({ error: 'ml must be greater than 0' });
@@ -820,6 +830,11 @@ router.get('/report', authMiddleware, (req, res) => {
   const user = db.prepare('SELECT id, name, email, age, weight_kg, height_cm, condition, timezone FROM users WHERE id = ?').get(req.userId);
   const { days, to } = req.query;
   const range = rangeFromDays(days || 30, to || today(user?.timezone));
+
+  // Validate date range is not inverted
+  if (range.from > range.to) {
+    return res.status(400).json({ error: 'Invalid date range: from date must be before or equal to to date' });
+  }
 
   const goals = db.prepare('SELECT * FROM goals WHERE user_id = ?').get(req.userId);
   const meals = db.prepare(`

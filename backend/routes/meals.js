@@ -167,9 +167,15 @@ router.post('/', authMiddleware, (req, res) => {
   if (!VALID_MEAL_TYPES.has(meal_type))
     return res.status(400).json({ error: 'meal_type must be one of: breakfast, lunch, dinner, snack' });
 
-  // BUG-01 fix: reject invalid date formats
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(log_date) || isNaN(Date.parse(log_date)))
-    return res.status(400).json({ error: 'log_date must be a valid date in YYYY-MM-DD format' });
+  // BUG-01 fix: reject invalid date formats (strict validation)
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(log_date)) {
+    return res.status(400).json({ error: 'log_date must be in YYYY-MM-DD format' });
+  }
+  const d = new Date(log_date + 'T00:00:00Z');
+  const [year, month, day] = log_date.split('-').map(Number);
+  if (d.getUTCFullYear() !== year || d.getUTCMonth() + 1 !== month || d.getUTCDate() !== day) {
+    return res.status(400).json({ error: 'log_date is not a valid calendar date' });
+  }
 
   // BUG-02 fix: reject zero or negative qty
   if (parseFloat(qty) <= 0)
