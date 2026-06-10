@@ -696,12 +696,17 @@ router.post('/plate', authMiddleware, checkScanLimit, async (req, res) => {
     let unit = 'g' // AI provides grams
 
     // BUGFIX: Handle unit mismatch (AI gives grams, library uses pieces)
-    // Example: AI detects "100g egg white" but library has "Egg white (1 piece = 33g)"
+    // Example: AI detects "100g egg white" but library has "Egg white (1 piece = 33g, 17kcal)"
     if (matched && matched.base_unit === 'piece') {
+      // Extract grams per piece from serving string (e.g., "1 white (33g)")
+      const servingMatch = matched.serving?.match(/\((\d+)g\)/)
+      const gramsPerPiece = servingMatch ? parseFloat(servingMatch[1]) : 100
+
       // Convert grams to pieces: 100g ÷ 33g/piece = 3.03 pieces
-      const gramsPerPiece = matched.base_amount || 100
       qty = qty / gramsPerPiece
       unit = 'piece'
+
+      console.log(`[scan/plate] Unit conversion: ${item.grams}g → ${qty.toFixed(2)} pieces (${gramsPerPiece}g/piece)`)
     }
 
     // BUGFIX: Use AI estimates for unmatched foods (don't save with zero nutrition)
