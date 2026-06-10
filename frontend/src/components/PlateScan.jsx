@@ -629,6 +629,14 @@ export default function PlateScan({ date, onLogged }) {
             lineHeight:    1.6,
           }}>
             <strong>Scan failed:</strong> {error}
+            <div style={{ marginTop: 8 }}>
+              <button className="btn btn-ghost btn-compact" onClick={scanPlate} style={{ marginRight: 8 }}>
+                Try Again
+              </button>
+              <button className="btn btn-ghost btn-compact" onClick={reset}>
+                Choose Different Photo
+              </button>
+            </div>
           </div>
         )}
 
