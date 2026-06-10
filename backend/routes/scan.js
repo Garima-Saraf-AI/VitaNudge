@@ -703,10 +703,10 @@ router.post('/plate', authMiddleware, checkScanLimit, async (req, res) => {
       const gramsPerPiece = servingMatch ? parseFloat(servingMatch[1]) : 100
 
       // Convert grams to pieces: 100g ÷ 33g/piece = 3.03 pieces
-      qty = qty / gramsPerPiece
+      qty = Math.round((qty / gramsPerPiece) * 100) / 100  // Round to 2 decimals
       unit = 'piece'
 
-      console.log(`[scan/plate] Unit conversion: ${item.grams}g → ${qty.toFixed(2)} pieces (${gramsPerPiece}g/piece)`)
+      console.log(`[scan/plate] Unit conversion: ${item.grams}g → ${qty} pieces (${gramsPerPiece}g/piece)`)
     }
 
     // BUGFIX: Use AI estimates for unmatched foods (don't save with zero nutrition)

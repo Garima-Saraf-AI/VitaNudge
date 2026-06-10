@@ -22,19 +22,23 @@ function mapProduct(product, barcode) {
   // We need to scale them to the actual serving size
   const scaleFactor = baseAmount / 100;
 
+  // BUGFIX: Ensure serving text matches base_unit to avoid confusion
+  // Example: Don't show "330ml" when base_unit is 'g'
+  const normalizedServing = `${baseAmount}${baseUnit}`;
+
   return {
     barcode,
     name: product.product_name || product.generic_name || `Barcode ${barcode}`,
     brand: product.brands || '',
     image_url: product.image_front_small_url || product.image_url || '',
     ingredients_text: product.ingredients_text || '',
-    serving: product.serving_size || `${baseAmount}${baseUnit}`,
+    serving: normalizedServing,  // Use normalized serving instead of Open Food Facts text
     food: {
       name: product.product_name || product.generic_name || `Barcode ${barcode}`,
       category: 'custom',
       base_unit: baseUnit,
       base_amount: baseAmount,  // FIX: Use actual quantity
-      serving: product.serving_size || `${baseAmount}${baseUnit}`,
+      serving: normalizedServing,  // Consistent with base_unit
       cal: Math.round((n(nutriments, 'energy-kcal_100g') || n(nutriments, 'energy-kcal')) * scaleFactor),
       protein_g: Math.round(n(nutriments, 'proteins_100g') * scaleFactor * 10) / 10,
       fiber_g: Math.round(n(nutriments, 'fiber_100g') * scaleFactor * 10) / 10,
