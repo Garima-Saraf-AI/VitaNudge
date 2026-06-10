@@ -4305,15 +4305,15 @@ textarea {
     border-left: 0;
     border-top: 1px solid rgba(255,255,255,.28);
   }
-  .auth-hero-stage { display: block; margin: 18px 0 0; }
+  /* MOBILE FIX: Hide hero content to reduce empty space */
+  .auth-hero-stage { display: none; }
   .auth-product-copy {
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-    padding: 0;
-    backdrop-filter: none;
+    display: none;
   }
   .auth-photo-card { display: none; }
+  .auth-plan-strip { display: none; }
+  .auth-value-row { display: none; }
+  .auth-insight-panel { display: none; }
   .auth-device { max-width: 420px; transform: none; }
   .auth-product-copy h1 {
     font-size: 30px;
@@ -4377,6 +4377,11 @@ textarea {
 	    top: 58px;
 	    padding: 8px;
 	    border-radius: 20px;
+	  }
+	  /* MOBILE FIX: Prevent helper text truncation on narrow screens */
+	  .scan-tab-desc {
+	    white-space: normal;
+	    overflow: visible;
 	  }
 	  .today-sticky-summary .dashboard-control-bar {
 	    padding: 9px;
