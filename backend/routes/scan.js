@@ -331,7 +331,14 @@ const { today } = require('../utils/date')
 //  POST /api/scan/plate    → plate/food photo → identify items for review
 // ─────────────────────────────────────────────────────────────
 
-const LABEL_PROMPT = `You are a nutrition label reader. Extract nutrition data from this image.
+const LABEL_PROMPT = `You are a nutrition label reader. Your job is to ONLY read nutrition labels/facts panels.
+
+CRITICAL VALIDATION:
+1. Check if this image shows a NUTRITION LABEL/FACTS PANEL with printed nutrition information
+2. If you see actual food, a meal plate, groceries, or any non-label photo: {"error":"not a nutrition label"}
+3. Only proceed if you see a printed label with calories, protein, carbs, etc.
+
+If this IS a nutrition label, extract the data:
 Return ONLY a single valid JSON object. No markdown. No backticks. No explanation.
 Start your response with { and end with }
 
@@ -342,7 +349,7 @@ Rules:
 - Use 0 for any value you cannot read clearly
 - gi must be one of: low, med, high
 - confidence must be one of: high, medium, low
-- If this is NOT a nutrition label return exactly: {"error":"not a nutrition label"}
+- If this is NOT a nutrition label (e.g., meal photo, food plate): {"error":"not a nutrition label"}
 - Do NOT wrap in markdown. Do NOT add text outside the JSON`
 
 function buildPlatePrompt(foodContext) {
@@ -354,12 +361,18 @@ Start with { and end with }
 CRITICAL: Keep response under 1000 characters. Use SHORT food names.
 
 Format (REQUIRED):
-{"items":[{"name":"food name","grams":150,"conf":"high"}]}
+{"items":[{"name":"food name","grams":150,"cal":200,"protein":8,"carbs":30,"fiber":2,"conf":"high"}]}
 
 - name: SHORT common name (e.g. "rice" not "basmati rice cooked")
 - grams: estimated weight (use visual cues: plate size, bowl depth)
+- cal: estimated calories for this portion (REQUIRED - use nutrition knowledge)
+- protein: estimated protein in grams (REQUIRED)
+- carbs: estimated carbs in grams (REQUIRED)
+- fiber: estimated fiber in grams (REQUIRED)
 - conf: "high", "med", or "low"
 - MAX 10 items (if more foods, pick the 10 largest portions)
+
+IMPORTANT: Provide calorie/macro estimates for EVERY food. Use standard nutrition data.
 
 Estimation guide:
 - Bowl of rice/dal = 150g
@@ -393,8 +406,9 @@ const FOOD_ALIASES = {
 
   // Proteins
   'chicken': ['chicken breast', 'grilled chicken', 'chicken curry', 'roasted chicken', 'chicken tikka', 'tandoori chicken', 'fried chicken'],
-  'egg': ['eggs', 'boiled egg', 'scrambled eggs', 'omelette', 'fried egg', 'poached egg'],
+  'whole egg': ['egg', 'eggs', 'boiled egg', 'hard-boiled egg', 'soft-boiled egg', 'scrambled eggs', 'omelette', 'fried egg', 'poached egg'],
   'fish': ['grilled fish', 'fried fish', 'baked fish', 'salmon', 'tuna'],
+  'salmon': ['grilled salmon', 'baked salmon', 'smoked salmon', 'salmon fillet'],
   'tofu': ['fried tofu', 'grilled tofu', 'soft tofu'],
 
   // Vegetables
@@ -678,9 +692,34 @@ router.post('/plate', authMiddleware, checkScanLimit, async (req, res) => {
     // Fuzzy match food name against library (with aliases)
     const matched = matchFoodByName(foodName, foods)
 
-    const qty      = parseFloat(item.grams || item.qty) || 100
-    const unit     = 'g' // Always use grams from compact format
-    const macros   = matched ? calcMacros(matched, qty, unit) : { cal: 0, protein_g: 0, fiber_g: 0, carbs_g: 0, fat_g: 0, mult: 1 }
+    let qty  = parseFloat(item.grams || item.qty) || 100
+    let unit = 'g' // AI provides grams
+
+    // BUGFIX: Handle unit mismatch (AI gives grams, library uses pieces)
+    // Example: AI detects "100g egg white" but library has "Egg white (1 piece = 33g)"
+    if (matched && matched.base_unit === 'piece') {
+      // Convert grams to pieces: 100g ÷ 33g/piece = 3.03 pieces
+      const gramsPerPiece = matched.base_amount || 100
+      qty = qty / gramsPerPiece
+      unit = 'piece'
+    }
+
+    // BUGFIX: Use AI estimates for unmatched foods (don't save with zero nutrition)
+    let macros
+    if (matched) {
+      macros = calcMacros(matched, qty, unit)
+    } else {
+      // Use AI-provided nutrition estimates
+      macros = {
+        cal:       Math.round(item.cal || item.calories || 0),
+        protein_g: Math.round((item.protein || item.protein_g || 0) * 10) / 10,
+        fiber_g:   Math.round((item.fiber || item.fiber_g || 0) * 10) / 10,
+        carbs_g:   Math.round((item.carbs || item.carbs_g || 0) * 10) / 10,
+        fat_g:     Math.round((item.fat || item.fat_g || 0) * 10) / 10,
+        mult:      1,
+      }
+    }
+
     const mealType = meal_type || 'lunch' // Use user-provided meal_type or default to lunch
     const amt      = matched ? amtLabel(qty, unit, matched) : `~${qty}g`
     const conf     = item.conf || item.confidence || 'medium'
@@ -699,7 +738,7 @@ router.post('/plate', authMiddleware, checkScanLimit, async (req, res) => {
       fat_g:        macros.fat_g,
       matched:      !!matched,
       confidence:   conf === 'high' ? 'high' : conf === 'low' ? 'low' : 'medium',
-      match_note:   matched ? `Matched: ${matched.name}` : 'No library match - using AI estimate',
+      match_note:   matched ? `Matched: ${matched.name}` : 'AI estimate - review before saving',
     })
   }
 

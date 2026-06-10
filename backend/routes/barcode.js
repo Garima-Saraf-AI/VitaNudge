@@ -17,6 +17,11 @@ function mapProduct(product, barcode) {
   // Example: Coca-Cola 330ml can should be base_amount: 330, not 100
   const baseAmount = quantity || 100;
 
+  // BUGFIX: Scale nutrition from per-100g to actual serving size
+  // Open Food Facts provides *_100g values (per 100g/100ml)
+  // We need to scale them to the actual serving size
+  const scaleFactor = baseAmount / 100;
+
   return {
     barcode,
     name: product.product_name || product.generic_name || `Barcode ${barcode}`,
@@ -30,13 +35,13 @@ function mapProduct(product, barcode) {
       base_unit: baseUnit,
       base_amount: baseAmount,  // FIX: Use actual quantity
       serving: product.serving_size || `${baseAmount}${baseUnit}`,
-      cal: Math.round(n(nutriments, 'energy-kcal_100g') || n(nutriments, 'energy-kcal')),
-      protein_g: Math.round(n(nutriments, 'proteins_100g') * 10) / 10,
-      fiber_g: Math.round(n(nutriments, 'fiber_100g') * 10) / 10,
-      carbs_g: Math.round(n(nutriments, 'carbohydrates_100g') * 10) / 10,
-      fat_g: Math.round(n(nutriments, 'fat_100g') * 10) / 10,
-      sugar_g: Math.round(n(nutriments, 'sugars_100g') * 10) / 10,
-      sodium_mg: Math.round((n(nutriments, 'sodium_100g') || n(nutriments, 'sodium')) * 1000),
+      cal: Math.round((n(nutriments, 'energy-kcal_100g') || n(nutriments, 'energy-kcal')) * scaleFactor),
+      protein_g: Math.round(n(nutriments, 'proteins_100g') * scaleFactor * 10) / 10,
+      fiber_g: Math.round(n(nutriments, 'fiber_100g') * scaleFactor * 10) / 10,
+      carbs_g: Math.round(n(nutriments, 'carbohydrates_100g') * scaleFactor * 10) / 10,
+      fat_g: Math.round(n(nutriments, 'fat_100g') * scaleFactor * 10) / 10,
+      sugar_g: Math.round(n(nutriments, 'sugars_100g') * scaleFactor * 10) / 10,
+      sodium_mg: Math.round((n(nutriments, 'sodium_100g') || n(nutriments, 'sodium')) * scaleFactor * 1000),
       gi: 'unknown',
       notes: product.nutriscore_grade ? `Open Food Facts · Nutri-Score ${String(product.nutriscore_grade).toUpperCase()}` : 'Open Food Facts barcode import',
     },
