@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import api from '../utils/api'
+// No imports needed - manual upgrade via email only
 
 const PLAN_FEATURES = {
   pro: [
@@ -22,8 +21,6 @@ const PLAN_FEATURES = {
 }
 
 export default function UpgradeModal({ feature, onClose }) {
-  const [busy, setBusy] = useState(false)
-  const [err, setErr] = useState('')
 
   const featureMessages = {
     scan: "You've used all 5 free scans this month.",
@@ -38,27 +35,11 @@ export default function UpgradeModal({ feature, onClose }) {
 
   const message = featureMessages[feature] || 'Upgrade to unlock this feature.'
 
-  async function handleUpgrade(plan) {
-    setBusy(true)
-    setErr('')
-    try {
-      const data = await api.post('/billing/checkout', { plan })
-      if (data.coming_soon) {
-        setErr('💳 Payment processing coming soon! Email support@vitanudge.com to upgrade manually.')
-        setBusy(false)
-        return
-      }
-      if (data.checkout_url) {
-        window.location.href = data.checkout_url
-      }
-    } catch (e) {
-      if (e.status === 503 || e.coming_soon) {
-        setErr('💳 Payment processing coming soon! Email support@vitanudge.com to upgrade manually.')
-      } else {
-        setErr(e.error || 'Could not start checkout. Please try again.')
-      }
-      setBusy(false)
-    }
+  // Payment provider not yet configured - manual upgrade only
+  function requestUpgrade(plan) {
+    const subject = encodeURIComponent(`Upgrade Request: ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`)
+    const body = encodeURIComponent(`Hi VitaNudge team,\n\nI would like to upgrade to the ${plan.charAt(0).toUpperCase() + plan.slice(1)} plan.\n\nPlease let me know the next steps.\n\nThanks!`)
+    window.location.href = `mailto:support@vitanudge.com?subject=${subject}&body=${body}`
   }
 
   return (
@@ -83,10 +64,9 @@ export default function UpgradeModal({ feature, onClose }) {
               </div>
               <button
                 className="btn btn-green"
-                onClick={() => handleUpgrade('pro')}
-                disabled={busy}
+                onClick={() => requestUpgrade('pro')}
               >
-                {busy ? 'Loading…' : 'Upgrade to Pro'}
+                Request Upgrade
               </button>
             </div>
             <ul className="upgrade-feature-list">
@@ -104,10 +84,9 @@ export default function UpgradeModal({ feature, onClose }) {
               </div>
               <button
                 className="btn btn-ghost"
-                onClick={() => handleUpgrade('clinical')}
-                disabled={busy}
+                onClick={() => requestUpgrade('clinical')}
               >
-                {busy ? 'Loading…' : 'Get Clinical'}
+                Request Upgrade
               </button>
             </div>
             <ul className="upgrade-feature-list">
@@ -118,11 +97,12 @@ export default function UpgradeModal({ feature, onClose }) {
           </div>
         </div>
 
-        {err && <div className="error-box" style={{ marginTop: 12 }}>{err}</div>}
+        <div className="info-box" style={{ marginTop: 12, fontSize: '0.9rem' }}>
+          💳 Online checkout coming soon. Click "Request Upgrade" to email us and we'll activate your plan manually within 24 hours.
+        </div>
 
         <div className="upgrade-footer">
           <button className="btn-link" type="button" onClick={onClose}>Continue with free plan</button>
-          <span>Cancel anytime · Secure payment via Stripe</span>
         </div>
       </div>
     </div>
