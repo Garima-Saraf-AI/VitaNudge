@@ -297,7 +297,7 @@ router.put('/:id', authMiddleware, (req, res) => {
 
   // BUG-04 fix: reject zero or negative qty when editing
   if (qty <= 0)
-    return res.status(400).json({ error: 'qty must be greater than 0' });
+    return res.status(400).json({ error: 'Quantity must be greater than 0. Use the delete button to remove this meal.' });
 
   let macros = { cal: entry.cal, protein_g: entry.protein_g, fiber_g: entry.fiber_g, carbs_g: entry.carbs_g, fat_g: entry.fat_g };
   let label  = entry.amt_label;

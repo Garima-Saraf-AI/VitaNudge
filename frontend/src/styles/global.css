@@ -4604,10 +4604,13 @@ textarea {
   }
   .tools-overlay {
     padding: 8px;
+    box-sizing: border-box;
   }
   .tools-drawer {
     border-radius: 22px;
     padding: 14px;
+    width: 100%;
+    max-width: calc(100vw - 16px);
   }
   .tools-drawer-head h2 {
     font-size: 18px;

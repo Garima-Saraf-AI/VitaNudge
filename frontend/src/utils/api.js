@@ -20,7 +20,11 @@ api.interceptors.request.use(config => {
 api.interceptors.response.use(
   res => res.data,
   err => {
-    if (err.response?.status === 401) {
+    // Only auto-redirect to login for 401 errors on protected routes
+    // Don't redirect on login/register failures (let the page handle the error)
+    const isAuthEndpoint = err.config?.url?.includes('/auth/login') || err.config?.url?.includes('/auth/register');
+
+    if (err.response?.status === 401 && !isAuthEndpoint) {
       localStorage.removeItem('nt_token');
       window.location.href = '/login';
     }
