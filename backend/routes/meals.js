@@ -298,6 +298,18 @@ router.put('/:id', authMiddleware, (req, res) => {
       macros = calcMacros(food, qty, unit);
       label  = amtLabel(qty, unit, food);
     }
+  } else {
+    // BUG-05 fix: For manual meals, proportionally scale macros when quantity changes
+    const oldQty = parseFloat(entry.qty) || 1;
+    const ratio = qty / oldQty;
+    macros = {
+      cal: Math.round(entry.cal * ratio),
+      protein_g: Math.round(entry.protein_g * ratio * 10) / 10,
+      fiber_g: Math.round(entry.fiber_g * ratio * 10) / 10,
+      carbs_g: Math.round(entry.carbs_g * ratio * 10) / 10,
+      fat_g: Math.round(entry.fat_g * ratio * 10) / 10,
+    };
+    label = `${qty}${unit}`;
   }
 
   db.prepare(`

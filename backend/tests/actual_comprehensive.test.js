@@ -185,6 +185,34 @@ test('MEALS - POSITIVE', async t => {
     assert.equal(data.entry.cal, calBefore * 2)
   })
 
+  await t.test('BUG-05: edit manual meal qty proportionally scales macros', async () => {
+    // Create manual meal with 100g, 200 cal, 10g protein
+    const { data: created } = await api('POST', '/meals', {
+      food_name: 'Manual Chicken',
+      meal_type: 'lunch',
+      log_date: today,
+      qty: 100,
+      unit: 'g',
+      cal: 200,
+      protein_g: 10,
+      fiber_g: 2,
+      carbs_g: 5,
+      fat_g: 8
+    }, 201)
+
+    // Edit to 200g - should double all macros
+    const { data: edited } = await api('PUT', `/meals/${created.entry.id}`, { qty: 200, unit: 'g' })
+    assert.equal(edited.entry.qty, 200)
+    assert.equal(edited.entry.cal, 400, 'Calories should double from 200 to 400')
+    assert.equal(edited.entry.protein_g, 20, 'Protein should double from 10g to 20g')
+    assert.equal(edited.entry.fiber_g, 4, 'Fiber should double from 2g to 4g')
+    assert.equal(edited.entry.carbs_g, 10, 'Carbs should double from 5g to 10g')
+    assert.equal(edited.entry.fat_g, 16, 'Fat should double from 8g to 16g')
+
+    // Clean up
+    await api('DELETE', `/meals/${created.entry.id}`)
+  })
+
   await t.test('food_name auto-filled when only food_id sent (no "Unknown")', async () => {
     const { data } = await api('POST', '/meals', { food_id: foodId, meal_type: 'snack', log_date: today, qty: 50, unit: 'g' }, 201)
     assert.ok(data.entry.food_name)
