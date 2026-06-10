@@ -346,38 +346,66 @@ Rules:
 - Do NOT wrap in markdown. Do NOT add text outside the JSON`
 
 function buildPlatePrompt(foodContext) {
-  return `You are a food recognition AI for a diabetic-friendly nutrition tracker.
-Look carefully at this photo of food on a plate, in a bowl, or on a table.
+  return `You are a food recognition AI. Identify ALL visible foods in this photo.
 
-FOOD LIBRARY (match items to these when possible):
-${foodContext}
+Return ONLY a compact JSON object. NO markdown. NO backticks. NO text outside JSON.
+Start with { and end with }
 
-Your job:
-1. Identify every food item visible in the photo
-2. Estimate the portion size using visual cues (plate/bowl size, depth, fullness)
-3. Match each item to the closest entry in the food library
-4. Infer the meal type from the foods (dal+roti=lunch/dinner, oats/eggs=breakfast etc.)
+CRITICAL: Keep response under 1000 characters. Use SHORT food names.
 
-Return ONLY a raw JSON array. No markdown. No backticks. No explanation.
-Start with [ and end with ]
+Format (REQUIRED):
+{"items":[{"name":"food name","grams":150,"conf":"high"}]}
 
-Format:
-[{"food_id":"exact ID from library or null","food_name":"what you see","meal_type":"breakfast|lunch|dinner|snack","qty":1,"unit":"piece|g|ml|cup|tbsp|serving","confidence":"high|medium|low","portion_note":"how you estimated (e.g. approx 1 katori = 150g)"}]
+- name: SHORT common name (e.g. "rice" not "basmati rice cooked")
+- grams: estimated weight (use visual cues: plate size, bowl depth)
+- conf: "high", "med", or "low"
+- MAX 10 items (if more foods, pick the 10 largest portions)
 
-Portion estimation guidelines for Indian food:
-- Standard katori/bowl of dal or curry = 150-200g
-- Standard roti on a plate = 1 piece (~30g each)
-- Rice on a plate = 100-150g cooked
-- Side salad/kachumber = 80-100g
-- Glass of lassi/milk = 250ml
-- Paneer cubes in curry = 60-80g
-- Sabzi/dry vegetable = 100-150g
-- Sprouts/salad bowl = 100g
-- Oats porridge bowl = 150-200g cooked
-- Egg on plate = count them (1 egg = 1 piece)
-- Paratha = 1 piece (~60g each, larger than roti)
+Estimation guide:
+- Bowl of rice/dal = 150g
+- Roti/chapati = 30g each
+- Curry bowl = 180g
+- Egg = 50g each
+- Paratha = 60g each
+- Salad bowl = 100g
 
-If the photo is blurry, not food, or too dark to identify, return: []`
+If photo unclear or no food, return: {"items":[]}
+`
+}
+
+// ── Food matching with aliases ───────────────────────────────
+const FOOD_ALIASES = {
+  'rice': ['cooked rice', 'brown rice', 'white rice', 'basmati', 'jeera rice'],
+  'roti': ['chapati', 'phulka', 'wheat roti'],
+  'dal': ['lentils', 'daal', 'yellow dal', 'masoor dal'],
+  'yogurt': ['curd', 'dahi'],
+  'paneer': ['cottage cheese', 'paneer cubes'],
+  'broccoli': ['broccoli florets'],
+  'quinoa': ['cooked quinoa'],
+  'chicken': ['chicken breast', 'grilled chicken', 'chicken curry'],
+}
+
+function matchFoodByName(name, foods) {
+  if (!name || !foods) return null
+  const lower = name.toLowerCase().trim()
+
+  // Exact match
+  let match = foods.find(f => f.name.toLowerCase() === lower)
+  if (match) return match
+
+  // Partial match
+  match = foods.find(f => f.name.toLowerCase().includes(lower) || lower.includes(f.name.toLowerCase()))
+  if (match) return match
+
+  // Alias match
+  for (const [canonical, aliases] of Object.entries(FOOD_ALIASES)) {
+    if (aliases.some(a => a === lower || lower.includes(a) || a.includes(lower))) {
+      match = foods.find(f => f.name.toLowerCase().includes(canonical))
+      if (match) return match
+    }
+  }
+
+  return null
 }
 
 // ── helpers ───────────────────────────────────────────────────
@@ -385,13 +413,29 @@ function extractJSON(text) {
   if (!text || typeof text !== 'string') throw new Error('Empty response from AI')
   let clean = text
     .replace(/^```json\s*/im, '').replace(/^```\s*/im, '').replace(/```\s*$/im, '').trim()
+
+  // Try direct parse first
   try { return JSON.parse(clean) } catch (_) {}
+
+  // Try to find complete JSON array
   const as = clean.indexOf('['), ae = clean.lastIndexOf(']')
   if (as !== -1 && ae > as) { try { return JSON.parse(clean.slice(as, ae + 1)) } catch (_) {} }
+
+  // Try to find complete JSON object
   const os = clean.indexOf('{'), oe = clean.lastIndexOf('}')
   if (os !== -1 && oe > os) { try { return JSON.parse(clean.slice(os, oe + 1)) } catch (_) {} }
-  const am = clean.match(/\[[\s\S]*\]/)
-  if (am) { try { return JSON.parse(am[0]) } catch (_) {} }
+
+  // PARTIAL RECOVERY: Try to extract truncated items array
+  const itemsMatch = clean.match(/"items"\s*:\s*\[([^\]]*)/i)
+  if (itemsMatch) {
+    try {
+      // Attempt to parse whatever we have, even if incomplete
+      const partialItems = JSON.parse('[' + itemsMatch[1] + ']')
+      console.warn('[scan] Partial recovery: extracted', partialItems.length, 'items from truncated response')
+      return { items: partialItems, _truncated: true }
+    } catch (_) {}
+  }
+
   throw new Error('Could not parse AI response. Raw: ' + clean.slice(0, 300))
 }
 
@@ -570,15 +614,32 @@ router.post('/plate', authMiddleware, checkScanLimit, async (req, res) => {
   }
 
   let items
+  let retryAttempted = false
   try {
     items = await callVisionAI(imageBase64, mediaType, platePrompt)
   } catch (e) {
-    console.error('[scan/plate]', e.message)
-    return res.status(502).json({ error: e.message })
+    console.error('[scan/plate] First attempt failed:', e.message)
+
+    // Retry once with compact repair prompt if parsing failed
+    if (e.message.includes('parse') && !retryAttempted) {
+      console.log('[scan/plate] Retrying with compact prompt...')
+      retryAttempted = true
+      const compactPrompt = `Identify foods in this photo. Return ONLY: {"items":[{"name":"food","grams":100,"conf":"high"}]} Keep under 500 chars. NO markdown.`
+      try {
+        items = await callVisionAI(imageBase64, mediaType, compactPrompt)
+      } catch (retryError) {
+        console.error('[scan/plate] Retry failed:', retryError.message)
+        return res.status(502).json({ error: 'AI response could not be parsed after retry. Try a clearer photo.' })
+      }
+    } else {
+      return res.status(502).json({ error: e.message })
+    }
   }
 
-  if (!Array.isArray(items)) items = []
-  if (items.length === 0) {
+  // Handle new compact format: {"items":[{name,grams,conf}]}
+  let itemsArray = Array.isArray(items) ? items : (items?.items || [])
+
+  if (itemsArray.length === 0) {
     return res.status(200).json({
       items: [],
       logged: [],
@@ -587,18 +648,23 @@ router.post('/plate', authMiddleware, checkScanLimit, async (req, res) => {
   }
 
   const identified = []
-  for (const item of items) {
-    if (!item.food_name) continue
-    const food     = item.food_id ? foods.find(f => f.id === item.food_id) : null
-    const qty      = parseFloat(item.qty) || 1
-    const unit     = item.unit || food?.base_unit || 'g'
-    const macros   = food ? calcMacros(food, qty, unit) : { cal: 0, protein_g: 0, fiber_g: 0, carbs_g: 0, fat_g: 0, mult: 1 }
-    const mealType = meal_type || (['breakfast','lunch','dinner','snack'].includes(item.meal_type) ? item.meal_type : 'lunch')
-    const amt      = food ? amtLabel(qty, unit, food) : `~${qty} ${unit}`
+  for (const item of itemsArray) {
+    const foodName = item.name || item.food_name
+    if (!foodName) continue
+
+    // Fuzzy match food name against library (with aliases)
+    const matched = matchFoodByName(foodName, foods)
+
+    const qty      = parseFloat(item.grams || item.qty) || 100
+    const unit     = 'g' // Always use grams from compact format
+    const macros   = matched ? calcMacros(matched, qty, unit) : { cal: 0, protein_g: 0, fiber_g: 0, carbs_g: 0, fat_g: 0, mult: 1 }
+    const mealType = meal_type || 'lunch' // Use user-provided meal_type or default to lunch
+    const amt      = matched ? amtLabel(qty, unit, matched) : `~${qty}g`
+    const conf     = item.conf || item.confidence || 'medium'
 
     identified.push({
-      food_id:      food?.id || null,
-      food_name:    food?.name || item.food_name,
+      food_id:      matched?.id || null,
+      food_name:    matched?.name || foodName,
       meal_type:    mealType,
       qty,
       unit,
@@ -608,9 +674,9 @@ router.post('/plate', authMiddleware, checkScanLimit, async (req, res) => {
       fiber_g:      macros.fiber_g,
       carbs_g:      macros.carbs_g,
       fat_g:        macros.fat_g,
-      matched:      !!food,
-      confidence:   item.confidence   || 'medium',
-      portion_note: item.portion_note || '',
+      matched:      !!matched,
+      confidence:   conf === 'high' ? 'high' : conf === 'low' ? 'low' : 'medium',
+      match_note:   matched ? `Matched: ${matched.name}` : 'No library match - using AI estimate',
     })
   }
 
@@ -621,7 +687,21 @@ router.post('/plate', authMiddleware, checkScanLimit, async (req, res) => {
     carbs_g:   t.carbs_g   + e.carbs_g,
   }), { cal: 0, protein_g: 0, fiber_g: 0, carbs_g: 0 })
 
-  res.json({ items: identified, logged: [], totals, date: logDate, items_detected: items.length })
+  // Check if response was truncated
+  const wasTruncated = items?._truncated || false
+  const message = wasTruncated
+    ? 'Some foods may not have been detected due to AI response limit. Scan complex plates separately.'
+    : undefined
+
+  res.json({
+    items: identified,
+    logged: [],
+    totals,
+    date: logDate,
+    items_detected: identified.length,
+    message,
+    _truncated: wasTruncated
+  })
 })
 
 router.get('/info', authMiddleware, (req, res) => {
