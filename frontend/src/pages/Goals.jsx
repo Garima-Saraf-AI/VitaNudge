@@ -1146,11 +1146,24 @@ export default function Goals() {
 
         {(!planSaved || wizardOpen) && (
           <div className="goal-wizard-actions">
-            {wizardStep < PREVIEW_STEP_INDEX && (
-              <button className="btn btn-green" type="button" onClick={goNextStep}>
-                {wizardStep === PREVIEW_STEP_INDEX - 1 ? 'Preview plan →' : 'Next →'}
-              </button>
-            )}
+            {wizardStep < PREVIEW_STEP_INDEX && (() => {
+              // Disable Next button on Stats step (index 1) if required fields are empty
+              const isStatsStep = WIZARD_STEPS[wizardStep].key === 'stats'
+              const isStatsComplete = profile.age && profile.weight_kg && profile.height_cm && profile.gender
+              const isNextDisabled = isStatsStep && !isStatsComplete
+
+              return (
+                <button
+                  className="btn btn-green"
+                  type="button"
+                  onClick={goNextStep}
+                  disabled={isNextDisabled}
+                  title={isNextDisabled ? 'Please fill all required fields (Age, Weight, Height, Gender)' : ''}
+                >
+                  {wizardStep === PREVIEW_STEP_INDEX - 1 ? 'Preview plan →' : 'Next →'}
+                </button>
+              )
+            })()}
           </div>
         )}
       </div>

@@ -3951,7 +3951,17 @@ textarea {
 }
 
 /* ── MODAL ── */
-.modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 500; }
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 500;
+  overflow-y: auto;
+}
 .modal-box { background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(250,251,248,.94)); border: 1px solid rgba(200,208,193,.78); border-radius: var(--rl); padding: 18px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; animation: fadeIn .2s ease; box-shadow: 0 28px 80px rgba(18,32,24,.24); }
 .modal-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
 .modal-sub { font-size: 12px; color: var(--muted); font-family: 'JetBrains Mono', monospace; margin-bottom: 14px; }
@@ -4935,15 +4945,22 @@ textarea {
 
 /* ── UPGRADE MODAL ── */
 .upgrade-modal {
-  max-width: 560px;
+  max-width: 580px;
   width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
 }
 .upgrade-modal-head {
   display: flex;
   gap: 14px;
   align-items: flex-start;
-  padding: 22px 22px 0;
-  margin-bottom: 18px;
+  padding: 22px 22px 16px;
+  margin-bottom: 0;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
 }
 .upgrade-icon {
   font-size: 28px;
@@ -4973,14 +4990,21 @@ textarea {
 .upgrade-plans {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 0 22px;
+  gap: 14px;
+  padding: 20px 22px;
+  margin-bottom: 0;
+  flex: 1;
+  overflow-y: auto;
+  align-items: start;
 }
 .upgrade-plan {
   border: 1px solid var(--border);
   border-radius: var(--r);
-  padding: 14px;
+  padding: 16px;
   background: var(--surface2);
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
 }
 .upgrade-plan-pro {
   border-color: var(--green-b);
@@ -5014,6 +5038,8 @@ textarea {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  flex: 1;
+  min-height: 0;
 }
 .upgrade-feature-list li {
   display: flex;
@@ -5031,10 +5057,11 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 22px 18px;
+  padding: 16px 22px 20px;
   gap: 12px;
   border-top: 1px solid var(--border);
-  margin-top: 14px;
+  margin-top: 0;
+  flex-shrink: 0;
 }
 .upgrade-footer span {
   font-size: 11px;
@@ -5076,8 +5103,34 @@ textarea {
 }
 
 @media (max-width: 600px) {
-  .upgrade-plans { grid-template-columns: 1fr; }
-  .copy-yesterday-banner { flex-direction: column; align-items: flex-start; }
+  .upgrade-plans {
+    grid-template-columns: 1fr;
+  }
+  .upgrade-modal {
+    max-height: 90vh;
+  }
+  .modal-bg {
+    align-items: center;
+    padding: 20px 16px;
+  }
+  .upgrade-modal-head {
+    padding: 18px 18px 0;
+    margin-bottom: 14px;
+  }
+  .upgrade-plans {
+    padding: 0 18px;
+  }
+  .upgrade-plan-head {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .upgrade-plan-head .btn {
+    width: 100%;
+  }
+  .copy-yesterday-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* ── GOAL TRACKER CARD ── */

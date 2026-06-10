@@ -97,7 +97,7 @@ export default function UpgradeModal({ feature, onClose }) {
           </div>
         </div>
 
-        <div className="info-box" style={{ marginTop: 12, fontSize: '0.9rem' }}>
+        <div className="info-box" style={{ margin: '0 22px 16px', fontSize: '0.9rem', flexShrink: 0 }}>
           💳 Online checkout coming soon. Click "Request Upgrade" to email us and we'll activate your plan manually within 24 hours.
         </div>
 
