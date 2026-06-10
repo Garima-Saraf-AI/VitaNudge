@@ -63,13 +63,23 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],  // Required for React
-      styleSrc: ["'self'", "'unsafe-inline'"],  // Required for styled components
-      imgSrc: ["'self'", "data:", "https:"],  // Allow data URIs and external images
-      connectSrc: ["'self'", process.env.FRONTEND_URL || "http://localhost:3000"],
-      fontSrc: ["'self'", "data:"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],  // Google Fonts
+      imgSrc: ["'self'", "data:", "https:", "blob:"],  // Allow data URIs, external images, and blob URLs
+      connectSrc: ["'self'", process.env.FRONTEND_URL || "http://localhost:3000", "https://generativelanguage.googleapis.com"],
+      fontSrc: ["'self'", "data:", "https://fonts.gstatic.com"],  // Google Fonts
+      frameSrc: ["'none'"],  // Prevent embedding (clickjacking protection)
       objectSrc: ["'none'"],
       upgradeInsecureRequests: process.env.NODE_ENV === 'production' ? [] : null
     }
+  },
+  // Additional security headers
+  frameguard: { action: 'deny' },  // X-Frame-Options: DENY (prevent clickjacking)
+  noSniff: true,  // X-Content-Type-Options: nosniff
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },  // Referrer-Policy
+  hsts: {
+    maxAge: 31536000,  // 1 year
+    includeSubDomains: true,
+    preload: true
   }
 }));
 app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:3000', credentials: true }));

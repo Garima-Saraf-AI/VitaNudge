@@ -375,14 +375,37 @@ If photo unclear or no food, return: {"items":[]}
 
 // ── Food matching with aliases ───────────────────────────────
 const FOOD_ALIASES = {
-  'rice': ['cooked rice', 'brown rice', 'white rice', 'basmati', 'jeera rice'],
-  'roti': ['chapati', 'phulka', 'wheat roti'],
-  'dal': ['lentils', 'daal', 'yellow dal', 'masoor dal'],
-  'yogurt': ['curd', 'dahi'],
-  'paneer': ['cottage cheese', 'paneer cubes'],
-  'broccoli': ['broccoli florets'],
-  'quinoa': ['cooked quinoa'],
-  'chicken': ['chicken breast', 'grilled chicken', 'chicken curry'],
+  // Grains & Rice
+  'rice': ['cooked rice', 'brown rice', 'white rice', 'basmati', 'jeera rice', 'steamed rice', 'boiled rice', 'fried rice'],
+  'roti': ['chapati', 'phulka', 'wheat roti', 'whole wheat roti', 'indian bread'],
+  'naan': ['butter naan', 'garlic naan', 'plain naan'],
+  'bread': ['white bread', 'wheat bread', 'whole grain bread', 'toast'],
+  'quinoa': ['cooked quinoa', 'boiled quinoa'],
+
+  // Lentils & Legumes
+  'dal': ['lentils', 'daal', 'yellow dal', 'masoor dal', 'dal makhani', 'dal tadka', 'dal fry', 'toor dal'],
+  'beans': ['black beans', 'kidney beans', 'pinto beans', 'chickpeas', 'garbanzo beans'],
+
+  // Dairy
+  'yogurt': ['curd', 'dahi', 'greek yogurt', 'plain yogurt'],
+  'paneer': ['cottage cheese', 'paneer cubes', 'paneer tikka', 'grilled paneer'],
+  'milk': ['whole milk', 'skim milk', '2% milk', 'low fat milk'],
+
+  // Proteins
+  'chicken': ['chicken breast', 'grilled chicken', 'chicken curry', 'roasted chicken', 'chicken tikka', 'tandoori chicken', 'fried chicken'],
+  'egg': ['eggs', 'boiled egg', 'scrambled eggs', 'omelette', 'fried egg', 'poached egg'],
+  'fish': ['grilled fish', 'fried fish', 'baked fish', 'salmon', 'tuna'],
+  'tofu': ['fried tofu', 'grilled tofu', 'soft tofu'],
+
+  // Vegetables
+  'broccoli': ['broccoli florets', 'steamed broccoli', 'roasted broccoli'],
+  'spinach': ['palak', 'spinach leaves', 'cooked spinach', 'sauteed spinach'],
+  'potato': ['potatoes', 'boiled potato', 'mashed potato', 'roasted potato', 'baked potato', 'french fries'],
+  'tomato': ['tomatoes', 'cherry tomatoes', 'sliced tomato'],
+  'cucumber': ['sliced cucumber', 'cucumber slices'],
+  'carrot': ['carrots', 'sliced carrot', 'boiled carrot', 'baby carrots'],
+  'onion': ['onions', 'sliced onion', 'red onion', 'white onion'],
+  'pepper': ['bell pepper', 'green pepper', 'red pepper', 'capsicum'],
 }
 
 function matchFoodByName(name, foods) {

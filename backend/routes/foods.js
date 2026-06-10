@@ -226,23 +226,37 @@ router.post('/estimate', authMiddleware, async (req, res) => {
 
 // POST /api/foods — create custom food
 router.post('/', authMiddleware, (req, res) => {
-  const { name, category, base_unit, base_amount, serving, cal, protein_g, fiber_g, carbs_g, fat_g, gi, notes } = req.body;
+  let { name, category, base_unit, base_amount, serving, cal, protein_g, fiber_g, carbs_g, fat_g, gi, notes } = req.body;
   if (!name) return res.status(400).json({ error: 'Food name is required' });
-  // BUG-05 fix: enforce maximum food name length
-  if (String(name).trim().length > 100) return res.status(400).json({ error: 'Food name must be 100 characters or fewer' });
+
+  // BUGFIX: Long product names from barcodes (e.g., 737628064502)
+  // Truncate to 100 chars but preserve full name in notes
+  let displayName = String(name).trim();
+  let productNotes = String(notes || '');
+
+  if (displayName.length > 100) {
+    // Store full name in notes if not already there
+    if (!productNotes.includes('Full name:')) {
+      productNotes = `Full name: ${displayName}\n${productNotes}`.trim();
+    }
+    // Truncate display name
+    displayName = displayName.substring(0, 97) + '...';
+    console.log(`[foods] Truncated long name (${displayName.length} chars) to: ${displayName}`);
+  }
+
   if (!hasCompleteNutrition({ cal, protein_g, fiber_g, carbs_g, fat_g })) {
     return res.status(400).json({ error: 'Add all before saving. Use AI estimate if you do not know the values.' });
   }
 
   const db = getDb();
-  const duplicate = findDuplicateFood(db, req.userId, name);
+  const duplicate = findDuplicateFood(db, req.userId, displayName);
   if (duplicate) return res.status(409).json({ error: 'This food is already in your library' });
 
   const id = uuidv4();
   db.prepare(`
     INSERT INTO foods (id, user_id, name, category, base_unit, base_amount, serving, cal, protein_g, fiber_g, carbs_g, fat_g, gi, notes, is_default)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
-  `).run(id, req.userId, name, category||'custom', base_unit||'g', base_amount||100, serving||'', cal||0, protein_g||0, fiber_g||0, carbs_g||0, fat_g||0, gi||'', notes||'');
+  `).run(id, req.userId, displayName, category||'custom', base_unit||'g', base_amount||100, serving||'', cal||0, protein_g||0, fiber_g||0, carbs_g||0, fat_g||0, gi||'', productNotes);
 
   const food = db.prepare('SELECT * FROM foods WHERE id = ?').get(id);
   res.status(201).json({ food });
