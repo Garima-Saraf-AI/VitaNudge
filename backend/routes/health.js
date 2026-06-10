@@ -429,10 +429,28 @@ router.post('/water', authMiddleware, (req, res) => {
   // BUG-03 fix: reject zero or negative ml
   if (parseFloat(ml) <= 0)
     return res.status(400).json({ error: 'ml must be greater than 0' });
+
   const db = getDb();
+
+  // Get user timezone for proper logged_at time
+  const user = db.prepare('SELECT timezone FROM users WHERE id = ?').get(req.userId);
+  const userTimezone = user?.timezone || 'America/Chicago';
+
+  // Create timestamp in user's timezone
+  const now = new Date();
+  const logged_at = now.toLocaleString('en-US', {
+    timeZone: userTimezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).replace(/(\d+)\/(\d+)\/(\d+),\s(\d+):(\d+):(\d+)/, '$3-$1-$2 $4:$5:$6');
+
   const id = uuidv4();
-  const t = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-  db.prepare('INSERT INTO water_logs (id, user_id, log_date, ml) VALUES (?, ?, ?, ?)').run(id, req.userId, log_date, ml);
+  db.prepare('INSERT INTO water_logs (id, user_id, log_date, ml, logged_at) VALUES (?, ?, ?, ?, ?)').run(id, req.userId, log_date, ml, logged_at);
   const entry = db.prepare('SELECT * FROM water_logs WHERE id = ?').get(id);
   res.status(201).json({ entry });
 });
