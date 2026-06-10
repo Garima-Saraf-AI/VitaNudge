@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom'
 import api from '../utils/api'
 import { addDays, today } from '../utils/calc'
 import PageHero from '../components/PageHero'
+import { useAuth } from '../hooks/useAuth'
+import UpgradeModal from '../components/UpgradeModal'
 
 const SUGGESTIONS = [
   'Why is my glucose high after lunch?',
@@ -12,6 +14,7 @@ const SUGGESTIONS = [
 ]
 
 export default function Coach() {
+  const { user } = useAuth()
   const location = useLocation()
   const presetQuestion = location.state?.question || ''
   const [question, setQuestion] = useState(presetQuestion || SUGGESTIONS[0])
@@ -19,6 +22,9 @@ export default function Coach() {
   const [provider, setProvider] = useState('')
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState('')
+  const [showUpgrade, setShowUpgrade] = useState(false)
+
+  const isPro = user?.subscription_tier === 'pro' || user?.subscription_tier === 'clinical'
 
   useEffect(() => {
     if (!presetQuestion) return
@@ -29,6 +35,12 @@ export default function Coach() {
   }, [presetQuestion])
 
   async function ask(q = question) {
+    // Enforce Pro tier
+    if (!isPro) {
+      setShowUpgrade(true)
+      return
+    }
+
     if (!q.trim()) {
       setErr('Please enter a question for the coach first.')
       return
@@ -101,6 +113,13 @@ export default function Coach() {
             Use this as pattern-spotting help, not medical advice. Confirm medication or treatment changes with your clinician.
           </div>
         </div>
+      )}
+
+      {showUpgrade && (
+        <UpgradeModal
+          feature="AI Coach"
+          onClose={() => setShowUpgrade(false)}
+        />
       )}
     </div>
   )
