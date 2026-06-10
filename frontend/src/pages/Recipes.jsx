@@ -4,6 +4,7 @@ import api from '../utils/api'
 import { useAuth } from '../hooks/useAuth'
 import PageHero from '../components/PageHero'
 import CustomFoodModal from '../components/CustomFoodModal'
+import UpgradeModal from '../components/UpgradeModal'
 
 const DEFAULT_GOALS = {
   goal_type: 'glucose',
@@ -250,6 +251,9 @@ export default function Recipes() {
   const [method, setMethod] = useState('')
   const [msg, setMsg] = useState('')
   const [err, setErr] = useState('')
+  const [showUpgrade, setShowUpgrade] = useState(false)
+
+  const isPro = user?.subscription_tier === 'pro' || user?.subscription_tier === 'clinical'
 
   async function loadData(resetIngredients = false) {
     const [foodData, goalData] = await Promise.all([
@@ -344,6 +348,12 @@ export default function Recipes() {
   }
 
   async function saveRecipe(recipe = null) {
+    // Enforce Pro tier
+    if (!isPro) {
+      setShowUpgrade(true)
+      return
+    }
+
     setErr('')
     const recipeName = recipe?.name || name.trim()
     const macros = recipe || servingMacros
@@ -591,6 +601,13 @@ export default function Recipes() {
           saveLabel="Save ingredient"
           onClose={closeNewIngredientModal}
           onCreated={handleNewIngredientCreated}
+        />
+      )}
+
+      {showUpgrade && (
+        <UpgradeModal
+          feature="Recipe Builder"
+          onClose={() => setShowUpgrade(false)}
         />
       )}
     </div>
