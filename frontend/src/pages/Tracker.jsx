@@ -350,15 +350,19 @@ export default function Tracker() {
   const [copyBusy, setCopyBusy] = useState(false)
   const [goalData, setGoalData] = useState(null)
   const [latestWeight, setLatestWeight] = useState(null)
+  const [firstWeight, setFirstWeight] = useState(null)
 
   useEffect(() => { api.get('/foods').then(d => setFoods(d.foods)) }, [])
 
   useEffect(() => {
     api.get('/health/goals').then(d => { if (d.goals?.target_weight_kg) setGoalData(d.goals) }).catch(() => {})
-    api.get(`/health/weight/range?from=${addDays(today(), -30)}&to=${today()}`)
+    api.get(`/health/weight/range?from=${addDays(today(), -365)}&to=${today()}`)
       .then(d => {
         const sorted = [...(d.data || [])].sort((a, b) => b.log_date.localeCompare(a.log_date))
-        if (sorted[0]) setLatestWeight(Number(sorted[0].weight_kg))
+        if (sorted.length > 0) {
+          setLatestWeight(Number(sorted[0].weight_kg))
+          setFirstWeight(Number(sorted[sorted.length - 1].weight_kg))
+        }
       }).catch(() => {})
   }, [])
 
@@ -617,11 +621,12 @@ export default function Tracker() {
                   </div>
                   <div className="goal-mini-bar-wrap">
                     {(() => {
-                      const start = Number(user?.weight_kg || latestWeight)
+                      // BUG-08 fix: Use firstWeight as baseline, fall back to profile weight or latest
+                      const start = Number(firstWeight || user?.weight_kg || latestWeight)
                       const target = Number(goalData.target_weight_kg)
                       const current = latestWeight
-                      const total = Math.abs(start - target)
-                      const covered = Math.abs(current - start)
+                      const total = Math.abs(target - start)
+                      const covered = Math.abs(start - current)
                       const pct = total > 0 ? Math.min(100, Math.round((covered / total) * 100)) : 0
                       return (
                         <>
