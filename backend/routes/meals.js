@@ -289,6 +289,10 @@ router.put('/:id', authMiddleware, (req, res) => {
   const qty  = parseFloat(req.body.qty)  || entry.qty;
   const unit = req.body.unit             || entry.unit;
 
+  // BUG-04 fix: reject zero or negative qty when editing
+  if (qty <= 0)
+    return res.status(400).json({ error: 'qty must be greater than 0' });
+
   let macros = { cal: entry.cal, protein_g: entry.protein_g, fiber_g: entry.fiber_g, carbs_g: entry.carbs_g, fat_g: entry.fat_g };
   let label  = entry.amt_label;
 

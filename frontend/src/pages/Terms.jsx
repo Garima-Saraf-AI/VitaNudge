@@ -49,8 +49,8 @@ export default function Terms() {
         <h3 style={{ fontSize: 16, fontWeight: 600, marginTop: 24, marginBottom: 12 }}>4. Subscription & Billing</h3>
         <p style={{ color: 'var(--muted)', marginBottom: 16 }}>
           • Free tier: No credit card required
-          <br />• Pro tier: $9.99/month, billed monthly
-          <br />• Clinical tier: $29.99/month, billed monthly
+          <br />• Pro tier: $4.99/month, billed monthly
+          <br />• Clinical tier: $9.99/month, billed monthly
           <br />• Cancel anytime, no refunds for partial months
           <br />• Processed securely through Stripe
         </p>

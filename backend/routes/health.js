@@ -742,6 +742,12 @@ router.put('/goals', authMiddleware, (req, res) => {
     : toNumber(current.target_weight_kg, null);
   const target_muscle_gain_kg = toNumber(current.target_muscle_gain_kg, 0);
   const target_date = current.target_date || '';
+
+  // BUG-03 fix: Validate target_date format and validity
+  if (target_date && (!/^\d{4}-\d{2}-\d{2}$/.test(target_date) || isNaN(Date.parse(target_date)))) {
+    return res.status(400).json({ error: 'target_date must be a valid date in YYYY-MM-DD format' });
+  }
+
   const target_summary = current.target_summary || '';
   const cal = Math.round(toNumber(current.cal, DEFAULT_GOALS.cal));
   const protein_g = toNumber(current.protein_g, DEFAULT_GOALS.protein_g);

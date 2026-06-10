@@ -456,10 +456,11 @@ export default function Goals() {
     ? Math.max(0, Math.round((new Date(goals.target_date) - new Date()) / 86400000))
     : null
 
-  // Expected weight today based on linear plan
-  const weeksRemaining = weightGap > 0.1
-    ? Math.ceil(weightGap / Math.max(Number(recommendation.target.weekly_rate_kg) || 0.1, 0.1))
-    : 0
+  // BUG-07 fix: Calculate weeks from target_date, not from recalculated weight gap
+  // This ensures the timeline shown matches the original preview (e.g., 8 weeks, not 5)
+  const weeksRemaining = goals.target_date
+    ? Math.max(0, Math.ceil(daysRemaining / 7))
+    : (weightGap > 0.1 ? Math.ceil(weightGap / Math.max(Number(recommendation.target.weekly_rate_kg) || 0.1, 0.1)) : 0)
 
   // On-track: compare current weight to expected weight at this point in time
   // Works for ANY goal type that has a weight target (glucose, fat_loss, gain, muscle, maintain)
