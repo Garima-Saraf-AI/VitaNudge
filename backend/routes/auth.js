@@ -101,8 +101,12 @@ router.post('/register', async (req, res) => {
     const user = db.prepare(`SELECT ${USER_SELECT} FROM users WHERE id = ?`).get(userId);
     res.status(201).json({ token, user });
   } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'Registration failed' });
+    console.error('[register] Registration error:', e.message, e.stack);
+    // Send detailed error in development, generic in production
+    const errorMsg = process.env.NODE_ENV === 'development'
+      ? `Registration failed: ${e.message}`
+      : 'Registration failed. Please try again or contact support.';
+    res.status(500).json({ error: errorMsg });
   }
 });
 

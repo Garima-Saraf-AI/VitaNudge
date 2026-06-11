@@ -21,6 +21,8 @@ export default function Register() {
       const errorMsg = e.error || e.message || 'Registration failed. Please try again.'
       setErr(errorMsg)
       console.error('Registration error:', e)
+      // Scroll to top to ensure error is visible
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } finally {
       setLoading(false)
     }

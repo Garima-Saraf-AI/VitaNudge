@@ -20,6 +20,8 @@ export default function Login() {
       const errorMsg = e.error || e.message || 'Login failed. Please check your credentials.'
       setErr(errorMsg)
       console.error('Login error:', e)
+      // Scroll to top to ensure error is visible
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } finally {
       setLoading(false)
     }
