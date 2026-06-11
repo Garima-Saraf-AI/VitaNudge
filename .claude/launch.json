@@ -2,18 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "backend",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["server.js"],
-      "cwd": "/Users/uditgupta/Documents/Nutrient project/nutritrack/backend",
-      "port": 5001
-    },
-    {
-      "name": "frontend",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--", "--port", "3000"],
-      "cwd": "/Users/uditgupta/Documents/Nutrient project/nutritrack/frontend",
-      "port": 3000
+      "name": "production",
+      "url": "https://vitanudge.onrender.com",
+      "type": "external"
     }
   ]
 }

@@ -115,10 +115,10 @@ router.post('/login', async (req, res) => {
 
     const db = getDb();
     const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email.toLowerCase());
-    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!user) return res.status(401).json({ error: 'No account found with this email. Please create an account first.' });
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ error: 'Invalid credentials' });
+    if (!match) return res.status(401).json({ error: 'Incorrect password. Please try again.' });
 
     const token = signToken(user.id);
     const { password: _, ...safeUser } = user;
