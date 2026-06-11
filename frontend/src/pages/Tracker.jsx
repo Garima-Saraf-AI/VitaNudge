@@ -261,6 +261,7 @@ function CopyYesterdayModal({
   targetDate,
   logs,
   selectedIds,
+  destinationMeals,
   busy,
   onToggleItem,
   onToggleMeal,
@@ -268,6 +269,7 @@ function CopyYesterdayModal({
   onClear,
   onCancel,
   onConfirm,
+  onSetDestinationMeal,
 }) {
   const allEntries = mealLogsToList(logs)
   const selectedCount = allEntries.filter(entry => selectedIds.has(entry.id)).length
@@ -278,7 +280,7 @@ function CopyYesterdayModal({
         <div className="ingredient-modal-head">
           <div>
             <div className="modal-title" id="copy-meals-title">Copy yesterday's meals</div>
-            <div className="modal-sub">Choose which meals and foods from {shortDate(sourceDate)} should copy into {shortDate(targetDate)}.</div>
+            <div className="modal-sub">Choose which meals to copy from {shortDate(sourceDate)} and where they should go on {shortDate(targetDate)}.</div>
           </div>
           <button className="modal-close-btn" type="button" aria-label="Close copy meals" onClick={onCancel}>&times;</button>
         </div>
@@ -314,6 +316,24 @@ function CopyYesterdayModal({
                         <em>{entry.amt_label || `${entry.qty}${entry.unit || ''}`}</em>
                       </span>
                       <span className="copy-item-macros">{Math.round(entry.cal || 0)} kcal · P {r1(entry.protein_g)}g</span>
+                      <select
+                        value={destinationMeals[entry.id] || meal.id}
+                        onChange={(e) => onSetDestinationMeal(entry.id, e.target.value)}
+                        style={{
+                          marginLeft: 8,
+                          padding: '4px 8px',
+                          fontSize: 11,
+                          border: '1px solid var(--border2)',
+                          borderRadius: 'var(--rs)',
+                          background: 'var(--surface)',
+                          color: 'var(--text)',
+                        }}
+                        disabled={!selectedIds.has(entry.id)}
+                      >
+                        {MEALS.map(m => (
+                          <option key={m.id} value={m.id}>→ {m.label}</option>
+                        ))}
+                      </select>
                     </label>
                   ))}
                 </div>
@@ -347,10 +367,12 @@ export default function Tracker() {
   const [err,       setErr]       = useState('')
   const [copyReview, setCopyReview] = useState(null)
   const [copySelectedIds, setCopySelectedIds] = useState(new Set())
+  const [copyDestinationMeals, setCopyDestinationMeals] = useState({}) // { entryId: destinationMealType }
   const [copyBusy, setCopyBusy] = useState(false)
   const [goalData, setGoalData] = useState(null)
   const [latestWeight, setLatestWeight] = useState(null)
   const [firstWeight, setFirstWeight] = useState(null)
+  const [showProfileReminder, setShowProfileReminder] = useState(false)
 
   useEffect(() => { api.get('/foods').then(d => setFoods(d.foods)) }, [])
 
@@ -382,6 +404,11 @@ export default function Tracker() {
   async function addEntry(data) {
     await api.post('/meals', { ...data, log_date: date })
     load()
+    // Check if profile is incomplete and show reminder
+    const profileIncomplete = !user?.age || !user?.weight_kg || !user?.height_cm || !user?.gender
+    if (profileIncomplete && totalEntries >= 0) { // Show after first food logged
+      setShowProfileReminder(true)
+    }
   }
 
   function addFoodToList(food) {
@@ -453,6 +480,10 @@ export default function Tracker() {
     setCopySelectedIds(new Set())
   }
 
+  function setDestinationMeal(entryId, mealType) {
+    setCopyDestinationMeals(prev => ({ ...prev, [entryId]: mealType }))
+  }
+
   async function confirmCopyYesterday() {
     if (!copyReview || copySelectedIds.size === 0) return
     setMsg('')
@@ -463,11 +494,13 @@ export default function Tracker() {
         date: copyReview.targetDate,
         source_date: copyReview.sourceDate,
         entry_ids: [...copySelectedIds],
+        destination_meals: copyDestinationMeals, // Pass destination meal mapping
       })
       setMsg(`Copied ${data.copied.length} item(s) from ${shortDate(data.source_date)}`)
       setTimeout(() => setMsg(''), 2500)
       setCopyReview(null)
       setCopySelectedIds(new Set())
+      setCopyDestinationMeals({})
       load()
     } catch (e) {
       setErr(e.error || 'Could not copy selected meals')
@@ -649,7 +682,7 @@ export default function Tracker() {
             </p>
           )}
           <button className="panel-link" type="button" onClick={() => navigate('/goals')}>
-            View goal details
+            Edit goal
           </button>
         </div>
       )}
@@ -692,7 +725,12 @@ export default function Tracker() {
               <button className="btn btn-green" onClick={() => navigate('/scan')}>Scan meal</button>
             )}
             {nextAction.path !== '/coach' && (
-              <button className="btn btn-ghost" onClick={() => navigate('/coach')}>Ask coach</button>
+              <button className="btn btn-ghost" onClick={() => {
+                const goalContext = goalData ? `My goal is ${GOAL_TYPE_LABELS[goalData.goal_type] || 'general health'}${goalData.target_weight_kg ? ` (target: ${goalData.target_weight_kg}kg)` : ''}. ` : '';
+                const macroContext = `Today: ${Math.round(T.cal)}/${G.cal} kcal, ${r1(T.protein_g)}/${G.protein_g}g protein, ${r1(T.carbs_g)}/${G.carbs_g}g carbs. `;
+                const contextQuestion = goalContext + macroContext + 'What should I focus on for my next meal?';
+                navigate('/coach', { state: { question: contextQuestion, source: 'today-dashboard' } });
+              }}>Ask coach</button>
             )}
           </div>
         </div>
@@ -773,14 +811,67 @@ export default function Tracker() {
           targetDate={copyReview.targetDate}
           logs={copyReview.logs}
           selectedIds={copySelectedIds}
+          destinationMeals={copyDestinationMeals}
           busy={copyBusy}
           onToggleItem={toggleCopyItem}
           onToggleMeal={toggleCopyMeal}
           onSelectAll={selectAllCopyItems}
           onClear={clearCopyItems}
-          onCancel={() => setCopyReview(null)}
+          onCancel={() => { setCopyReview(null); setCopyDestinationMeals({}) }}
           onConfirm={confirmCopyYesterday}
+          onSetDestinationMeal={setDestinationMeal}
         />
+      )}
+
+      {showProfileReminder && (
+        <div className="modal-bg" role="presentation">
+          <div className="modal-box" role="dialog" aria-modal="true" style={{ maxWidth: 480 }}>
+            <div className="ingredient-modal-head">
+              <div>
+                <div className="modal-title">Complete your profile for better recommendations</div>
+                <div className="modal-sub">Add your age, weight, height, and gender to get personalized calorie and macro targets.</div>
+              </div>
+              <button className="modal-close-btn" type="button" aria-label="Close reminder" onClick={() => setShowProfileReminder(false)}>&times;</button>
+            </div>
+            <div style={{ padding: '20px 24px' }}>
+              <div style={{
+                padding: 16,
+                background: 'var(--green-l)',
+                border: '1px solid var(--green-b)',
+                borderRadius: 14,
+                marginBottom: 16
+              }}>
+                <p style={{ fontSize: 13, margin: 0, color: 'var(--green)', fontWeight: 600 }}>
+                  <strong style={{ display: 'block', marginBottom: 8 }}>Why complete your profile?</strong>
+                  • Get accurate calorie and macro targets<br />
+                  • Personalized recommendations from AI Coach<br />
+                  • Track progress toward your health goals<br />
+                  • Better meal suggestions and guidance
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button
+                  className="btn btn-ghost"
+                  type="button"
+                  onClick={() => setShowProfileReminder(false)}
+                >
+                  Maybe later
+                </button>
+                <button
+                  className="btn btn-green"
+                  type="button"
+                  onClick={() => {
+                    setShowProfileReminder(false)
+                    navigate('/profile')
+                  }}
+                  style={{ flex: 1 }}
+                >
+                  Complete profile now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       <div className="dashboard-workspace">

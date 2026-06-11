@@ -228,13 +228,14 @@ router.post('/', authMiddleware, (req, res) => {
 
 // POST /api/meals/copy-yesterday — duplicate previous day's selected meals into target date
 router.post('/copy-yesterday', authMiddleware, (req, res) => {
-  const { date, source_date, entry_ids } = req.body;
+  const { date, source_date, entry_ids, destination_meals } = req.body;
   if (!date) return res.status(400).json({ error: 'date is required' });
 
   const targetDate = date;
   const sourceDate = source_date || addDays(targetDate, -1);
   const db = getDb();
   const selectedIds = Array.isArray(entry_ids) ? new Set(entry_ids.map(String)) : null;
+  const destinationMealMap = destination_meals || {}; // { entryId: destinationMealType }
 
   if (selectedIds && selectedIds.size === 0) {
     return res.status(400).json({ error: 'Select at least one meal item to copy', source_date: sourceDate });
@@ -262,12 +263,14 @@ router.post('/copy-yesterday', authMiddleware, (req, res) => {
 
   const copyMany = db.transaction((logs) => logs.map(log => {
     const id = uuidv4();
+    // Use destination meal type if specified, otherwise keep original meal type
+    const mealType = destinationMealMap[log.id] || log.meal_type;
     insert.run(
       id,
       req.userId,
       log.food_id || null,
       log.food_name,
-      log.meal_type,
+      mealType,
       targetDate,
       log.qty,
       log.unit,
