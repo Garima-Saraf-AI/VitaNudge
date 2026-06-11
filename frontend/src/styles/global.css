@@ -3866,6 +3866,8 @@ textarea {
   padding: 28px;
   width: 100%;
   max-width: 430px;
+  max-height: 90vh;
+  overflow-y: auto;
   backdrop-filter: blur(18px);
 }
 .auth-card-pro {
