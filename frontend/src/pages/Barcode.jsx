@@ -12,6 +12,8 @@ export default function Barcode() {
   const [err, setErr] = useState('')
   const [msg, setMsg] = useState('')
   const [showUpgrade, setShowUpgrade] = useState(false)
+  const [editMode, setEditMode] = useState(false)
+  const [editedFood, setEditedFood] = useState(null)
 
   function flash(text) {
     setMsg(text)
@@ -24,10 +26,14 @@ export default function Barcode() {
     setLoading(true)
     setErr('')
     setProduct(null)
+    setEditMode(false)
+    setEditedFood(null)
+    setMsg('') // Clear any previous messages
     try {
       const data = await api.get(`/barcode/${clean}`)
       setBarcode(clean)
       setProduct(data.product)
+      setEditedFood(data.product.food) // Initialize editable copy
     } catch (e) {
       if (e.upgrade_required) { setShowUpgrade(true); return }
       setErr(e.error || 'Product not found')
@@ -56,10 +62,12 @@ export default function Barcode() {
   }
 
   async function saveFood() {
-    if (!product?.food) return
+    if (!editedFood) return
+    setMsg('') // Clear previous messages before saving
     try {
-      await api.post('/foods', product.food)
+      await api.post('/foods', editedFood)
       flash('✅ Saved to library')
+      setEditMode(false) // Exit edit mode after saving
     } catch (e) {
       if (e.status === 409) {
         flash('ℹ️ This food is already in your library')
@@ -71,8 +79,8 @@ export default function Barcode() {
   }
 
   async function logFood() {
-    if (!product?.food) return
-    const f = product.food
+    if (!editedFood) return
+    const f = editedFood
     await api.post('/meals', {
       food_name: f.name,
       meal_type: mealType,
@@ -87,6 +95,7 @@ export default function Barcode() {
       fat_g: f.fat_g,
     })
     flash('Logged to today')
+    setEditMode(false) // Exit edit mode after logging
   }
 
   return (
@@ -124,21 +133,61 @@ export default function Barcode() {
 
       {showUpgrade && <UpgradeModal feature="barcode" onClose={() => setShowUpgrade(false)} />}
 
-      {product && (
+      {product && editedFood && (
         <div className="card">
-          <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+          <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 16 }}>
             {product.image_url && <img src={product.image_url} alt="" style={{ width: 74, height: 74, objectFit: 'cover', borderRadius: 'var(--rs)', border: '1px solid var(--border)' }} />}
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 15, fontWeight: 700 }}>{product.food.name}</div>
-              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 3 }}>{product.brand || 'Open Food Facts'} · per {product.food.base_amount}{product.food.base_unit}</div>
-              <div className="food-pills" style={{ marginTop: 8 }}>
-                <span className="tag tag-k">{product.food.cal}kcal</span>
-                <span className="tag tag-p">P {product.food.protein_g}g</span>
-                <span className="tag tag-f">F {product.food.fiber_g}g</span>
-                <span className="tag tag-c">C {product.food.carbs_g}g</span>
+              {editMode ? (
+                <input
+                  value={editedFood.name}
+                  onChange={e => setEditedFood({ ...editedFood, name: e.target.value })}
+                  style={{ fontSize: 15, fontWeight: 700, width: '100%', padding: '4px 8px', border: '1px solid var(--border)', borderRadius: 'var(--rs)' }}
+                />
+              ) : (
+                <div style={{ fontSize: 15, fontWeight: 700 }}>{editedFood.name}</div>
+              )}
+              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 3 }}>{product.brand || 'Open Food Facts'} · per {editedFood.base_amount}{editedFood.base_unit}</div>
+              {!editMode && (
+                <div className="food-pills" style={{ marginTop: 8 }}>
+                  <span className="tag tag-k">{editedFood.cal}kcal</span>
+                  <span className="tag tag-p">P {editedFood.protein_g}g</span>
+                  <span className="tag tag-f">F {editedFood.fiber_g}g</span>
+                  <span className="tag tag-c">C {editedFood.carbs_g}g</span>
+                </div>
+              )}
+            </div>
+            {!editMode && (
+              <button
+                className="btn btn-ghost btn-compact"
+                onClick={() => setEditMode(true)}
+                style={{ flexShrink: 0 }}
+              >
+                Edit
+              </button>
+            )}
+          </div>
+
+          {editMode && (
+            <div className="form-grid" style={{ marginBottom: 12 }}>
+              <div className="form-group">
+                <label>Calories</label>
+                <input type="number" value={editedFood.cal} onChange={e => setEditedFood({ ...editedFood, cal: parseFloat(e.target.value) || 0 })} />
+              </div>
+              <div className="form-group">
+                <label>Protein (g)</label>
+                <input type="number" value={editedFood.protein_g} onChange={e => setEditedFood({ ...editedFood, protein_g: parseFloat(e.target.value) || 0 })} />
+              </div>
+              <div className="form-group">
+                <label>Fiber (g)</label>
+                <input type="number" value={editedFood.fiber_g} onChange={e => setEditedFood({ ...editedFood, fiber_g: parseFloat(e.target.value) || 0 })} />
+              </div>
+              <div className="form-group">
+                <label>Carbs (g)</label>
+                <input type="number" value={editedFood.carbs_g} onChange={e => setEditedFood({ ...editedFood, carbs_g: parseFloat(e.target.value) || 0 })} />
               </div>
             </div>
-          </div>
+          )}
 
           <div className="form-grid" style={{ marginTop: 12 }}>
             <div className="form-group">
@@ -152,11 +201,14 @@ export default function Barcode() {
             </div>
             <div className="form-group">
               <label>Serving</label>
-              <input value={product.food.serving} readOnly />
+              <input value={editedFood.serving || `${editedFood.base_amount}${editedFood.base_unit}`} readOnly />
             </div>
           </div>
 
           <div style={{ display: 'flex', gap: 8 }}>
+            {editMode && (
+              <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => { setEditMode(false); setEditedFood(product.food); }}>Cancel</button>
+            )}
             <button className="btn btn-ghost" style={{ flex: 1 }} onClick={saveFood}>Save to library</button>
             <button className="btn btn-green" style={{ flex: 1 }} onClick={logFood}>Log today</button>
           </div>

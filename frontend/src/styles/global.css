@@ -1889,7 +1889,7 @@ textarea {
 .profile-toast {
   position: fixed;
   left: 50%;
-  bottom: 80px;
+  top: 90px;
   transform: translateX(-50%);
   z-index: 9999;
   display: grid;
@@ -1974,7 +1974,7 @@ textarea {
 }
 @media (max-width: 860px) {
   .profile-toast {
-    top: 112px;
+    top: 80px;
     min-width: 0;
     grid-template-columns: 30px minmax(0, 1fr);
     max-width: calc(100vw - 32px);

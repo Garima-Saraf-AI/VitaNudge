@@ -69,7 +69,7 @@ export default function Library() {
           <option value="protein">Protein</option>
           <option value="fiber">Fibre</option>
         </select>
-        <button className="btn btn-green" onClick={() => navigate('/scan')}>+ Add food</button>
+        <button className="btn btn-green" onClick={() => navigate('/add-food')}>+ Add food</button>
       </div>
 
       <div className="chip-row">

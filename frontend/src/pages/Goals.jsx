@@ -666,10 +666,10 @@ export default function Goals() {
     })
     setHasPreviewed(true)
     setPlanSaved(false)
-    setTargetsEditable(false)
+    setTargetsEditable(true)  // Allow editing recommended targets immediately
     setWizardStep(PREVIEW_STEP_INDEX)
     setMaxStepReached(PREVIEW_STEP_INDEX)
-    flash('Recommended targets are ready to review.')
+    flash('Recommended targets are ready to review. You can edit any number before saving.')
   }
 
   function updateGoal(key, value) {
