@@ -18,7 +18,9 @@ export default function Register() {
       // New users go to Goals for onboarding setup
       navigate('/goals?setup=1')
     } catch (e) {
-      setErr(e.error || 'Registration failed')
+      const errorMsg = e.error || e.message || 'Registration failed. Please try again.'
+      setErr(errorMsg)
+      console.error('Registration error:', e)
     } finally {
       setLoading(false)
     }
