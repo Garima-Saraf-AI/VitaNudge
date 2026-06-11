@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import api from '../utils/api'
+import AuthFrame from '../components/AuthFrame'
 
 export default function ResetPassword() {
   const navigate = useNavigate()
@@ -39,11 +40,13 @@ export default function ResetPassword() {
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
 
@@ -53,60 +56,71 @@ export default function ResetPassword() {
       navigate('/login?reset=success')
     } catch (err) {
       setError(err.error || 'Failed to reset password. Please try again.')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       setResetting(false)
     }
   }
 
   if (validatingToken) {
     return (
-      <div className="auth-page">
-        <div className="auth-card">
-          <div style={{ textAlign: 'center', padding: 40 }}>
-            <div style={{ fontSize: 32, marginBottom: 16 }}>⏳</div>
-            <p style={{ color: 'var(--muted)' }}>Validating reset link...</p>
-          </div>
+      <AuthFrame
+        eyebrow="Password Reset"
+        title="Validating Reset Link"
+        subtitle="Please wait while we verify your reset link..."
+        note="This should only take a moment."
+        footer={null}
+      >
+        <div style={{ textAlign: 'center', padding: 40 }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>⏳</div>
+          <p style={{ color: 'var(--muted)', fontWeight: 600 }}>Validating reset link...</p>
         </div>
-      </div>
+      </AuthFrame>
     )
   }
 
   if (!tokenValid) {
     return (
-      <div className="auth-page">
-        <div className="auth-card">
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
-            <h2 style={{ marginBottom: 16 }}>Invalid Reset Link</h2>
-            <p style={{ color: 'var(--muted)', marginBottom: 24 }}>
-              {error || 'This password reset link has expired or is invalid.'}
-            </p>
-            <Link to="/forgot-password" className="btn btn-green" style={{ width: '100%' }}>
-              Request New Reset Link
-            </Link>
-            <Link to="/login" style={{ display: 'block', marginTop: 16, color: 'var(--green)' }}>
-              Back to Login
-            </Link>
-          </div>
+      <AuthFrame
+        eyebrow="Password Reset"
+        title="Invalid Reset Link"
+        subtitle={error || 'This password reset link has expired or is invalid.'}
+        note="Reset links are valid for 1 hour after being sent."
+        footer={(
+          <p className="auth-switch">
+            <Link to="/login">← Back to Login</Link>
+          </p>
+        )}
+      >
+        <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <div style={{ fontSize: 64, marginBottom: 16 }}>⚠️</div>
         </div>
-      </div>
+        <Link to="/forgot-password" className="btn btn-green btn-full">
+          Request New Reset Link
+        </Link>
+      </AuthFrame>
     )
   }
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h1>Create New Password</h1>
-        <p style={{ color: 'var(--muted)', marginBottom: 24 }}>
-          Enter your new password below.
+    <AuthFrame
+      eyebrow="Password Reset"
+      title="Create New Password"
+      subtitle="Enter your new password below. Make sure it's at least 6 characters long."
+      note="Choose a strong password to keep your account secure."
+      footer={(
+        <p className="auth-switch">
+          Remember your password? <Link to="/login">Log in</Link>
         </p>
+      )}
+    >
+      {error && (
+        <div className="error-box" style={{ marginBottom: 20 }}>
+          {error}
+        </div>
+      )}
 
-        {error && (
-          <div className="error-box" style={{ marginBottom: 20 }}>
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
+        <div className="form-grid full" style={{ marginBottom: 9 }}>
           <div className="form-group">
             <label htmlFor="password">New Password</label>
             <input
@@ -115,11 +129,14 @@ export default function ResetPassword() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               placeholder="At least 6 characters"
+              autoComplete="new-password"
               required
               autoFocus
             />
           </div>
+        </div>
 
+        <div className="form-grid full" style={{ marginBottom: 16 }}>
           <div className="form-group">
             <label htmlFor="confirm-password">Confirm Password</label>
             <input
@@ -128,26 +145,20 @@ export default function ResetPassword() {
               value={confirmPassword}
               onChange={e => setConfirmPassword(e.target.value)}
               placeholder="Re-enter your password"
+              autoComplete="new-password"
               required
             />
           </div>
-
-          <button
-            type="submit"
-            className="btn btn-green"
-            style={{ width: '100%' }}
-            disabled={resetting}
-          >
-            {resetting ? 'Resetting...' : 'Reset Password'}
-          </button>
-        </form>
-
-        <div style={{ marginTop: 24, textAlign: 'center', fontSize: 14 }}>
-          <Link to="/login" style={{ color: 'var(--green)' }}>
-            ← Back to Login
-          </Link>
         </div>
-      </div>
-    </div>
+
+        <button
+          type="submit"
+          className="btn btn-green btn-full"
+          disabled={resetting}
+        >
+          {resetting ? 'Resetting Password...' : 'Reset Password'}
+        </button>
+      </form>
+    </AuthFrame>
   )
 }
