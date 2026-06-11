@@ -47,19 +47,19 @@ export default function Register() {
           <div className="form-grid full" style={{ marginBottom: 9 }}>
             <div className="form-group">
               <label>Your name</label>
-              <input value={form.name} onChange={set('name')} placeholder="Rahul Sharma" required />
+              <input value={form.name} onChange={set('name')} placeholder="Rahul Sharma" autoComplete="name" required />
             </div>
           </div>
           <div className="form-grid full" style={{ marginBottom: 9 }}>
             <div className="form-group">
               <label>Email</label>
-              <input type="email" value={form.email} onChange={set('email')} placeholder="you@email.com" required />
+              <input type="email" value={form.email} onChange={set('email')} placeholder="you@email.com" autoComplete="email" required />
             </div>
           </div>
           <div className="form-grid full" style={{ marginBottom: 16 }}>
             <div className="form-group">
               <label>Password (min 6 chars)</label>
-              <input type="password" value={form.password} onChange={set('password')} placeholder="Minimum 6 characters" required minLength={6} />
+              <input type="password" value={form.password} onChange={set('password')} placeholder="Minimum 6 characters" autoComplete="new-password" required minLength={6} />
             </div>
           </div>
           <button className="btn btn-green btn-full" type="submit" disabled={loading}>

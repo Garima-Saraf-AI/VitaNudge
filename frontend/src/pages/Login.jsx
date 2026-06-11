@@ -44,13 +44,13 @@ export default function Login() {
           <div className="form-grid full" style={{ marginBottom: 9 }}>
             <div className="form-group">
               <label>Email</label>
-              <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="you@email.com" required />
+              <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="you@email.com" autoComplete="email" required />
             </div>
           </div>
           <div className="form-grid full" style={{ marginBottom: 8 }}>
             <div className="form-group">
               <label>Password</label>
-              <input type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} placeholder="Your password" required />
+              <input type="password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} placeholder="Your password" autoComplete="current-password" required />
             </div>
           </div>
 
