@@ -1,0 +1,2372 @@
+[
+  {
+    "row": 1,
+    "functionality": "VitaNudge Regression Test Cases",
+    "testCase": "",
+    "actual": "",
+    "expected": "",
+    "status": "",
+    "flow": "",
+    "testingDate": ""
+  },
+  {
+    "row": 2,
+    "functionality": "Functionality",
+    "testCase": "Test cases",
+    "actual": "Actual result",
+    "expected": "Expected result",
+    "status": "Status",
+    "flow": "Flow",
+    "testingDate": "Testing date"
+  },
+  {
+    "row": 3,
+    "functionality": "Login & Registration",
+    "testCase": "[Positive] Create temporary QA account",
+    "actual": "Production: a unique QA account was created and redirected to first-time Goals setup.",
+    "expected": "Account is created successfully and the user is signed in.",
+    "status": "Pass",
+    "flow": "Open Register > enter a valid name, unique email, and password > select Create account.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 4,
+    "functionality": "Login & Registration",
+    "testCase": "[Positive] Log in using valid registered credentials",
+    "actual": "Automated backend regression: registered credentials authenticated successfully and returned a valid session.",
+    "expected": "User is authenticated and redirected to the Today dashboard.",
+    "status": "Pass",
+    "flow": "Open Login > enter valid registered email and password > select Continue to dashboard.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 5,
+    "functionality": "Login & Registration",
+    "testCase": "[Negative] Log in with an email that has no account",
+    "actual": "Production: an unregistered email showed a privacy-safe incorrect email/password message and kept Create free account visible.",
+    "expected": "A privacy-safe incorrect email/password message is shown and Create free account remains visible.",
+    "status": "Pass",
+    "flow": "Open Login > enter an unregistered email and any password > submit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 6,
+    "functionality": "Login & Registration",
+    "testCase": "[Negative] Log in with a valid email and incorrect password",
+    "actual": "Automated backend regression: incorrect credentials were rejected without returning account data.",
+    "expected": "Login is rejected without revealing whether the email exists.",
+    "status": "Pass",
+    "flow": "Enter a registered email with an incorrect password > submit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 7,
+    "functionality": "Login & Registration",
+    "testCase": "[Negative] Submit login with empty email and password",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Required-field validation prevents submission.",
+    "status": "Not Tested",
+    "flow": "Open Login > leave both fields empty > submit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 8,
+    "functionality": "Login & Registration",
+    "testCase": "[Negative] Register using an invalid email format",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Email format validation prevents account creation.",
+    "status": "Not Tested",
+    "flow": "Open Register > enter name, invalid email text, and valid password > submit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 9,
+    "functionality": "Login & Registration",
+    "testCase": "[Boundary] Register with a 5-character password",
+    "actual": "Production: a 5-character password was rejected with 'Password must be at least 6 characters'.",
+    "expected": "Registration is blocked because the minimum length is 6 characters.",
+    "status": "Pass",
+    "flow": "Open Register > enter valid name/email > enter 5-character password > submit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 10,
+    "functionality": "Login & Registration",
+    "testCase": "[Boundary] Register with exactly a 6-character password",
+    "actual": "Production: an exact 6-character password was accepted and the account was created.",
+    "expected": "Registration succeeds when all other values are valid.",
+    "status": "Pass",
+    "flow": "Open Register > enter valid name and unique email > enter exactly 6 characters > submit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 11,
+    "functionality": "Login & Registration",
+    "testCase": "[Negative] Register using an email that already exists",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Duplicate account is rejected with a clear message and no duplicate user is created.",
+    "status": "Not Tested",
+    "flow": "Open Register > enter an existing email with valid name/password > submit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 12,
+    "functionality": "Login & Registration",
+    "testCase": "[Edge] Use leading/trailing spaces and uppercase letters in email",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Email is normalized consistently and authentication behaves predictably.",
+    "status": "Not Tested",
+    "flow": "Register or log in using spaces around an uppercase email address.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 13,
+    "functionality": "Login & Registration",
+    "testCase": "[Boundary] Enter maximum practical name and email lengths",
+    "actual": "Not executed in this production QA round.",
+    "expected": "The form remains usable and the API applies documented length validation.",
+    "status": "Not Tested",
+    "flow": "Paste long but valid name/email values near accepted limits > submit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 14,
+    "functionality": "Login & Registration",
+    "testCase": "[Edge] Verify Register page login link on a 390px mobile viewport",
+    "actual": "Production at 390x844: the Register-page Log in link was fully visible at 663-678px in an 844px viewport.",
+    "expected": "Already have an account? Log in is fully visible without scrolling or clipping.",
+    "status": "Pass",
+    "flow": "Open Register on a 390x844 viewport > inspect the bottom of the form.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 15,
+    "functionality": "Login & Registration",
+    "testCase": "[Positive] Request password reset for a registered email",
+    "actual": "Not executed in this production QA round.",
+    "expected": "A neutral confirmation is displayed and reset instructions are sent when configured.",
+    "status": "Not Tested",
+    "flow": "Open Forgot password > enter registered email > submit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 16,
+    "functionality": "Login & Registration",
+    "testCase": "[Negative] Request password reset for an unknown email",
+    "actual": "Not executed in this production QA round.",
+    "expected": "The same neutral confirmation is displayed to prevent account enumeration.",
+    "status": "Not Tested",
+    "flow": "Open Forgot password > enter unknown email > submit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 17,
+    "functionality": "Login & Registration",
+    "testCase": "[Negative] Open a protected page while logged out",
+    "actual": "Not executed in this production QA round.",
+    "expected": "User is redirected to Login and protected data is not shown.",
+    "status": "Not Tested",
+    "flow": "Log out > directly open /goals, /profile, or /report.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 18,
+    "functionality": "Login & Registration",
+    "testCase": "[Positive] Log out from the profile menu",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Session token is cleared and the user returns to Login.",
+    "status": "Not Tested",
+    "flow": "Open username menu > select Log out > revisit a protected URL.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 19,
+    "functionality": "Navigation & Access",
+    "testCase": "[Positive] Navigate through Today, Add Food, Coach, Reports, and Tools",
+    "actual": "Production: Today, Add Food, Coach, Reports, and Tools opened; active states were visible for routed pages.",
+    "expected": "Each destination opens and only the correct navigation item is active.",
+    "status": "Pass",
+    "flow": "Log in > select each primary navigation item in sequence.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 20,
+    "functionality": "Navigation & Access",
+    "testCase": "[Positive] Open a Tools subpage",
+    "actual": "Production: Tools opened its drawer and the Core Body subpage loaded successfully.",
+    "expected": "Tools remains highlighted for Body, Clinical, Medications, Food Library, Recipes, and Templates.",
+    "status": "Pass",
+    "flow": "Open Tools > select each available tool.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 21,
+    "functionality": "Navigation & Access",
+    "testCase": "[Positive] Open Profile, Goals, and My saved recipes from username menu",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Each item opens its own correct page.",
+    "status": "Not Tested",
+    "flow": "Open username menu > select each menu item.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 22,
+    "functionality": "Navigation & Access",
+    "testCase": "[Edge] Close username menu by clicking outside",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Menu closes without navigating or changing data.",
+    "status": "Not Tested",
+    "flow": "Open username menu > click outside the menu.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 23,
+    "functionality": "Navigation & Access",
+    "testCase": "[Edge] Close username menu using Escape",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Menu closes and keyboard focus remains usable.",
+    "status": "Not Tested",
+    "flow": "Open username menu > press Escape.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 24,
+    "functionality": "Navigation & Access",
+    "testCase": "[Positive] Verify legacy URLs redirect correctly",
+    "actual": "Not executed in this production QA round.",
+    "expected": "/barcode, /water, /weight, /glucose, /vitals, and /weekly redirect to their current pages.",
+    "status": "Not Tested",
+    "flow": "Open each legacy URL directly while signed in.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 25,
+    "functionality": "Navigation & Access",
+    "testCase": "[Negative] Open an unknown application route",
+    "actual": "Production: an unknown authenticated route redirected safely to Today.",
+    "expected": "User is safely redirected to Today without a blank screen.",
+    "status": "Pass",
+    "flow": "Open a random unsupported path after the domain.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 26,
+    "functionality": "Navigation & Access",
+    "testCase": "[Edge] Refresh every protected route",
+    "actual": "Not executed in this production QA round.",
+    "expected": "The page restores the authenticated session and current route without redirect loops.",
+    "status": "Not Tested",
+    "flow": "Open each major page > refresh the browser.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 27,
+    "functionality": "Subscription & Tier Access",
+    "testCase": "[Positive] Core user opens included features",
+    "actual": "Production Core account opened Today, Add Food, Body, Profile, Goals, and Reports without an inappropriate paywall.",
+    "expected": "Core features load without an upgrade prompt.",
+    "status": "Pass",
+    "flow": "Use Today, Body, Clinical basic logs, Food Library, profile, goals, and allowed scan quotas.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 28,
+    "functionality": "Subscription & Tier Access",
+    "testCase": "[Negative] Core user opens a Pro-only feature",
+    "actual": "Production Core account opened Medications and received a visible Pro explanation/upgrade screen.",
+    "expected": "A visible upgrade dialog explains the required plan and can be closed.",
+    "status": "Pass",
+    "flow": "Using a Core account, open Medications, Recipes save, Templates, or another gated action.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 29,
+    "functionality": "Subscription & Tier Access",
+    "testCase": "[Positive] Pro user opens all Pro features",
+    "actual": "Blocked: no Pro QA account was available to verify unrestricted Pro access.",
+    "expected": "Pro features work without an upgrade prompt.",
+    "status": "Blocked",
+    "flow": "Sign in as Pro > use recipes, templates, medications, advanced coach, scans, and exports.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 30,
+    "functionality": "Subscription & Tier Access",
+    "testCase": "[Positive] Clinical user opens Clinical-only functionality",
+    "actual": "Blocked: no Clinical QA account was available to verify Clinical-only access.",
+    "expected": "Clinical-specific features open and all lower-tier features remain available.",
+    "status": "Blocked",
+    "flow": "Sign in as Clinical > open Clinical functionality and Pro/Core features.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 31,
+    "functionality": "Subscription & Tier Access",
+    "testCase": "[Boundary] Use the last free label scan and barcode lookup",
+    "actual": "Blocked: production quota counters were not manipulated to the final-use boundary.",
+    "expected": "The final included use succeeds and the counter reaches its exact limit.",
+    "status": "Blocked",
+    "flow": "Set counters to one below the limit > complete one successful lookup/scan.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 32,
+    "functionality": "Subscription & Tier Access",
+    "testCase": "[Boundary] Attempt one scan or barcode lookup beyond the free quota",
+    "actual": "Blocked: production quota counters were not exhausted to avoid consuming live allowances.",
+    "expected": "Operation is blocked before paid usage and the upgrade dialog is shown.",
+    "status": "Blocked",
+    "flow": "Exhaust the free quota > attempt one additional successful operation.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 33,
+    "functionality": "Subscription & Tier Access",
+    "testCase": "[Edge] Subscription expires during an authenticated session",
+    "actual": "Blocked: no expired paid QA subscription was available.",
+    "expected": "The next protected request re-evaluates access and shows a clear upgrade message.",
+    "status": "Blocked",
+    "flow": "Use an expired paid QA account > refresh or call a gated feature.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 34,
+    "functionality": "Today Dashboard",
+    "testCase": "[Positive] Load Today with no meal logs",
+    "actual": "Production fresh account showed current date, zero meals, default macro targets, and a first-action suggestion.",
+    "expected": "Zero-state summary, current date, macro targets, and suggested first action are displayed.",
+    "status": "Pass",
+    "flow": "Sign in with a clean account > open Today.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 35,
+    "functionality": "Today Dashboard",
+    "testCase": "[Positive] Add a food to Breakfast",
+    "actual": "Production: Green apple was selected for Breakfast, but '+ Add' did not create the meal or update dashboard totals after repeated attempts.",
+    "expected": "Meal, calories, protein, fibre, and carbs update immediately.",
+    "status": "Fail",
+    "flow": "Search Breakfast > choose a food > set quantity/unit > Add.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 36,
+    "functionality": "Today Dashboard",
+    "testCase": "[Positive] Add foods to Lunch, Dinner, and Snack",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Each food appears only in the selected meal and totals include all meals.",
+    "status": "Not Tested",
+    "flow": "Repeat food add in Lunch, Dinner, and Snack.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 37,
+    "functionality": "Today Dashboard",
+    "testCase": "[Negative] Try to add food without selecting a search result",
+    "actual": "Not executed in this production QA round.",
+    "expected": "No meal entry is created.",
+    "status": "Not Tested",
+    "flow": "Type unmatched text in a meal search without selecting a food > attempt Add.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 38,
+    "functionality": "Today Dashboard",
+    "testCase": "[Boundary] Add the minimum allowed positive quantity",
+    "actual": "Not executed in this production QA round.",
+    "expected": "A small positive quantity is accepted and macros scale correctly.",
+    "status": "Not Tested",
+    "flow": "Select food > enter minimum supported quantity > Add.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 39,
+    "functionality": "Today Dashboard",
+    "testCase": "[Boundary] Enter zero quantity",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Entry is blocked and no zero-value meal is created.",
+    "status": "Not Tested",
+    "flow": "Select food > set quantity to 0 > attempt Add.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 40,
+    "functionality": "Today Dashboard",
+    "testCase": "[Negative] Enter a negative quantity",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Validation rejects the value and no entry is created.",
+    "status": "Not Tested",
+    "flow": "Select food > enter a negative quantity > attempt Add.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 41,
+    "functionality": "Today Dashboard",
+    "testCase": "[Edge] Enter a very large quantity",
+    "actual": "Not executed in this production QA round.",
+    "expected": "The app either validates the maximum or saves without overflow/NaN values.",
+    "status": "Not Tested",
+    "flow": "Select food > enter an unusually large numeric quantity > Add.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 42,
+    "functionality": "Today Dashboard",
+    "testCase": "[Positive] Edit quantity and unit of a logged meal",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "The entry and dashboard totals recalculate and persist after refresh.",
+    "status": "Not Tested",
+    "flow": "Log food > select Edit > change quantity/unit > Save > refresh.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 43,
+    "functionality": "Today Dashboard",
+    "testCase": "[Negative] Edit a logged meal with zero or invalid quantity",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Save is blocked and the original log remains unchanged.",
+    "status": "Not Tested",
+    "flow": "Edit a meal > enter zero, negative, or non-numeric quantity > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 44,
+    "functionality": "Today Dashboard",
+    "testCase": "[Positive] Delete a logged meal entry",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Entry is removed and all summary values recalculate.",
+    "status": "Not Tested",
+    "flow": "Log a food > select Delete > confirm if prompted.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 45,
+    "functionality": "Today Dashboard",
+    "testCase": "[Positive] Navigate to a previous date",
+    "actual": "Not executed in this production QA round.",
+    "expected": "The selected date and only that date's meal logs are displayed.",
+    "status": "Not Tested",
+    "flow": "Select the previous-day arrow on Today.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 46,
+    "functionality": "Today Dashboard",
+    "testCase": "[Boundary] Attempt to navigate beyond today",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Next-day arrow is disabled and future dates cannot be selected.",
+    "status": "Not Tested",
+    "flow": "Open Today > inspect/select the forward arrow.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 47,
+    "functionality": "Today Dashboard",
+    "testCase": "[Edge] Refresh after selecting a historical date",
+    "actual": "Not executed in this production QA round.",
+    "expected": "App returns to its documented default date without corrupting logs.",
+    "status": "Not Tested",
+    "flow": "Open a previous date > refresh.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 48,
+    "functionality": "Today Dashboard",
+    "testCase": "[Positive] Show incomplete-profile reminder after the first food is added",
+    "actual": "Blocked by the failed Today meal-add workflow; the first-food reminder could not be triggered.",
+    "expected": "A centered, fully visible profile reminder opens above every sticky header.",
+    "status": "Blocked",
+    "flow": "Use an incomplete profile > add the first food on Today.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 49,
+    "functionality": "Today Dashboard",
+    "testCase": "[Edge] Dismiss the profile reminder with Maybe later",
+    "actual": "Blocked by the failed Today meal-add workflow; the reminder could not be triggered.",
+    "expected": "Reminder closes and the newly logged food remains saved.",
+    "status": "Blocked",
+    "flow": "Trigger reminder > select Maybe later.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 50,
+    "functionality": "Today Dashboard",
+    "testCase": "[Positive] Open Complete profile now from the reminder",
+    "actual": "Blocked by the failed Today meal-add workflow; the reminder could not be triggered.",
+    "expected": "Reminder closes and Profile opens.",
+    "status": "Blocked",
+    "flow": "Trigger reminder > select Complete profile now.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 51,
+    "functionality": "Today Dashboard",
+    "testCase": "[Positive] Open Coach from the suggested next action",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Coach opens with the recommendation question prefilled from current macro gaps.",
+    "status": "Not Tested",
+    "flow": "Create a macro gap on Today > select Find options or Ask coach.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 52,
+    "functionality": "Today Dashboard",
+    "testCase": "[Edge] Dashboard totals exceed a target",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Progress remains readable, over-target messaging appears, and values do not cap incorrectly.",
+    "status": "Not Tested",
+    "flow": "Log enough food to exceed calories or carbs > inspect summary.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 53,
+    "functionality": "Today Dashboard",
+    "testCase": "[Data Integrity] Saved goal targets appear on Today",
+    "actual": "Production: Goals saved 2300 kcal / 145g protein / 110g carbs, but Today still showed 1700 / 110g / 150g.",
+    "expected": "Today uses the latest saved calories, protein, fibre, and carbs targets.",
+    "status": "Fail",
+    "flow": "Save a goal plan > return to Today > compare all targets.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 54,
+    "functionality": "Copy Yesterday",
+    "testCase": "[Positive] Open Copy yesterday when yesterday has logs",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Review dialog lists yesterday's meals and items.",
+    "status": "Not Tested",
+    "flow": "Create yesterday logs > return to Today > select Copy yesterday.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 55,
+    "functionality": "Copy Yesterday",
+    "testCase": "[Positive] Change an item's destination meal before copying",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Each selected item can be assigned to Breakfast, Lunch, Dinner, or Snack.",
+    "status": "Not Tested",
+    "flow": "Open Copy yesterday > change a Dinner item destination to Lunch.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 56,
+    "functionality": "Copy Yesterday",
+    "testCase": "[Positive] Copy only selected food items",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Only checked items are copied and unselected items remain absent.",
+    "status": "Not Tested",
+    "flow": "Open review > clear/select individual items > confirm copy.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 57,
+    "functionality": "Copy Yesterday",
+    "testCase": "[Negative] Confirm copy with no selected items",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Confirm action is disabled or a clear validation message is shown.",
+    "status": "Not Tested",
+    "flow": "Open review > Clear > attempt confirm.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 58,
+    "functionality": "Copy Yesterday",
+    "testCase": "[Edge] Copy when yesterday has no meals",
+    "actual": "Not executed in this production QA round.",
+    "expected": "A clear no-meals message is shown and no duplicate data is created.",
+    "status": "Not Tested",
+    "flow": "Use an account with no previous-day logs > select Copy yesterday.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 59,
+    "functionality": "Copy Yesterday",
+    "testCase": "[Edge] Attempt to copy the same items twice",
+    "actual": "Not executed in this production QA round.",
+    "expected": "App warns about duplicates or performs the documented behavior consistently.",
+    "status": "Not Tested",
+    "flow": "Copy yesterday once > open Copy yesterday again > copy the same item.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 60,
+    "functionality": "Add Food - Manual",
+    "testCase": "[Positive] Save a manually entered food with complete nutrition",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Food is saved once, confirmation appears, and form values clear.",
+    "status": "Not Tested",
+    "flow": "Open Add Food > Manual add > enter name and all nutrition fields > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 61,
+    "functionality": "Add Food - Manual",
+    "testCase": "[Negative] Save manual food with name only",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Save is blocked with guidance to add nutrition or use AI estimate.",
+    "status": "Not Tested",
+    "flow": "Manual add > enter only food name > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 62,
+    "functionality": "Add Food - Manual",
+    "testCase": "[Negative] Save manual food without a name",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Save is blocked with Food name is required.",
+    "status": "Not Tested",
+    "flow": "Manual add > fill nutrition but leave name empty > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 63,
+    "functionality": "Add Food - Manual",
+    "testCase": "[Boundary] Save nutrition values equal to zero",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Zero is accepted where nutritionally valid and values persist as zero.",
+    "status": "Not Tested",
+    "flow": "Enter complete food with one or more valid zero nutrient values > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 64,
+    "functionality": "Add Food - Manual",
+    "testCase": "[Negative] Enter negative nutrition values",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Validation rejects negative calories or macros.",
+    "status": "Not Tested",
+    "flow": "Enter a negative value in each nutrition field > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 65,
+    "functionality": "Add Food - Manual",
+    "testCase": "[Edge] Enter decimal nutrition values",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Decimals save and display without unwanted rounding or precision errors.",
+    "status": "Not Tested",
+    "flow": "Enter decimal calories/macros > Save > inspect Library.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 66,
+    "functionality": "Add Food - Manual",
+    "testCase": "[Edge] Enter a duplicate manual food name",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Duplicate is prevented or clearly identified without creating a second record.",
+    "status": "Not Tested",
+    "flow": "Save a food > repeat with the same normalized name.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 67,
+    "functionality": "Add Food - AI Estimate",
+    "testCase": "[Positive] Estimate nutrition using food name",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Estimated serving and complete nutrition are shown for review.",
+    "status": "Not Tested",
+    "flow": "Open AI estimate > enter a recognizable food and portion hint > Extract nutrition.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 68,
+    "functionality": "Add Food - AI Estimate",
+    "testCase": "[Negative] Estimate with an empty food name",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Request is blocked with Enter a food name first.",
+    "status": "Not Tested",
+    "flow": "Open AI estimate > leave name empty > Extract nutrition.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 69,
+    "functionality": "Add Food - AI Estimate",
+    "testCase": "[Edge] Estimate an uncommon or misspelled food",
+    "actual": "Not executed in this production QA round.",
+    "expected": "App returns a cautious estimate or clear failure without fabricating certainty.",
+    "status": "Not Tested",
+    "flow": "Enter an uncommon/misspelled food > Extract nutrition.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 70,
+    "functionality": "Add Food - AI Estimate",
+    "testCase": "[Positive] Edit estimated values before saving",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Manual edit opens with the estimated values populated.",
+    "status": "Not Tested",
+    "flow": "Generate estimate > select Edit values > change values.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 71,
+    "functionality": "Add Food - AI Estimate",
+    "testCase": "[Positive] Save estimated food",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Food saves once, the form clears, and the estimate button resets.",
+    "status": "Not Tested",
+    "flow": "Generate estimate > review > Save to library.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 72,
+    "functionality": "Add Food - AI Estimate",
+    "testCase": "[Negative] Save an estimated duplicate food",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Only the duplicate message is shown and no duplicate row is created.",
+    "status": "Not Tested",
+    "flow": "Estimate a food already in Library > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 73,
+    "functionality": "Barcode",
+    "testCase": "[Positive] Look up a valid supported barcode",
+    "actual": "Production: barcode 3017620422003 returned Nutella with serving and nutrition values.",
+    "expected": "Product name, serving, and nutrition values are displayed.",
+    "status": "Pass",
+    "flow": "Open Add Food > Barcode > enter 3017620422003 > Look up.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 74,
+    "functionality": "Barcode",
+    "testCase": "[Negative] Look up an empty barcode",
+    "actual": "Not executed in this production QA round.",
+    "expected": "No request is sent or a clear barcode-required validation appears.",
+    "status": "Not Tested",
+    "flow": "Leave Barcode number empty > Look up.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 75,
+    "functionality": "Barcode",
+    "testCase": "[Negative] Look up an invalid or unknown barcode",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Product-not-found message appears without stale product data.",
+    "status": "Not Tested",
+    "flow": "Enter an invalid numeric barcode > Look up.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 76,
+    "functionality": "Barcode",
+    "testCase": "[Edge] Paste barcode containing spaces or non-digits",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Input is normalized to digits or rejected clearly.",
+    "status": "Not Tested",
+    "flow": "Paste a formatted barcode string > Look up.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 77,
+    "functionality": "Barcode",
+    "testCase": "[Positive] Review and edit barcode nutrition before saving",
+    "actual": "Production: barcode result offered only Save to library; no Edit values action was available.",
+    "expected": "An Edit values action is available before Save to library.",
+    "status": "Fail",
+    "flow": "Look up a valid barcode > inspect product actions.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 78,
+    "functionality": "Barcode",
+    "testCase": "[Positive] Save a new barcode product",
+    "actual": "Production: a new barcode product saved once, showed confirmation, and cleared the barcode/result fields.",
+    "expected": "One food is created, success appears, and barcode/result fields clear.",
+    "status": "Pass",
+    "flow": "Look up a new barcode > Save to library.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 79,
+    "functionality": "Barcode",
+    "testCase": "[Negative] Save a barcode product already in Library",
+    "actual": "Production duplicate save displayed both 'Saved to library!' and 'This food is already in your library'.",
+    "expected": "Only the duplicate message appears; the previous success message is cleared.",
+    "status": "Fail",
+    "flow": "Save a barcode product > look up the same barcode > Save again.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 80,
+    "functionality": "Barcode",
+    "testCase": "[Boundary] Use the final free barcode lookup",
+    "actual": "Blocked: production barcode quota was not moved to 9/10.",
+    "expected": "Lookup succeeds and usage counter increments exactly once on success.",
+    "status": "Blocked",
+    "flow": "Set free counter to 9/10 > perform one successful lookup.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 81,
+    "functionality": "Barcode",
+    "testCase": "[Edge] Scan barcode photo in a browser without BarcodeDetector",
+    "actual": "Blocked: an unsupported BarcodeDetector browser and barcode image were not available.",
+    "expected": "Fallback message instructs the user to type the barcode.",
+    "status": "Blocked",
+    "flow": "Use an unsupported browser > select Scan photo > choose barcode image.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 82,
+    "functionality": "Label Scanner",
+    "testCase": "[Positive] Upload a clear nutrition label image",
+    "actual": "Blocked: no approved nutrition-label image was supplied for production upload.",
+    "expected": "Image is read and extracted values are displayed.",
+    "status": "Blocked",
+    "flow": "Open Add Food > Label > Choose photo > select a clear label image.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 83,
+    "functionality": "Label Scanner",
+    "testCase": "[Positive] Take a nutrition label photo on mobile",
+    "actual": "Blocked: physical mobile camera access was unavailable.",
+    "expected": "Camera input opens and the captured label is processed.",
+    "status": "Blocked",
+    "flow": "Open Label on a phone > Take photo > capture a clear label.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 84,
+    "functionality": "Label Scanner",
+    "testCase": "[Negative] Upload a non-image file",
+    "actual": "Blocked: file upload automation was unavailable in the in-app production browser.",
+    "expected": "File is rejected with Please choose a valid image file.",
+    "status": "Blocked",
+    "flow": "Choose photo > select a non-image file.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 85,
+    "functionality": "Label Scanner",
+    "testCase": "[Negative] Upload a plate or non-label image",
+    "actual": "Blocked: no approved non-label image was supplied for production upload.",
+    "expected": "App reports that the image is not a nutrition label and does not create a food.",
+    "status": "Blocked",
+    "flow": "Choose photo > upload a meal/plate image.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 86,
+    "functionality": "Label Scanner",
+    "testCase": "[Edge] Upload a blurry or partially cropped label",
+    "actual": "Blocked: no approved blurry/cropped nutrition-label image was supplied.",
+    "expected": "Low-confidence/missing fields are identified for review instead of silently saved.",
+    "status": "Blocked",
+    "flow": "Upload a blurry or cropped label image.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 87,
+    "functionality": "Label Scanner",
+    "testCase": "[Positive] Edit extracted label values before saving",
+    "actual": "Blocked: a successful label extraction was required before edit controls could be tested.",
+    "expected": "Edit values is available and opens all extracted fields.",
+    "status": "Blocked",
+    "flow": "Scan a valid label > inspect extracted nutrition actions.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 88,
+    "functionality": "Label Scanner",
+    "testCase": "[Negative] Save a scan where product name was not detected",
+    "actual": "Blocked: a successful label extraction was required before missing-name validation could be tested.",
+    "expected": "Save is blocked and only Food name is required is shown.",
+    "status": "Blocked",
+    "flow": "Scan a label with no product name > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 89,
+    "functionality": "Label Scanner",
+    "testCase": "[Negative] Prevent simultaneous success and validation messages",
+    "actual": "Blocked: a successful label extraction was required before message-state validation could be tested.",
+    "expected": "Only the message matching the current save attempt is visible.",
+    "status": "Blocked",
+    "flow": "Complete a save > scan/save an invalid result immediately afterward.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 90,
+    "functionality": "Label Scanner",
+    "testCase": "[Positive] Save reviewed label result",
+    "actual": "Blocked: a successful label extraction was required before save could be tested.",
+    "expected": "Food saves once and image/result/form state clears.",
+    "status": "Blocked",
+    "flow": "Scan label > review values > Save to library.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 91,
+    "functionality": "Label Scanner",
+    "testCase": "[Boundary] Use final free label scan",
+    "actual": "Blocked: production label quota was not moved to its final free scan.",
+    "expected": "Final included scan succeeds and counter reaches 5/5.",
+    "status": "Blocked",
+    "flow": "Set scan usage to 4/5 > process one valid label.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 92,
+    "functionality": "Plate Scan",
+    "testCase": "[Positive] Upload a clear meal photo",
+    "actual": "Blocked: no approved meal photo was supplied for production upload.",
+    "expected": "Foods and estimated quantities are identified without logging automatically.",
+    "status": "Blocked",
+    "flow": "Open Scan > Plate scan > choose a clear meal image > Identify.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 93,
+    "functionality": "Plate Scan",
+    "testCase": "[Negative] Upload a nutrition label in Plate scan",
+    "actual": "Blocked: no approved nutrition-label image was supplied to Plate Scan.",
+    "expected": "App rejects or redirects the image as the wrong scan type.",
+    "status": "Blocked",
+    "flow": "Plate scan > upload a nutrition facts image.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 94,
+    "functionality": "Plate Scan",
+    "testCase": "[Negative] Upload a non-image or corrupted file",
+    "actual": "Blocked: file upload automation was unavailable in the in-app production browser.",
+    "expected": "Upload is rejected and the page remains usable.",
+    "status": "Blocked",
+    "flow": "Choose an unsupported/corrupt file.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 95,
+    "functionality": "Plate Scan",
+    "testCase": "[Edge] Scan a plate containing many foods",
+    "actual": "Blocked: no approved many-food plate image was supplied.",
+    "expected": "Response remains readable and all supported items are listed without parser failure.",
+    "status": "Blocked",
+    "flow": "Upload a complex plate containing 8-10 visible foods.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 96,
+    "functionality": "Plate Scan",
+    "testCase": "[Edge] Scan an unfamiliar food not present in Library",
+    "actual": "Blocked: no approved unfamiliar-food plate image was supplied.",
+    "expected": "Food remains editable and receives an estimate or clear unmatched status.",
+    "status": "Blocked",
+    "flow": "Upload a plate containing an uncommon food.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 97,
+    "functionality": "Plate Scan",
+    "testCase": "[Positive] Edit detected food name",
+    "actual": "Blocked: a successful Plate Scan result was required before editing the food name.",
+    "expected": "Nutrition is recalculated or clearly marked for re-estimation.",
+    "status": "Blocked",
+    "flow": "Identify plate > edit a detected food name.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 98,
+    "functionality": "Plate Scan",
+    "testCase": "[Positive] Edit detected quantity",
+    "actual": "Blocked: a successful Plate Scan result was required before editing quantity.",
+    "expected": "Calories and macros update for the edited quantity.",
+    "status": "Blocked",
+    "flow": "Identify plate > change quantity/unit for one detected item.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 99,
+    "functionality": "Plate Scan",
+    "testCase": "[Positive] Remove an incorrect detected food",
+    "actual": "Blocked: a successful Plate Scan result was required before removing a detected food.",
+    "expected": "Removed item is excluded from saved meal totals.",
+    "status": "Blocked",
+    "flow": "Identify plate > remove one food > save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 100,
+    "functionality": "Plate Scan",
+    "testCase": "[Positive] Choose meal destination and save identified foods",
+    "actual": "Blocked: a successful Plate Scan result was required before saving identified foods.",
+    "expected": "Selected foods are logged once to the selected meal.",
+    "status": "Blocked",
+    "flow": "Identify plate > review/edit > select meal > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 101,
+    "functionality": "Plate Scan",
+    "testCase": "[Negative] Save with no selected detected foods",
+    "actual": "Blocked: a successful Plate Scan result was required before testing empty selection.",
+    "expected": "Save is disabled or validation explains that at least one item is required.",
+    "status": "Blocked",
+    "flow": "Identify plate > deselect/remove every item > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 102,
+    "functionality": "Food Library",
+    "testCase": "[Positive] Load default and user-created foods",
+    "actual": "Automated backend regression: default foods loaded and a user-created food was created and listed.",
+    "expected": "Library displays searchable foods with nutrition and serving information.",
+    "status": "Pass",
+    "flow": "Open Tools > Food Library.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 103,
+    "functionality": "Food Library",
+    "testCase": "[Positive] Search by full and partial food name",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Matching foods are filtered without losing data.",
+    "status": "Not Tested",
+    "flow": "Enter full and partial names in Search foods.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 104,
+    "functionality": "Food Library",
+    "testCase": "[Edge] Search using different letter case and surrounding spaces",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Search is case-insensitive and handles whitespace.",
+    "status": "Not Tested",
+    "flow": "Search for an existing food using uppercase and spaces.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 105,
+    "functionality": "Food Library",
+    "testCase": "[Positive] Sort foods by name, calories, protein, and fibre",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Rows reorder correctly for every sort option.",
+    "status": "Not Tested",
+    "flow": "Select each sort option and inspect order.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 106,
+    "functionality": "Food Library",
+    "testCase": "[Positive] Filter by each category",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Only foods in the selected category are shown.",
+    "status": "Not Tested",
+    "flow": "Select protein, dairy, legume, grain, veg, fruit, snack, beverage, recipe, and custom filters.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 107,
+    "functionality": "Food Library",
+    "testCase": "[Positive] Open Add food from Library",
+    "actual": "Not executed in this production QA round.",
+    "expected": "The app opens /add-food rather than Plate scan.",
+    "status": "Not Tested",
+    "flow": "Open Food Library > select + Add food.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 108,
+    "functionality": "Food Library",
+    "testCase": "[Positive] Edit a user-created food",
+    "actual": "Automated backend regression: a user-created food was updated and the change persisted.",
+    "expected": "Manual edit opens with saved values and Update persists changes.",
+    "status": "Pass",
+    "flow": "Find a custom food > Edit > change nutrition > Update.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 109,
+    "functionality": "Food Library",
+    "testCase": "[Negative] Attempt to edit or delete a protected default food",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Controls are consistently disabled or an explanatory message is shown.",
+    "status": "Not Tested",
+    "flow": "Inspect a seeded food > attempt Edit/Delete.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 110,
+    "functionality": "Food Library",
+    "testCase": "[Positive] Delete a user-created food",
+    "actual": "Automated backend regression: a user-created food was deleted successfully.",
+    "expected": "Food is removed without deleting unrelated meal history.",
+    "status": "Pass",
+    "flow": "Create custom food > Library > Delete > verify logs and list.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 111,
+    "functionality": "Food Library",
+    "testCase": "[Data Integrity] Prevent duplicate foods from manual, AI, barcode, and label sources",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Normalized duplicate detection behaves consistently across all add methods.",
+    "status": "Not Tested",
+    "flow": "Try saving the same name through each Add Food tab.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 112,
+    "functionality": "Goals",
+    "testCase": "[Positive] Complete the seven-step goal wizard",
+    "actual": "Production: completed Goal, Stats, Activity, Pace, Carbs, Diabetes, Preview, and Save across all seven steps.",
+    "expected": "User can select Goal, Stats, Activity, Pace, Carbs, Diabetes, preview, and save.",
+    "status": "Pass",
+    "flow": "Open Goals with completed profile > progress through all steps.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 113,
+    "functionality": "Goals",
+    "testCase": "[Negative] Open Goals with incomplete profile",
+    "actual": "Production: an incomplete profile showed Profile Required, prevented invalid setup, and displayed Complete your profile.",
+    "expected": "The app clearly directs the user to Profile and prevents invalid recommendations.",
+    "status": "Pass",
+    "flow": "Use a new account without age/weight/height > open Goals.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 114,
+    "functionality": "Goals",
+    "testCase": "[Negative] Try to continue from Stats with incomplete profile",
+    "actual": "Production: incomplete-profile Goals now provides a visible Complete your profile action instead of a dead-end Stats step.",
+    "expected": "Next is disabled and a visible Complete profile action is provided.",
+    "status": "Pass",
+    "flow": "Use incomplete profile > Goals > move to Stats.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 115,
+    "functionality": "Goals",
+    "testCase": "[Boundary] Enter minimum supported age, weight, and height",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Values at the documented minimum are accepted and produce finite recommendations.",
+    "status": "Not Tested",
+    "flow": "At Stats, enter minimum valid values > continue.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 116,
+    "functionality": "Goals",
+    "testCase": "[Boundary] Enter maximum supported age, weight, and height",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Values at the documented maximum are accepted without overflow.",
+    "status": "Not Tested",
+    "flow": "At Stats, enter maximum valid values > continue.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 117,
+    "functionality": "Goals",
+    "testCase": "[Negative] Enter values below or above allowed profile ranges",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Next/save is blocked with field-specific validation.",
+    "status": "Not Tested",
+    "flow": "Enter out-of-range age, weight, or height.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 118,
+    "functionality": "Goals",
+    "testCase": "[Positive] Preview fat-loss recommendation",
+    "actual": "Automated frontend goal test: fat-loss BMR/TDEE deficit, macros, target weight, and date calculations passed.",
+    "expected": "Calories use BMR/TDEE deficit; target weight/date and macros are visible.",
+    "status": "Pass",
+    "flow": "Choose Reduce weight > complete wizard > Preview.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 119,
+    "functionality": "Goals",
+    "testCase": "[Positive] Preview muscle-build recommendation",
+    "actual": "Automated frontend goal test: muscle-build surplus, protein, lean-mass target, and timeline calculations passed.",
+    "expected": "Calorie surplus, protein, lean-mass target, and timeline are non-zero and sensible.",
+    "status": "Pass",
+    "flow": "Choose Build muscle > complete wizard > Preview.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 120,
+    "functionality": "Goals",
+    "testCase": "[Positive] Preview weight-gain, maintenance, and glucose-control plans",
+    "actual": "Automated frontend goal tests passed weight-gain, maintenance, and glucose-control calculations; glucose-control preview was also verified live.",
+    "expected": "Each goal applies its documented adjustment and displays a complete plan.",
+    "status": "Pass",
+    "flow": "Repeat the wizard for each remaining goal type.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 121,
+    "functionality": "Goals",
+    "testCase": "[Edge] Choose aggressive pace with diabetes-focused goal",
+    "actual": "Production: Improve glucose control plus Aggressive pace displayed the glucose-safety warning.",
+    "expected": "A glucose safety warning appears and Steady is recommended.",
+    "status": "Pass",
+    "flow": "Choose Improve glucose control + aggressive pace + diabetic status.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 122,
+    "functionality": "Goals",
+    "testCase": "[Positive] Edit recommended target values in Preview",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Editable targets accept valid values and show contextual guidance.",
+    "status": "Not Tested",
+    "flow": "Preview plan > change calories, macros, water, date, or target weight.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 123,
+    "functionality": "Goals",
+    "testCase": "[Negative] Enter zero, negative, or unrealistic edited targets",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Save is blocked or a clear warning explains the acceptable range.",
+    "status": "Not Tested",
+    "flow": "Preview plan > enter invalid target values > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 124,
+    "functionality": "Goals",
+    "testCase": "[Positive] Save a goal plan",
+    "actual": "Production: the plan saved and collapsed to a summary, but Today did not use the newly saved targets.",
+    "expected": "Goal collapses to a saved summary and Today immediately uses saved targets.",
+    "status": "Fail",
+    "flow": "Preview plan > Save changes > open Today.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 125,
+    "functionality": "Goals",
+    "testCase": "[Positive] Modify an existing saved goal",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Modify goal opens Preview with editable saved values and Save changes persists updates.",
+    "status": "Not Tested",
+    "flow": "Save a plan > return to Goals > select Modify goal.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 126,
+    "functionality": "Goals",
+    "testCase": "[Positive] Delete an existing goal",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Confirmation appears and the goal is removed without deleting health logs.",
+    "status": "Not Tested",
+    "flow": "Save a goal > Delete goal > confirm.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 127,
+    "functionality": "Goals",
+    "testCase": "[Edge] Trigger recalculation after weight changes by 2kg or more",
+    "actual": "Not executed in this production QA round.",
+    "expected": "A recalculation prompt appears and can apply the latest weight.",
+    "status": "Not Tested",
+    "flow": "Save goal > log weight differing by at least 2kg > open Goals.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 128,
+    "functionality": "Goals",
+    "testCase": "[Data Integrity] Compare saved goal targets across Goals, Today, Coach, and Reports",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Every page uses the same latest target values.",
+    "status": "Not Tested",
+    "flow": "Save unique targets > inspect all consuming pages.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 129,
+    "functionality": "Profile",
+    "testCase": "[Positive] Load saved profile values",
+    "actual": "Production: saved name, locked email, age, gender, weight, height, preference, location, and timezone loaded correctly.",
+    "expected": "Name, locked login email, age, gender, weight, height, preference, location, timezone, and notes display correctly.",
+    "status": "Pass",
+    "flow": "Open Profile after saving profile data.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 130,
+    "functionality": "Profile",
+    "testCase": "[Positive] Save valid profile changes",
+    "actual": "Production: valid profile changes saved once and a visible Profile updated confirmation appeared.",
+    "expected": "Profile updates once and a visible confirmation appears without page jumping.",
+    "status": "Pass",
+    "flow": "Edit profile fields > Save profile.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 131,
+    "functionality": "Profile",
+    "testCase": "[Negative] Attempt to edit login email",
+    "actual": "Production: Login email was disabled and could not be edited.",
+    "expected": "Login email remains disabled and cannot be changed in the form.",
+    "status": "Pass",
+    "flow": "Open Profile > try typing into Login email.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 132,
+    "functionality": "Profile",
+    "testCase": "[Negative] Save invalid name characters",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Name validation rejects unsupported characters with clear guidance.",
+    "status": "Not Tested",
+    "flow": "Enter numbers/symbols outside the supported pattern > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 133,
+    "functionality": "Profile",
+    "testCase": "[Boundary] Save minimum and maximum age, weight, and height",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Boundary values are handled consistently with Goals validation.",
+    "status": "Not Tested",
+    "flow": "Enter documented minimums, save; repeat with maximums.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 134,
+    "functionality": "Profile",
+    "testCase": "[Negative] Save out-of-range age, weight, or height",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Save is blocked and existing profile data remains unchanged.",
+    "status": "Not Tested",
+    "flow": "Enter below-minimum/above-maximum values > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 135,
+    "functionality": "Profile",
+    "testCase": "[Positive] Select Vegan, Vegetarian, and Non-vegetarian preferences",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Selected preference persists and recipe suggestions filter accordingly.",
+    "status": "Not Tested",
+    "flow": "Save each food preference > open Recipes.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 136,
+    "functionality": "Profile",
+    "testCase": "[Positive] Select country, then state, then city",
+    "actual": "Production: United States loaded state options; Illinois loaded city options; Chicago saved successfully.",
+    "expected": "State options depend on country; city options depend on state; placeholders update correctly.",
+    "status": "Pass",
+    "flow": "Choose a country > state > city > Save > reload.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 137,
+    "functionality": "Profile",
+    "testCase": "[Edge] Change country after choosing state and city",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Incompatible state and city values reset.",
+    "status": "Not Tested",
+    "flow": "Select full location > change country.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 138,
+    "functionality": "Profile",
+    "testCase": "[Positive] Save timezone and verify Today date",
+    "actual": "Production: Central Time was saved and the header used the correct Chicago-local date during the test.",
+    "expected": "Header and Today date use the saved timezone.",
+    "status": "Pass",
+    "flow": "Change timezone > Save > compare with local time around midnight.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 139,
+    "functionality": "Profile",
+    "testCase": "[Positive] Enable Sunday health summary",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Preference persists and uses the profile email.",
+    "status": "Not Tested",
+    "flow": "Check Get a health summary delivered every Sunday > Save > reload.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 140,
+    "functionality": "Profile",
+    "testCase": "[Positive] Export account data",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Authorized JSON/CSV export downloads only the current user's data.",
+    "status": "Not Tested",
+    "flow": "Open Profile > Export JSON and Export meals CSV.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 141,
+    "functionality": "Profile",
+    "testCase": "[Negative] Delete account with incorrect confirmation credentials",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Deletion is blocked and account/data remain accessible.",
+    "status": "Not Tested",
+    "flow": "Open Delete Account > enter invalid confirmation > submit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 142,
+    "functionality": "Profile",
+    "testCase": "[Positive] Delete a disposable QA account",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Account and owned data are deleted and future login fails.",
+    "status": "Not Tested",
+    "flow": "Create disposable account > Delete Account > confirm > try login.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 143,
+    "functionality": "Coach",
+    "testCase": "[Negative] Submit Coach with no question",
+    "actual": "Blocked: the Core account shows the Pro upgrade dialog before Coach question validation.",
+    "expected": "A prompt asks the user to enter a question and no empty request is sent.",
+    "status": "Blocked",
+    "flow": "Open Coach > leave question blank > Ask coach.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 144,
+    "functionality": "Coach",
+    "testCase": "[Positive] Ask a general nutrition question",
+    "actual": "Blocked: AI Coach is Pro-only and no Pro QA account was available.",
+    "expected": "Coach returns a useful answer with appropriate non-medical framing.",
+    "status": "Blocked",
+    "flow": "Enter a general question > Ask coach.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 145,
+    "functionality": "Coach",
+    "testCase": "[Positive] Ask about current meal logs",
+    "actual": "Blocked: AI Coach is Pro-only and no Pro QA account was available.",
+    "expected": "Response references the user's actual meal/macro context.",
+    "status": "Blocked",
+    "flow": "Create distinctive logs > ask what to improve today.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 146,
+    "functionality": "Coach",
+    "testCase": "[Positive] Open Coach from Today recommendation",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Prefilled question and source context are preserved.",
+    "status": "Not Tested",
+    "flow": "Select Today recommendation CTA.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 147,
+    "functionality": "Coach",
+    "testCase": "[Positive] Open Coach from saved goal context",
+    "actual": "Blocked: AI Coach is Pro-only and no Pro QA account was available.",
+    "expected": "Question contains the saved goal and relevant targets.",
+    "status": "Blocked",
+    "flow": "Save a goal > Today > Ask coach.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 148,
+    "functionality": "Coach",
+    "testCase": "[Negative] Ask for diagnosis or medication changes",
+    "actual": "Blocked: AI Coach is Pro-only and no Pro QA account was available.",
+    "expected": "Coach avoids diagnosis/prescribing and advises professional care.",
+    "status": "Blocked",
+    "flow": "Ask a high-risk medical question.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 149,
+    "functionality": "Coach",
+    "testCase": "[Edge] Submit a very long question",
+    "actual": "Blocked: AI Coach is Pro-only and no Pro QA account was available.",
+    "expected": "Input is validated or processed without layout/API failure.",
+    "status": "Blocked",
+    "flow": "Paste a long multi-paragraph question near the allowed limit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 150,
+    "functionality": "Coach",
+    "testCase": "[Error Handling] AI provider is unavailable",
+    "actual": "Blocked: provider-failure simulation was not performed against production.",
+    "expected": "A clear retry/fallback message appears and the page remains usable.",
+    "status": "Blocked",
+    "flow": "Simulate provider timeout/failure > submit question.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 151,
+    "functionality": "Recipes",
+    "testCase": "[Positive] Calculate recipe nutrition from ingredients and quantities",
+    "actual": "Blocked: recipe calculation is gated for the Core QA account.",
+    "expected": "Total and per-serving macros recalculate correctly.",
+    "status": "Blocked",
+    "flow": "Open Recipes > name recipe > add ingredients/quantities > set servings.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 152,
+    "functionality": "Recipes",
+    "testCase": "[Negative] Add ingredient without choosing an ingredient or quantity",
+    "actual": "Blocked: recipe calculation is gated for the Core QA account.",
+    "expected": "Add ingredient remains disabled or validation is shown.",
+    "status": "Blocked",
+    "flow": "Leave default ingredient/quantity > attempt Add ingredient.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 153,
+    "functionality": "Recipes",
+    "testCase": "[Boundary] Use one serving",
+    "actual": "Blocked: recipe calculation is gated for the Core QA account.",
+    "expected": "Per-serving macros equal total recipe macros.",
+    "status": "Blocked",
+    "flow": "Build recipe > set Servings to 1.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 154,
+    "functionality": "Recipes",
+    "testCase": "[Boundary] Use a large serving count",
+    "actual": "Blocked: recipe calculation is gated for the Core QA account.",
+    "expected": "Per-serving values remain finite and correctly divided.",
+    "status": "Blocked",
+    "flow": "Build recipe > enter a large valid serving count.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 155,
+    "functionality": "Recipes",
+    "testCase": "[Negative] Use zero or negative servings/ingredient quantity",
+    "actual": "Blocked: recipe calculation is gated for the Core QA account.",
+    "expected": "Save/calculation is blocked and no invalid recipe is created.",
+    "status": "Blocked",
+    "flow": "Enter zero/negative serving or quantity.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 156,
+    "functionality": "Recipes",
+    "testCase": "[Positive] Add Other / add new ingredient manually",
+    "actual": "Blocked: recipe calculation is gated for the Core QA account.",
+    "expected": "Modal blocks the background, saves the ingredient, and returns it to the ingredient selector.",
+    "status": "Blocked",
+    "flow": "Ingredient dropdown > Other > Manual > complete nutrition > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 157,
+    "functionality": "Recipes",
+    "testCase": "[Positive] Add Other ingredient using scan",
+    "actual": "Blocked: recipe scanning requires paid access and an approved image.",
+    "expected": "Scan result can be reviewed and saved as an ingredient.",
+    "status": "Blocked",
+    "flow": "Ingredient dropdown > Other > Scan > process label > review/save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 158,
+    "functionality": "Recipes",
+    "testCase": "[Positive] Save a complete recipe",
+    "actual": "Blocked: recipe saving is gated for the Core QA account.",
+    "expected": "Recipe appears in My saved recipes and can be followed later.",
+    "status": "Blocked",
+    "flow": "Complete recipe name, ingredients, servings, times, and method > Save recipe.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 159,
+    "functionality": "Recipes",
+    "testCase": "[Negative] Save an incomplete recipe",
+    "actual": "Blocked: recipe saving is gated for the Core QA account.",
+    "expected": "Missing name/ingredients/method validation is clear and no partial recipe is saved.",
+    "status": "Blocked",
+    "flow": "Leave required recipe data empty > Save recipe.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 160,
+    "functionality": "Recipes",
+    "testCase": "[Negative] Save a duplicate recipe",
+    "actual": "Blocked: recipe saving is gated for the Core QA account.",
+    "expected": "Duplicate is prevented or marked Already in library.",
+    "status": "Blocked",
+    "flow": "Save a recipe > attempt to save the same recipe again.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 161,
+    "functionality": "Recipes",
+    "testCase": "[Negative] Core user selects Add to library for a suggested recipe",
+    "actual": "Blocked: the recipe suggestion workflow was not reachable with the Core QA account.",
+    "expected": "Upgrade dialog is centered and fully visible above sticky navigation.",
+    "status": "Blocked",
+    "flow": "Use Core account > Recipes > select Add to library on a suggestion.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 162,
+    "functionality": "Recipes",
+    "testCase": "[Positive] Filter suggested recipes by All, Vegan, Veg, and Non-veg",
+    "actual": "Blocked: recipe suggestions are gated for the Core QA account.",
+    "expected": "Cards match the selected filter and profile preference.",
+    "status": "Blocked",
+    "flow": "Select each recipe diet filter.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 163,
+    "functionality": "Recipes",
+    "testCase": "[Positive] Open a saved recipe in My saved recipes",
+    "actual": "Blocked: no paid saved recipe could be created for this workflow.",
+    "expected": "Ingredients, quantities, timing, method, and nutrition are visible.",
+    "status": "Blocked",
+    "flow": "Save a recipe > username menu > My saved recipes > open recipe.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 164,
+    "functionality": "Recipes",
+    "testCase": "[Data Integrity] Saved recipes do not appear in the ingredient list",
+    "actual": "Blocked: no paid saved recipe could be created for this integrity check.",
+    "expected": "Only ingredients/foods appear in ingredient selection.",
+    "status": "Blocked",
+    "flow": "Save a recipe > open new recipe > inspect ingredient dropdown.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 165,
+    "functionality": "Meal Templates",
+    "testCase": "[Positive] Create a template from multiple foods",
+    "actual": "Blocked: Meal Templates are paid and no Pro QA account was available.",
+    "expected": "Template saves with all selected foods and quantities.",
+    "status": "Blocked",
+    "flow": "Open Templates > create template > add foods > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 166,
+    "functionality": "Meal Templates",
+    "testCase": "[Negative] Save template without a name or items",
+    "actual": "Blocked: Meal Templates are paid and no Pro QA account was available.",
+    "expected": "Validation blocks incomplete template.",
+    "status": "Blocked",
+    "flow": "Leave name/items empty > Save template.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 167,
+    "functionality": "Meal Templates",
+    "testCase": "[Positive] Log a saved template",
+    "actual": "Blocked: Meal Templates are paid and no Pro QA account was available.",
+    "expected": "All template items are logged once to the selected meal/date.",
+    "status": "Blocked",
+    "flow": "Open Templates > select template > Log.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 168,
+    "functionality": "Meal Templates",
+    "testCase": "[Data Integrity] Template logging preserves quantities and macros",
+    "actual": "Blocked: Meal Templates are paid and no Pro QA account was available.",
+    "expected": "Logged values match the saved template.",
+    "status": "Blocked",
+    "flow": "Save distinctive quantities > log template > compare Today.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 169,
+    "functionality": "Meal Templates",
+    "testCase": "[Positive] Edit a template",
+    "actual": "Blocked: Meal Templates are paid and no Pro QA account was available.",
+    "expected": "Changes persist without duplicating the template.",
+    "status": "Blocked",
+    "flow": "Open existing template > edit foods/quantities > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 170,
+    "functionality": "Meal Templates",
+    "testCase": "[Positive] Delete a template",
+    "actual": "Blocked: Meal Templates are paid and no Pro QA account was available.",
+    "expected": "Template is removed and previous meal logs remain.",
+    "status": "Blocked",
+    "flow": "Delete a saved template.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 171,
+    "functionality": "Meal Templates",
+    "testCase": "[Boundary] Reach the Core template limit",
+    "actual": "Blocked: Core template-limit state was not available.",
+    "expected": "Allowed templates can be created up to the exact configured limit.",
+    "status": "Blocked",
+    "flow": "Create templates until the Core limit is reached.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 172,
+    "functionality": "Meal Templates",
+    "testCase": "[Boundary] Create one template beyond the Core limit",
+    "actual": "Blocked: Core template-limit state was not available.",
+    "expected": "Upgrade dialog appears and no extra template is saved.",
+    "status": "Blocked",
+    "flow": "At the Core limit > create another template.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 173,
+    "functionality": "Body Tracking",
+    "testCase": "[Positive] Log daily weight",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Weight is saved for the selected date and trend/BMI update.",
+    "status": "Not Tested",
+    "flow": "Tools > Body > Weight > enter valid weight/date > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 174,
+    "functionality": "Body Tracking",
+    "testCase": "[Positive] Edit weight logged for the same date",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Documented replace/update behavior occurs without duplicate daily points.",
+    "status": "Not Tested",
+    "flow": "Log weight for a date > log a different value for the same date.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 175,
+    "functionality": "Body Tracking",
+    "testCase": "[Boundary] Log minimum and maximum allowed weight",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Boundary weights save and chart correctly.",
+    "status": "Not Tested",
+    "flow": "Enter documented minimum; repeat with maximum.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 176,
+    "functionality": "Body Tracking",
+    "testCase": "[Negative] Log zero, negative, or non-numeric weight",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Validation blocks save and chart remains unchanged.",
+    "status": "Not Tested",
+    "flow": "Enter invalid weight > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 177,
+    "functionality": "Body Tracking",
+    "testCase": "[Positive] Log water intake",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Daily hydration total and progress update.",
+    "status": "Not Tested",
+    "flow": "Body > Water > enter valid amount > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 178,
+    "functionality": "Body Tracking",
+    "testCase": "[Boundary] Log very small and large water amounts",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Values follow allowed boundaries without overflow.",
+    "status": "Not Tested",
+    "flow": "Enter boundary hydration amounts.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 179,
+    "functionality": "Body Tracking",
+    "testCase": "[Positive] Log daily steps",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Steps save for the selected date and summary updates.",
+    "status": "Not Tested",
+    "flow": "Body > Steps > enter valid steps > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 180,
+    "functionality": "Body Tracking",
+    "testCase": "[Negative] Log negative steps",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Validation blocks negative steps.",
+    "status": "Not Tested",
+    "flow": "Enter negative steps > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 181,
+    "functionality": "Body Tracking",
+    "testCase": "[Positive] View weight, water, and steps trends",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Charts match stored range data and dates.",
+    "status": "Not Tested",
+    "flow": "Create several dated logs > inspect charts.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 182,
+    "functionality": "Body Tracking",
+    "testCase": "[Edge] View Body with no historical data",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Useful empty state appears and charts do not break.",
+    "status": "Not Tested",
+    "flow": "Open Body with a fresh account.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 183,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Positive] Log fasting glucose",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Value, context, date/time, and trend save correctly.",
+    "status": "Not Tested",
+    "flow": "Tools > Clinical > Glucose > enter valid fasting result > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 184,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Positive] Log post-meal glucose",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Meal timing/context is preserved and chart updates.",
+    "status": "Not Tested",
+    "flow": "Log glucose with post-meal context.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 185,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Boundary] Log glucose at allowed minimum and maximum",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Boundary values save and display without clipping.",
+    "status": "Not Tested",
+    "flow": "Enter minimum; repeat with maximum.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 186,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Negative] Log zero, negative, or non-numeric glucose",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Validation prevents save.",
+    "status": "Not Tested",
+    "flow": "Enter invalid glucose > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 187,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Positive] Log blood pressure and pulse",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Systolic, diastolic, pulse, date, and chart update.",
+    "status": "Not Tested",
+    "flow": "Clinical > Blood pressure > enter valid values > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 188,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Negative] Log diastolic greater than or equal to systolic",
+    "actual": "Not executed in this production QA round.",
+    "expected": "App warns or blocks physiologically invalid input.",
+    "status": "Not Tested",
+    "flow": "Enter systolic lower than/equal to diastolic > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 189,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Boundary] Log BP/pulse at allowed boundaries",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Boundary values behave according to validation rules.",
+    "status": "Not Tested",
+    "flow": "Enter documented min/max systolic, diastolic, and pulse.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 190,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Positive] Log HbA1c",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Quarterly value and trend save correctly.",
+    "status": "Not Tested",
+    "flow": "Clinical > HbA1c > enter valid percentage/date > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 191,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Negative] Log invalid HbA1c percentage",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Out-of-range/negative input is rejected.",
+    "status": "Not Tested",
+    "flow": "Enter invalid HbA1c > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 192,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Positive] Log wellbeing or notes",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Entry persists for the selected date.",
+    "status": "Not Tested",
+    "flow": "Clinical > Wellbeing > enter allowed value/notes > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 193,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Data Integrity] Clinical charts use only current user's records",
+    "actual": "Not executed in this production QA round.",
+    "expected": "No other user's data appears.",
+    "status": "Not Tested",
+    "flow": "Compare two QA accounts with distinctive clinical logs.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 194,
+    "functionality": "Clinical Tracking",
+    "testCase": "[Edge] Open Clinical with no data",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Empty states render without chart errors.",
+    "status": "Not Tested",
+    "flow": "Use fresh account > open Clinical.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 195,
+    "functionality": "Medications",
+    "testCase": "[Positive] Create a medication",
+    "actual": "Blocked: medication management is Pro-only for the available QA account.",
+    "expected": "Medication name, dose, schedule, and start information save.",
+    "status": "Blocked",
+    "flow": "Tools > Medications > add valid medication details > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 196,
+    "functionality": "Medications",
+    "testCase": "[Negative] Save medication without required fields",
+    "actual": "Blocked: medication management is Pro-only for the available QA account.",
+    "expected": "Validation blocks incomplete medication.",
+    "status": "Blocked",
+    "flow": "Leave medication name/dose/schedule empty > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 197,
+    "functionality": "Medications",
+    "testCase": "[Positive] Mark medication taken for today",
+    "actual": "Blocked: medication management is Pro-only for the available QA account.",
+    "expected": "Daily adherence and streak update once.",
+    "status": "Blocked",
+    "flow": "Open medication > mark Taken.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 198,
+    "functionality": "Medications",
+    "testCase": "[Edge] Mark the same medication taken twice",
+    "actual": "Blocked: medication management is Pro-only for the available QA account.",
+    "expected": "Duplicate daily adherence is prevented.",
+    "status": "Blocked",
+    "flow": "Mark Taken > repeat the same action.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 199,
+    "functionality": "Medications",
+    "testCase": "[Positive] Undo or correct today's medication status",
+    "actual": "Blocked: medication management is Pro-only for the available QA account.",
+    "expected": "Documented correction updates adherence consistently.",
+    "status": "Blocked",
+    "flow": "Mark medication > use available correction action.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 200,
+    "functionality": "Medications",
+    "testCase": "[Positive] Edit a medication",
+    "actual": "Blocked: medication management is Pro-only for the available QA account.",
+    "expected": "Updated medication details persist.",
+    "status": "Blocked",
+    "flow": "Open medication > Edit > Save.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 201,
+    "functionality": "Medications",
+    "testCase": "[Positive] Delete a medication",
+    "actual": "Blocked: medication management is Pro-only for the available QA account.",
+    "expected": "Medication is removed with clear handling of historical adherence.",
+    "status": "Blocked",
+    "flow": "Delete medication > confirm.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 202,
+    "functionality": "Medications",
+    "testCase": "[Negative] Core user opens medication logging",
+    "actual": "Production Core account was denied medication logging and shown a clear Pro feature explanation.",
+    "expected": "Visible upgrade prompt appears without exposing paid data.",
+    "status": "Pass",
+    "flow": "Use Core account > Tools > Medications.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 203,
+    "functionality": "Reports",
+    "testCase": "[Positive] Generate a weekly report for a selected week",
+    "actual": "Production: Weekly report loaded the selected current week; backend regression verified weekly aggregation.",
+    "expected": "Report reflects exactly the selected week's meals and health logs.",
+    "status": "Pass",
+    "flow": "Open Reports > Weekly > choose a week.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 204,
+    "functionality": "Reports",
+    "testCase": "[Positive] Generate a monthly report for a selected month",
+    "actual": "Production: Monthly selection changed the month picker, heading, and range; backend regression verified monthly aggregation.",
+    "expected": "Report reflects exactly the selected month and labels it monthly.",
+    "status": "Pass",
+    "flow": "Reports > Monthly > choose month.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 205,
+    "functionality": "Reports",
+    "testCase": "[Positive] Generate a custom-date report",
+    "actual": "Production: editing Custom From/To dates did not refresh the generated report range, which remained at the previous 30-day range.",
+    "expected": "Only records inside the inclusive date range are summarized.",
+    "status": "Fail",
+    "flow": "Reports > Custom > choose From and To dates.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 206,
+    "functionality": "Reports",
+    "testCase": "[Negative] Choose a custom From date after To date",
+    "actual": "Production: From later than To showed no clear validation message and retained the old generated report.",
+    "expected": "Generate is blocked with date-range validation.",
+    "status": "Fail",
+    "flow": "Set From later than To > Generate.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 207,
+    "functionality": "Reports",
+    "testCase": "[Boundary] Generate a one-day custom report",
+    "actual": "Production: setting From and To to the same date did not update the generated report to that day.",
+    "expected": "The selected day is included once and totals are correct.",
+    "status": "Fail",
+    "flow": "Set From and To to the same date.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 208,
+    "functionality": "Reports",
+    "testCase": "[Edge] Generate a report with no data",
+    "actual": "Production: a report with no health logs rendered zero/not-logged states without NaN or broken chart headings.",
+    "expected": "Report shows a clear no-data state and no NaN/empty chart errors.",
+    "status": "Pass",
+    "flow": "Select a period with no logs.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 209,
+    "functionality": "Reports",
+    "testCase": "[Data Integrity] Compare report totals with source logs",
+    "actual": "Automated backend regression verified weekly, monthly, and custom report aggregation against seeded source logs.",
+    "expected": "Meal, glucose, weight, BP, hydration, medication, and adherence totals reconcile.",
+    "status": "Pass",
+    "flow": "Create known data > generate matching report > compare.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 210,
+    "functionality": "Reports",
+    "testCase": "[Positive] Download doctor-ready PDF",
+    "actual": "Blocked: production browser download verification was not available for the PDF.",
+    "expected": "A readable PDF downloads with the selected period and current user data.",
+    "status": "Blocked",
+    "flow": "Generate report > Download PDF > open file.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 211,
+    "functionality": "Reports",
+    "testCase": "[Positive] Send test/weekly summary when email provider is configured",
+    "actual": "Blocked: an external email was not sent during this QA round.",
+    "expected": "Email is delivered to the profile email with correct report period.",
+    "status": "Blocked",
+    "flow": "Enable Sunday summary > trigger configured send/test process.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 212,
+    "functionality": "Reports",
+    "testCase": "[Negative] Send email without provider configuration",
+    "actual": "Blocked: production email configuration was not removed for a negative test.",
+    "expected": "Clear configuration error appears without losing the report.",
+    "status": "Blocked",
+    "flow": "Remove/omit RESEND_API_KEY > attempt send.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 213,
+    "functionality": "Reports",
+    "testCase": "[Edge] Switch from weekly to monthly mode",
+    "actual": "Production: switching Weekly to Monthly updated the picker, 'month' summary label, heading, and date range without stale weekly text.",
+    "expected": "All headings and email/report labels change to monthly; no stale weekly text remains.",
+    "status": "Pass",
+    "flow": "Select Weekly > switch to Monthly > inspect page.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 214,
+    "functionality": "Reports",
+    "testCase": "[Security] Open export/report URL without authentication",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Request is rejected and no health data is returned.",
+    "status": "Not Tested",
+    "flow": "Sign out > call report/export endpoint directly.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 215,
+    "functionality": "Mobile & Responsive UI",
+    "testCase": "[Positive] Use all main pages at 390x844",
+    "actual": "Not executed in this production QA round.",
+    "expected": "No controls, headings, buttons, dialogs, or navigation overlap or clip.",
+    "status": "Not Tested",
+    "flow": "Set mobile viewport > inspect Today, Add Food, Coach, Reports, Tools, Profile, Goals.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 216,
+    "functionality": "Mobile & Responsive UI",
+    "testCase": "[Edge] Rotate between portrait and landscape",
+    "actual": "Blocked: physical device rotation was unavailable.",
+    "expected": "Layout reflows without losing entered form data.",
+    "status": "Blocked",
+    "flow": "Begin entering data > rotate viewport > continue.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 217,
+    "functionality": "Mobile & Responsive UI",
+    "testCase": "[Positive] Use touch targets for tabs, icons, and buttons",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Controls are consistently sized and easy to tap.",
+    "status": "Not Tested",
+    "flow": "Inspect/tap all primary and scan controls on mobile.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 218,
+    "functionality": "Mobile & Responsive UI",
+    "testCase": "[Edge] Open on narrow 320px viewport",
+    "actual": "Partial production check only: Login at 320x700 had no horizontal overflow; other critical pages were not fully inspected.",
+    "expected": "Longest words and buttons remain inside their containers.",
+    "status": "Not Tested",
+    "flow": "Set viewport to 320px width > inspect critical pages.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 219,
+    "functionality": "Browser Compatibility",
+    "testCase": "[Positive] Run core journey in Chrome/Chromium",
+    "actual": "Production Chromium core journey exposed two blockers: Today meal add did not complete and saved Goals did not synchronize to Today.",
+    "expected": "Registration, login, meal logging, goals, and reports work.",
+    "status": "Fail",
+    "flow": "Execute smoke journey in current Chrome/Chromium.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 220,
+    "functionality": "Browser Compatibility",
+    "testCase": "[Positive] Run core journey in iPhone Safari",
+    "actual": "Blocked: no physical or remote iPhone Safari environment was available.",
+    "expected": "Core journey works; camera/file controls use supported fallback.",
+    "status": "Blocked",
+    "flow": "Execute smoke journey on iPhone Safari.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 221,
+    "functionality": "Browser Compatibility",
+    "testCase": "[Positive] Run core journey in Android Chrome",
+    "actual": "Blocked: no physical or remote Android Chrome environment was available.",
+    "expected": "Core journey and responsive navigation work.",
+    "status": "Blocked",
+    "flow": "Execute smoke journey on Android Chrome.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 222,
+    "functionality": "PWA",
+    "testCase": "[Positive] Install app from browser",
+    "actual": "Blocked: the in-app browser does not expose the operating-system PWA install flow.",
+    "expected": "Manifest, icons, name, start URL, theme, and standalone display are correct.",
+    "status": "Blocked",
+    "flow": "Open install-capable browser > install VitaNudge > launch.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 223,
+    "functionality": "PWA",
+    "testCase": "[Edge] Launch installed PWA while offline",
+    "actual": "Blocked: an installed PWA and offline device mode were unavailable.",
+    "expected": "App shows documented offline behavior rather than a blank page.",
+    "status": "Blocked",
+    "flow": "Install PWA > disconnect network > launch.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 224,
+    "functionality": "Security & Data Protection",
+    "testCase": "[Security] Reject API request without token",
+    "actual": "Production API: GET /api/auth/me without Authorization returned 401 and 'No token provided'.",
+    "expected": "Protected endpoint returns 401 and no data.",
+    "status": "Pass",
+    "flow": "Call meals/goals/profile endpoint without Authorization.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 225,
+    "functionality": "Security & Data Protection",
+    "testCase": "[Security] Reject malformed or expired token",
+    "actual": "Production API: a malformed bearer token returned 401 and 'Invalid or expired token'.",
+    "expected": "Request returns 401 without server crash.",
+    "status": "Pass",
+    "flow": "Call protected endpoint with malformed/expired JWT.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 226,
+    "functionality": "Security & Data Protection",
+    "testCase": "[Security] Prevent cross-user record access",
+    "actual": "Not executed in this production QA round.",
+    "expected": "A user cannot read, edit, or delete another user's records by ID.",
+    "status": "Not Tested",
+    "flow": "Create data in Account A > attempt access using Account B.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 227,
+    "functionality": "Security & Data Protection",
+    "testCase": "[Security] Sanitize script content in names and notes",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Content is stored/rendered as text and no script executes.",
+    "status": "Not Tested",
+    "flow": "Enter HTML/script payload in allowed text fields > save/view.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 228,
+    "functionality": "Security & Data Protection",
+    "testCase": "[Security] Verify password is never returned by API",
+    "actual": "Not executed in this production QA round.",
+    "expected": "Auth/profile responses contain no password or hash.",
+    "status": "Not Tested",
+    "flow": "Inspect register, login, and /auth/me responses.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 229,
+    "functionality": "Security & Data Protection",
+    "testCase": "[Security] Verify HTTPS and security headers",
+    "actual": "Production uses HTTPS and returned CSP, HSTS, X-Frame-Options DENY, nosniff, referrer policy, and related security headers.",
+    "expected": "Frontend/API use HTTPS and appropriate Helmet/security headers.",
+    "status": "Pass",
+    "flow": "Inspect production network responses.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 230,
+    "functionality": "Security & Data Protection",
+    "testCase": "[Boundary] Trigger authentication/API rate limit",
+    "actual": "Blocked: production authentication rate limits were not deliberately stressed.",
+    "expected": "Excess attempts receive controlled 429 responses and recover after window.",
+    "status": "Blocked",
+    "flow": "Send repeated invalid login or scan requests to the configured limit.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 231,
+    "functionality": "Integration & Recovery",
+    "testCase": "[Integration] Frontend changes persist after refresh and new session",
+    "actual": "Automated backend CRUD/integration coverage passed, but this complete browser/UI scenario was not executed.",
+    "expected": "Saved profile, goals, foods, logs, and settings reload from API.",
+    "status": "Not Tested",
+    "flow": "Create data > refresh > log out/in > verify.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 232,
+    "functionality": "Integration & Recovery",
+    "testCase": "[Error Handling] Backend is temporarily unavailable",
+    "actual": "Blocked: the production backend was not intentionally disabled.",
+    "expected": "User sees a clear recoverable error; current form data is not unexpectedly lost.",
+    "status": "Blocked",
+    "flow": "Stop/block API > perform save/load > restore API > retry.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 233,
+    "functionality": "Integration & Recovery",
+    "testCase": "[Error Handling] Request times out or network disconnects during save",
+    "actual": "Blocked: production requests were not intentionally disconnected mid-save.",
+    "expected": "App avoids duplicate saves and allows retry.",
+    "status": "Blocked",
+    "flow": "Throttle/drop network during a create request > retry.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 234,
+    "functionality": "Integration & Recovery",
+    "testCase": "[Data Integrity] Concurrent saves do not create unintended duplicates",
+    "actual": "Blocked: simultaneous production writes were not generated without an idempotency test fixture.",
+    "expected": "Idempotent/duplicate controls preserve one intended record.",
+    "status": "Blocked",
+    "flow": "Submit the same save rapidly from two tabs.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 235,
+    "functionality": "Performance",
+    "testCase": "[Performance] Measure initial production page load",
+    "actual": "Frontend build passed, but the main JavaScript chunk was 8.62 MB (2.32 MB gzip); mobile load optimization is recommended before broad launch.",
+    "expected": "Critical UI becomes usable within the agreed launch target on normal mobile network.",
+    "status": "Needs Change",
+    "flow": "Cold-load production with cache disabled > record timings.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 236,
+    "functionality": "Performance",
+    "testCase": "[Performance] Measure plate/label/AI response time",
+    "actual": "Blocked: approved representative scan images were not available.",
+    "expected": "Progress state appears immediately and response completes within agreed service target.",
+    "status": "Blocked",
+    "flow": "Run repeated scans/estimates with representative images/foods.",
+    "testingDate": "12-Jun-2026"
+  },
+  {
+    "row": 237,
+    "functionality": "Performance",
+    "testCase": "[Load] Run concurrent authenticated users",
+    "actual": "Blocked: production load/stress testing requires an approved window and load limits.",
+    "expected": "API stays available, data remains isolated, and error rate stays within target.",
+    "status": "Blocked",
+    "flow": "Execute staged load test against QA/staging with 10, 25, 50+ virtual users.",
+    "testingDate": "12-Jun-2026"
+  }
+]

@@ -265,13 +265,19 @@ export default function Body() {
               <div style={{ maxHeight: 240, overflowY: 'auto' }}>
                 {waterLogs.length === 0
                   ? <div style={{ fontSize: 12, color: 'var(--hint)', fontStyle: 'italic' }}>No entries yet — tap a cup or add ml above.</div>
-                  : [...waterLogs].reverse().map(e => (
-                    <div key={e.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid var(--border)', fontSize: 12 }}>
-                      <span style={{ fontWeight: 700, fontFamily: "'Sora',sans-serif", color: 'var(--text)' }}>{e.ml}ml</span>
-                      <span style={{ color: 'var(--hint)' }}>{new Date(e.logged_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>
-                      <button style={{ border: 'none', background: 'none', color: 'var(--hint)', cursor: 'pointer', fontSize: 13 }} onClick={() => delWater(e.id)}>&#215;</button>
-                    </div>
-                  ))
+                  : [...waterLogs].reverse().map(e => {
+                      const time = e.logged_at ? new Date(e.logged_at.replace(' ', 'T')) : new Date()
+                      const isValid = !isNaN(time.getTime())
+                      return (
+                        <div key={e.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid var(--border)', fontSize: 12 }}>
+                          <span style={{ fontWeight: 700, fontFamily: "'Sora',sans-serif", color: 'var(--text)' }}>{e.ml}ml</span>
+                          <span style={{ color: 'var(--hint)' }}>
+                            {isValid ? time.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : 'Now'}
+                          </span>
+                          <button style={{ border: 'none', background: 'none', color: 'var(--hint)', cursor: 'pointer', fontSize: 13 }} onClick={() => delWater(e.id)}>&#215;</button>
+                        </div>
+                      )
+                    })
                 }
               </div>
             </div>
