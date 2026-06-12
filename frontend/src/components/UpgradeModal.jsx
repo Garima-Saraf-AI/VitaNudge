@@ -1,4 +1,4 @@
-// No imports needed - manual upgrade via email only
+import { useEffect } from 'react'
 
 const PLAN_FEATURES = {
   pro: [
@@ -21,6 +21,10 @@ const PLAN_FEATURES = {
 }
 
 export default function UpgradeModal({ feature, onClose }) {
+  // Scroll to top when modal opens to ensure visibility
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
 
   const featureMessages = {
     scan: "You've used all 5 free scans this month.",
