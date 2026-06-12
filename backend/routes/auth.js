@@ -70,18 +70,15 @@ router.post('/register', async (req, res) => {
     if (!emailRegex.test(email))
       return res.status(400).json({ error: 'Invalid email format' });
 
-    // Password validation
-    if (password.length < 6)
-      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    // Keep the primary requirement in one clear message.
+    if (password.length < 6 || !/[a-zA-Z]/.test(password) || !/[0-9]/.test(password))
+      return res.status(400).json({
+        error: 'Password must be at least 6 characters and include both a letter and a number.'
+      });
     if (password.length > 128)
       return res.status(400).json({ error: 'Password must be less than 128 characters' });
     if (password.includes(' '))
       return res.status(400).json({ error: 'Password cannot contain spaces' });
-    if (!/[a-zA-Z]/.test(password))
-      return res.status(400).json({ error: 'Password must contain at least one letter' });
-    if (!/[0-9]/.test(password))
-      return res.status(400).json({ error: 'Password must contain at least one number' });
-
     // Validate name (same rules as profile update)
     const trimmedName = String(name).trim();
     if (trimmedName.length < 2)

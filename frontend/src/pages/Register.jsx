@@ -22,9 +22,13 @@ export default function Register() {
       return
     }
 
-    // Password validation
-    if (form.password.length < 6) {
-      setErr('Password must be at least 6 characters')
+    // Keep the primary requirement in one clear message.
+    if (
+      form.password.length < 6
+      || !/[a-zA-Z]/.test(form.password)
+      || !/[0-9]/.test(form.password)
+    ) {
+      setErr('Password must be at least 6 characters and include both a letter and a number.')
       setLoading(false)
       return
     }
@@ -38,18 +42,6 @@ export default function Register() {
       setLoading(false)
       return
     }
-    // Check for at least one letter and one number for stronger security
-    if (!/[a-zA-Z]/.test(form.password)) {
-      setErr('Password must contain at least one letter')
-      setLoading(false)
-      return
-    }
-    if (!/[0-9]/.test(form.password)) {
-      setErr('Password must contain at least one number')
-      setLoading(false)
-      return
-    }
-
     try {
       await register(form.name, form.email, form.password)
       // New users go to Goals for onboarding setup
