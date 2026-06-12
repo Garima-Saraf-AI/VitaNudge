@@ -334,7 +334,7 @@ export default function Profile() {
                 try {
                   const d = await api.post('/billing/portal')
                   if (d.portal_url) window.location.href = d.portal_url
-                } catch (e) { flashError(e.error || 'Could not open billing portal') }
+                } catch (e) { alert(e.error || 'Could not open billing portal') }
               }}>
                 Manage billing
               </button>

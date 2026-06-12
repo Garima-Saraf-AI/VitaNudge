@@ -1,6 +1,8 @@
-export default function AuthFrame({ eyebrow, title, subtitle, note, children, footer }) {
+export default function AuthFrame({ eyebrow, title, subtitle, note, children, footer, variant = '' }) {
+  const variantClass = variant ? ` auth-${variant}-page` : ''
+
   return (
-    <div className="auth-page auth-product-page">
+    <div className={`auth-page auth-product-page${variantClass}`}>
       <div className="auth-shell">
         <section className="auth-brand-panel" aria-label="VitaNudge product overview">
           <div className="auth-brand-top">

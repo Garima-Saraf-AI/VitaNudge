@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import AuthFrame from '../components/AuthFrame'
-import StatusToast from '../components/StatusToast'
 
 export default function Register() {
   const { register } = useAuth()
@@ -68,6 +67,7 @@ export default function Register() {
 
   return (
     <AuthFrame
+      variant="register"
       eyebrow="Get started free"
       title="Create your VitaNudge account"
       subtitle="Track meals, health metrics, and get AI-powered insights. Start with our free tier."
@@ -78,7 +78,7 @@ export default function Register() {
         </p>
       )}
     >
-        <StatusToast message={err} tone="error" />
+        {err && <div className="error-box">{err}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-grid full" style={{ marginBottom: 9 }}>
             <div className="form-group">

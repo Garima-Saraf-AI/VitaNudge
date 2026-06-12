@@ -42,7 +42,7 @@ export default function UpgradeModal({ feature, onClose }) {
   }
 
   return (
-    <ModalPortal onClose={onClose}>
+    <ModalPortal onClose={onClose} className="upgrade-modal-bg">
       <div className="modal-box upgrade-modal" role="dialog" aria-modal="true" aria-labelledby="upgrade-title">
         <div className="upgrade-modal-head">
           <div className="upgrade-icon">⚡</div>
