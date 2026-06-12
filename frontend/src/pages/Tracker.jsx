@@ -514,6 +514,12 @@ export default function Tracker() {
 
   const G = summary?.goals  || { cal: 1700, protein_g: 110, fiber_g: 35, carbs_g: 150 }
   const T = summary?.totals || { cal: 0, protein_g: 0, fiber_g: 0, carbs_g: 0 }
+  const profileComplete = Boolean(user?.age && user?.weight_kg && user?.height_cm && user?.gender)
+  const goalPlanConfirmed = Boolean(G.target_weight_kg || G.target_date || G.target_summary)
+  const hasPersonalizedTargets = profileComplete && goalPlanConfirmed
+  const targetLabel = hasPersonalizedTargets ? 'Goal' : 'Starter'
+  const personalizationPath = profileComplete ? '/goals?setup=1' : '/profile'
+  const personalizationAction = profileComplete ? 'Set goals' : 'Complete profile'
   const totalEntries = Object.values(logs).reduce((sum, items) => sum + (items?.length || 0), 0)
   const calProgress = actualPct(T.cal, G.cal)
   const carbsProgress = actualPct(T.carbs_g, G.carbs_g)
@@ -767,13 +773,33 @@ export default function Tracker() {
           </div>
         </div>
 
+        {!loading && !hasPersonalizedTargets && (
+          <div className="starter-target-notice">
+            <div>
+              <strong>Starter estimates</strong>
+              <span>
+                {profileComplete
+                  ? 'Confirm your goal plan to personalize daily targets.'
+                  : 'Complete your profile to calculate targets from your body and goals.'}
+              </span>
+            </div>
+            <button
+              className="btn btn-ghost btn-compact"
+              type="button"
+              onClick={() => navigate(personalizationPath)}
+            >
+              {personalizationAction}
+            </button>
+          </div>
+        )}
+
         <div className="macro-row dashboard-macro-row">
           {macroCards.map(m => (
             <div key={m.key} className={`macro-card ${m.cls}`}>
               <div className="macro-card-top">
                 <div>
                   <div className="lbl">{m.title}</div>
-                  <div className="macro-goal">Goal {m.goal}</div>
+                  <div className="macro-goal">{targetLabel} {m.goal}</div>
                 </div>
                 <span className="macro-pill">{m.percent}%</span>
               </div>

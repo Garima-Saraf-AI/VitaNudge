@@ -1429,6 +1429,39 @@ textarea {
   font-size: 16px;
   line-height: 1.1;
 }
+.starter-target-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -2px 0 10px;
+  padding: 8px 10px;
+  border: 1px solid rgba(47,122,66,.2);
+  border-radius: var(--rs);
+  background: rgba(231,244,234,.58);
+}
+.starter-target-notice > div {
+  min-width: 0;
+}
+.starter-target-notice strong,
+.starter-target-notice span {
+  display: block;
+}
+.starter-target-notice strong {
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 800;
+}
+.starter-target-notice span {
+  margin-top: 1px;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+.starter-target-notice .btn {
+  flex-shrink: 0;
+  min-height: 32px;
+}
 .today-sticky-summary .dashboard-macro-row {
   margin-bottom: 0;
   gap: 10px;
@@ -4524,6 +4557,18 @@ textarea {
 	  }
 	  .today-sticky-summary .dashboard-control-bar {
 	    padding: 9px;
+	  }
+	  .starter-target-notice {
+	    gap: 8px;
+	    padding: 7px 8px;
+	  }
+	  .starter-target-notice span {
+	    max-width: 210px;
+	  }
+	  .starter-target-notice .btn {
+	    min-height: 30px;
+	    padding: 0 9px;
+	    font-size: 10px;
 	  }
 	  .today-sticky-summary .dashboard-macro-row {
 	    grid-template-columns: repeat(4, minmax(126px, 1fr));
