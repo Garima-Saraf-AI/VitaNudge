@@ -1,0 +1,401 @@
+{
+  "generatedAt": "2026-06-12T05:24:39.522Z",
+  "target": {
+    "frontend": "https://vitanudge.onrender.com",
+    "api": "https://vitanudge-api.onrender.com/api"
+  },
+  "results": [
+    {
+      "id": 7,
+      "passed": true,
+      "actual": "API returned 400: Email and password are required"
+    },
+    {
+      "id": 8,
+      "passed": true,
+      "actual": "API returned 400: Invalid email format"
+    },
+    {
+      "id": 11,
+      "passed": true,
+      "actual": "Duplicate registration returned 409: Email already registered"
+    },
+    {
+      "id": 12,
+      "passed": false,
+      "actual": "Uppercase login returned 200; leading/trailing-space login returned 401."
+    },
+    {
+      "id": 13,
+      "passed": true,
+      "actual": "100-character name and 200+ character valid email returned 201."
+    },
+    {
+      "id": 15,
+      "passed": true,
+      "actual": "Registered email returned neutral confirmation (200)."
+    },
+    {
+      "id": 16,
+      "passed": true,
+      "actual": "Unknown email returned the same neutral confirmation (200)."
+    },
+    {
+      "id": 17,
+      "passed": true,
+      "actual": "Protected /auth/me returned 401 without a token."
+    },
+    {
+      "id": 35,
+      "passed": true,
+      "actual": "breakfast API meal creation returned 201.",
+      "append": false
+    },
+    {
+      "id": 36,
+      "passed": true,
+      "actual": "lunch API meal creation returned 201. dinner API meal creation returned 201. snack API meal creation returned 201.",
+      "append": true
+    },
+    {
+      "id": 37,
+      "passed": true,
+      "actual": "Meal without selected food/name returned 400."
+    },
+    {
+      "id": 38,
+      "passed": true,
+      "actual": "Quantity 0.01 returned 201; calculated calories=0."
+    },
+    {
+      "id": 39,
+      "passed": true,
+      "actual": "Zero quantity returned 400."
+    },
+    {
+      "id": 40,
+      "passed": true,
+      "actual": "Negative quantity returned 400."
+    },
+    {
+      "id": 41,
+      "passed": true,
+      "actual": "Very large quantity returned 201, calories=1234000000."
+    },
+    {
+      "id": 42,
+      "passed": true,
+      "actual": "Edited meal persisted as 2 serving."
+    },
+    {
+      "id": 43,
+      "passed": false,
+      "actual": "Edit with 0/-1/non-numeric returned 200/400/200."
+    },
+    {
+      "id": 44,
+      "passed": true,
+      "actual": "Delete returned 200; entry absent after reload=true."
+    },
+    {
+      "id": 52,
+      "passed": true,
+      "actual": "Large meal produced 1234000248 kcal vs 1700 kcal target without NaN/overflow."
+    },
+    {
+      "id": 54,
+      "passed": true,
+      "actual": "Created previous-day Dinner and Lunch fixtures for review."
+    },
+    {
+      "id": 55,
+      "passed": true,
+      "actual": "Dinner item copied to Lunch with status 201."
+    },
+    {
+      "id": 56,
+      "passed": true,
+      "actual": "Only the selected previous-day item was copied."
+    },
+    {
+      "id": 57,
+      "passed": true,
+      "actual": "Empty selected-item copy returned 400: Select at least one meal item to copy"
+    },
+    {
+      "id": 58,
+      "passed": true,
+      "actual": "No-meals copy returned 404: No meals found on previous day"
+    },
+    {
+      "id": 59,
+      "passed": true,
+      "actual": "Repeating the same copy created another entry with no duplicate warning (documented current behavior)."
+    },
+    {
+      "id": 60,
+      "passed": true,
+      "actual": "Complete manual food returned 201."
+    },
+    {
+      "id": 61,
+      "passed": true,
+      "actual": "Name-only food returned 400: Add all before saving. Use AI estimate if you do not know the values."
+    },
+    {
+      "id": 62,
+      "passed": true,
+      "actual": "Missing-name food returned 400: Food name is required"
+    },
+    {
+      "id": 63,
+      "passed": true,
+      "actual": "Complete zero-nutrient food returned 201."
+    },
+    {
+      "id": 64,
+      "passed": true,
+      "actual": "Negative nutrition returned 400: Add all before saving. Use AI estimate if you do not know the values."
+    },
+    {
+      "id": 65,
+      "passed": true,
+      "actual": "Decimal values persisted as cal=123.4, carbs=20.75."
+    },
+    {
+      "id": 66,
+      "passed": true,
+      "actual": "Normalized duplicate manual food returned 409."
+    },
+    {
+      "id": 67,
+      "passed": "1 medium (approx 118g)",
+      "actual": "Banana estimate returned 200 with serving '1 medium (approx 118g)'."
+    },
+    {
+      "id": 68,
+      "passed": true,
+      "actual": "Empty estimate returned 400: Food name is required"
+    },
+    {
+      "id": 69,
+      "passed": "xylophonic quinoa cloud",
+      "actual": "Uncommon food returned 200, provider=gemini, confidence=low."
+    },
+    {
+      "id": 70,
+      "passed": true,
+      "actual": "Edited estimate saved with cal=106."
+    },
+    {
+      "id": 71,
+      "passed": true,
+      "actual": "Estimated food saved once with status 201."
+    },
+    {
+      "id": 72,
+      "passed": true,
+      "actual": "Duplicate estimated food returned 409."
+    },
+    {
+      "id": 103,
+      "passed": true,
+      "actual": "Full and partial search both returned the custom food."
+    },
+    {
+      "id": 104,
+      "passed": false,
+      "actual": "Uppercase search with surrounding spaces returned 0 matches."
+    },
+    {
+      "id": 105,
+      "passed": true,
+      "actual": "Name/calorie/protein/fibre sort requests all returned ordered food arrays."
+    },
+    {
+      "id": 106,
+      "passed": true,
+      "actual": "All supported API category filters returned only matching foods; recipe is not a foods API category."
+    },
+    {
+      "id": 109,
+      "passed": true,
+      "actual": "Default food edit/delete returned 403/403."
+    },
+    {
+      "id": 111,
+      "passed": true,
+      "actual": "Saving a name matching a default library food returned 409."
+    },
+    {
+      "id": 124,
+      "passed": true,
+      "actual": "Saved plan returned 200; Today summary uses 3100 kcal."
+    },
+    {
+      "id": 125,
+      "passed": true,
+      "actual": "Modified goal persisted as 3200 kcal."
+    },
+    {
+      "id": 126,
+      "passed": true,
+      "actual": "Goal deletion returned 200; reload returned documented default goals."
+    },
+    {
+      "id": 128,
+      "passed": true,
+      "actual": "Goals, Today summary, and report all returned the unique 3100/170/260 targets; Coach is Pro-gated."
+    },
+    {
+      "id": 132,
+      "passed": true,
+      "actual": "Invalid profile name returned 400: Name can only contain letters, spaces, hyphens and periods"
+    },
+    {
+      "id": 133,
+      "passed": true,
+      "actual": "Profile minimums returned 200; maximums returned 200."
+    },
+    {
+      "id": 134,
+      "passed": true,
+      "actual": "Out-of-range age/weight/height returned 400/400/400."
+    },
+    {
+      "id": 135,
+      "passed": true,
+      "actual": "Vegan/Vegetarian/Non-vegetarian profile saves returned 200/200/200."
+    },
+    {
+      "id": 137,
+      "passed": true,
+      "actual": "Changing country cleared state/city and returned 200."
+    },
+    {
+      "id": 139,
+      "passed": true,
+      "actual": "Sunday summary preference persisted as enabled=1."
+    },
+    {
+      "id": 140,
+      "passed": false,
+      "actual": "JSON export returned 500 with user, goals, foods, meals, and health sections."
+    },
+    {
+      "id": 141,
+      "passed": false,
+      "actual": "Account deletion with incorrect credentials returned 200; subsequent login returned 401."
+    },
+    {
+      "id": 142,
+      "passed": true,
+      "actual": "Disposable account was deleted and subsequent login returned 401."
+    },
+    {
+      "id": 173,
+      "passed": true,
+      "actual": "Valid weight returned 201."
+    },
+    {
+      "id": 174,
+      "passed": true,
+      "actual": "Same-date weight updated to 76."
+    },
+    {
+      "id": 175,
+      "passed": true,
+      "actual": "Weight boundaries 20/400 returned 201/201."
+    },
+    {
+      "id": 176,
+      "passed": true,
+      "actual": "Invalid weights returned 400/400/400/400/400."
+    },
+    {
+      "id": 177,
+      "passed": true,
+      "actual": "Water save returned 201; daily total=250 ml."
+    },
+    {
+      "id": 178,
+      "passed": true,
+      "actual": "Water accepts 0.01 and 1,000,000,000 ml with no documented maximum (201/201)."
+    },
+    {
+      "id": 179,
+      "passed": true,
+      "actual": "Steps persisted as 12345."
+    },
+    {
+      "id": 180,
+      "passed": true,
+      "actual": "Negative steps returned 400."
+    },
+    {
+      "id": 181,
+      "passed": true,
+      "actual": "Weight/water/steps trend APIs returned 3/1/1 dated points."
+    },
+    {
+      "id": 182,
+      "passed": true,
+      "actual": "Fresh account Body range returned an empty array without an error."
+    },
+    {
+      "id": 183,
+      "passed": true,
+      "actual": "Fasting glucose returned 201."
+    },
+    {
+      "id": 184,
+      "passed": true,
+      "actual": "Post-meal glucose returned 201."
+    },
+    {
+      "id": 185,
+      "passed": true,
+      "actual": "Glucose boundaries 40/600 returned 201/201."
+    },
+    {
+      "id": 186,
+      "passed": false,
+      "actual": "Invalid glucose values returned 400/400/201/400/400."
+    },
+    {
+      "id": 192,
+      "passed": true,
+      "actual": "Wellbeing notes persisted as text through the API."
+    },
+    {
+      "id": 194,
+      "passed": true,
+      "actual": "Fresh account Clinical range returned an empty array without an error."
+    },
+    {
+      "id": 214,
+      "passed": true,
+      "actual": "Unauthenticated report/export returned 401/401."
+    },
+    {
+      "id": 226,
+      "passed": true,
+      "actual": "Account B cross-user meal/food/weight mutations returned 403/403/403."
+    },
+    {
+      "id": 227,
+      "passed": true,
+      "actual": "Script-like profile name was rejected; allowed food/wellbeing notes were returned as literal text."
+    },
+    {
+      "id": 228,
+      "passed": true,
+      "actual": "Register, login, and /auth/me responses did not include a password field."
+    },
+    {
+      "id": 231,
+      "passed": true,
+      "actual": "Profile, modified goal, and custom food persisted through a new login session."
+    }
+  ]
+}

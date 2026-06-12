@@ -67,7 +67,9 @@ export default function Barcode() {
 
   async function saveFood() {
     if (!editedFood) return
-    setMsg('') // Clear previous messages before saving
+    // Clear previous message timeout before saving
+    if (msgTimeout) clearTimeout(msgTimeout)
+    setMsg('')
     try {
       await api.post('/foods', editedFood)
       flash('✅ Saved to library')

@@ -260,6 +260,25 @@ export default function PlateScan({ date, onLogged }) {
     setReviewItems(items => items.filter((_, i) => i !== index))
   }
 
+  function addManualItem() {
+    const newItem = {
+      food_name: '',
+      qty: 100,
+      unit: 'g',
+      meal_type: mealType,
+      cal: 0,
+      protein_g: 0,
+      fiber_g: 0,
+      carbs_g: 0,
+      fat_g: 0,
+      matched: false,
+      confidence: 'manual',
+      match_note: 'Manually added. Enter a food name and leave the field to match or estimate nutrition.',
+    }
+    setReviewItems(items => [...items, newItem])
+    setResult(r => r?.saved ? { ...r, saved: false } : r)
+  }
+
   async function saveReviewedItems() {
     if (reviewItems.length === 0) return
     setSaving(true)
@@ -747,6 +766,18 @@ export default function PlateScan({ date, onLogged }) {
               <strong>Note:</strong> Edit the food name and leave the field to re-match your library or estimate nutrition. Portion estimates are still approximate.
             </div>
 
+            <div style={{ marginBottom: 12 }}>
+              <button
+                className="btn btn-ghost"
+                type="button"
+                onClick={addManualItem}
+                style={{ width: '100%', justifyContent: 'center' }}
+              >
+                <PlusIcon />
+                Add food AI missed
+              </button>
+            </div>
+
             <div className="plate-review-actions">
               <button className="btn btn-ghost" type="button" onClick={reset}>
                 <CameraIcon />
@@ -810,6 +841,15 @@ function PlateIcon() {
     <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="2">
       <circle cx="12" cy="12" r="8" />
       <circle cx="12" cy="12" r="4" />
+    </svg>
+  )
+}
+
+function PlusIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2">
+      <line x1="12" y1="5" x2="12" y2="19" />
+      <line x1="5" y1="12" x2="19" y2="12" />
     </svg>
   )
 }
