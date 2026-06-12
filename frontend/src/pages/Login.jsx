@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import AuthFrame from '../components/AuthFrame'
-import StatusToast from '../components/StatusToast'
 
 export default function Login() {
   const { login } = useAuth()
@@ -53,7 +52,7 @@ export default function Login() {
         </p>
       )}
     >
-        <StatusToast message={err} tone="error" />
+        {err && <div className="error-box">{err}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-grid full" style={{ marginBottom: 9 }}>
             <div className="form-group">

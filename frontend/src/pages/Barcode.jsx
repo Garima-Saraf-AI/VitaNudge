@@ -33,7 +33,9 @@ export default function Barcode() {
     setProduct(null)
     setEditMode(false)
     setEditedFood(null)
-    setMsg('') // Clear any previous messages
+    // Clear any previous messages AND their timeouts
+    if (msgTimeout) clearTimeout(msgTimeout)
+    setMsg('')
     try {
       const data = await api.get(`/barcode/${clean}`)
       setBarcode(clean)
