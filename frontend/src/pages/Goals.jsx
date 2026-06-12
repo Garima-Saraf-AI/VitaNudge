@@ -1152,10 +1152,11 @@ export default function Goals() {
         {(!planSaved || wizardOpen) && (
           <div className="goal-wizard-actions">
             {wizardStep < PREVIEW_STEP_INDEX && (() => {
-              // Disable Next button on Stats step (index 1) if required fields are empty
+              // Disable Next button if profile is incomplete (age, weight, height, gender required)
+              const isProfileComplete = profile.age && profile.weight_kg && profile.height_cm && profile.gender
               const isStatsStep = WIZARD_STEPS[wizardStep].key === 'stats'
-              const isStatsComplete = profile.age && profile.weight_kg && profile.height_cm && profile.gender
-              const isNextDisabled = isStatsStep && !isStatsComplete
+              // Disable on ALL steps if profile incomplete, or on Stats step if fields empty
+              const isNextDisabled = !isProfileComplete
 
               return (
                 <button
@@ -1163,7 +1164,7 @@ export default function Goals() {
                   type="button"
                   onClick={goNextStep}
                   disabled={isNextDisabled}
-                  title={isNextDisabled ? 'Please fill all required fields (Age, Weight, Height, Gender)' : ''}
+                  title={isNextDisabled ? 'Please complete your profile first (Age, Weight, Height, Gender). Click the button above to go to Profile.' : ''}
                 >
                   {wizardStep === PREVIEW_STEP_INDEX - 1 ? 'Preview plan →' : 'Next →'}
                 </button>

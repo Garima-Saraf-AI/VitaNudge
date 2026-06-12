@@ -1,0 +1,237 @@
+1	VitaNudge Regression Test Cases	
+2	Functionality	Test cases
+3	Login & Registration	[Positive] Create temporary QA account
+4	Login & Registration	[Positive] Log in using valid registered credentials
+5	Login & Registration	[Negative] Log in with an email that has no account
+6	Login & Registration	[Negative] Log in with a valid email and incorrect password
+7	Login & Registration	[Negative] Submit login with empty email and password
+8	Login & Registration	[Negative] Register using an invalid email format
+9	Login & Registration	[Boundary] Register with a 5-character password
+10	Login & Registration	[Boundary] Register with exactly a 6-character password
+11	Login & Registration	[Negative] Register using an email that already exists
+12	Login & Registration	[Edge] Use leading/trailing spaces and uppercase letters in email
+13	Login & Registration	[Boundary] Enter maximum practical name and email lengths
+14	Login & Registration	[Edge] Verify Register page login link on a 390px mobile viewport
+15	Login & Registration	[Positive] Request password reset for a registered email
+16	Login & Registration	[Negative] Request password reset for an unknown email
+17	Login & Registration	[Negative] Open a protected page while logged out
+18	Login & Registration	[Positive] Log out from the profile menu
+19	Navigation & Access	[Positive] Navigate through Today, Add Food, Coach, Reports, and Tools
+20	Navigation & Access	[Positive] Open a Tools subpage
+21	Navigation & Access	[Positive] Open Profile, Goals, and My saved recipes from username menu
+22	Navigation & Access	[Edge] Close username menu by clicking outside
+23	Navigation & Access	[Edge] Close username menu using Escape
+24	Navigation & Access	[Positive] Verify legacy URLs redirect correctly
+25	Navigation & Access	[Negative] Open an unknown application route
+26	Navigation & Access	[Edge] Refresh every protected route
+27	Subscription & Tier Access	[Positive] Core user opens included features
+28	Subscription & Tier Access	[Negative] Core user opens a Pro-only feature
+29	Subscription & Tier Access	[Positive] Pro user opens all Pro features
+30	Subscription & Tier Access	[Positive] Clinical user opens Clinical-only functionality
+31	Subscription & Tier Access	[Boundary] Use the last free label scan and barcode lookup
+32	Subscription & Tier Access	[Boundary] Attempt one scan or barcode lookup beyond the free quota
+33	Subscription & Tier Access	[Edge] Subscription expires during an authenticated session
+34	Today Dashboard	[Positive] Load Today with no meal logs
+35	Today Dashboard	[Positive] Add a food to Breakfast
+36	Today Dashboard	[Positive] Add foods to Lunch, Dinner, and Snack
+37	Today Dashboard	[Negative] Try to add food without selecting a search result
+38	Today Dashboard	[Boundary] Add the minimum allowed positive quantity
+39	Today Dashboard	[Boundary] Enter zero quantity
+40	Today Dashboard	[Negative] Enter a negative quantity
+41	Today Dashboard	[Edge] Enter a very large quantity
+42	Today Dashboard	[Positive] Edit quantity and unit of a logged meal
+43	Today Dashboard	[Negative] Edit a logged meal with zero or invalid quantity
+44	Today Dashboard	[Positive] Delete a logged meal entry
+45	Today Dashboard	[Positive] Navigate to a previous date
+46	Today Dashboard	[Boundary] Attempt to navigate beyond today
+47	Today Dashboard	[Edge] Refresh after selecting a historical date
+48	Today Dashboard	[Positive] Show incomplete-profile reminder after the first food is added
+49	Today Dashboard	[Edge] Dismiss the profile reminder with Maybe later
+50	Today Dashboard	[Positive] Open Complete profile now from the reminder
+51	Today Dashboard	[Positive] Open Coach from the suggested next action
+52	Today Dashboard	[Edge] Dashboard totals exceed a target
+53	Today Dashboard	[Data Integrity] Saved goal targets appear on Today
+54	Copy Yesterday	[Positive] Open Copy yesterday when yesterday has logs
+55	Copy Yesterday	[Positive] Change an item's destination meal before copying
+56	Copy Yesterday	[Positive] Copy only selected food items
+57	Copy Yesterday	[Negative] Confirm copy with no selected items
+58	Copy Yesterday	[Edge] Copy when yesterday has no meals
+59	Copy Yesterday	[Edge] Attempt to copy the same items twice
+60	Add Food - Manual	[Positive] Save a manually entered food with complete nutrition
+61	Add Food - Manual	[Negative] Save manual food with name only
+62	Add Food - Manual	[Negative] Save manual food without a name
+63	Add Food - Manual	[Boundary] Save nutrition values equal to zero
+64	Add Food - Manual	[Negative] Enter negative nutrition values
+65	Add Food - Manual	[Edge] Enter decimal nutrition values
+66	Add Food - Manual	[Edge] Enter a duplicate manual food name
+67	Add Food - AI Estimate	[Positive] Estimate nutrition using food name
+68	Add Food - AI Estimate	[Negative] Estimate with an empty food name
+69	Add Food - AI Estimate	[Edge] Estimate an uncommon or misspelled food
+70	Add Food - AI Estimate	[Positive] Edit estimated values before saving
+71	Add Food - AI Estimate	[Positive] Save estimated food
+72	Add Food - AI Estimate	[Negative] Save an estimated duplicate food
+73	Barcode	[Positive] Look up a valid supported barcode
+74	Barcode	[Negative] Look up an empty barcode
+75	Barcode	[Negative] Look up an invalid or unknown barcode
+76	Barcode	[Edge] Paste barcode containing spaces or non-digits
+77	Barcode	[Positive] Review and edit barcode nutrition before saving
+78	Barcode	[Positive] Save a new barcode product
+79	Barcode	[Negative] Save a barcode product already in Library
+80	Barcode	[Boundary] Use the final free barcode lookup
+81	Barcode	[Edge] Scan barcode photo in a browser without BarcodeDetector
+82	Label Scanner	[Positive] Upload a clear nutrition label image
+83	Label Scanner	[Positive] Take a nutrition label photo on mobile
+84	Label Scanner	[Negative] Upload a non-image file
+85	Label Scanner	[Negative] Upload a plate or non-label image
+86	Label Scanner	[Edge] Upload a blurry or partially cropped label
+87	Label Scanner	[Positive] Edit extracted label values before saving
+88	Label Scanner	[Negative] Save a scan where product name was not detected
+89	Label Scanner	[Negative] Prevent simultaneous success and validation messages
+90	Label Scanner	[Positive] Save reviewed label result
+91	Label Scanner	[Boundary] Use final free label scan
+92	Plate Scan	[Positive] Upload a clear meal photo
+93	Plate Scan	[Negative] Upload a nutrition label in Plate scan
+94	Plate Scan	[Negative] Upload a non-image or corrupted file
+95	Plate Scan	[Edge] Scan a plate containing many foods
+96	Plate Scan	[Edge] Scan an unfamiliar food not present in Library
+97	Plate Scan	[Positive] Edit detected food name
+98	Plate Scan	[Positive] Edit detected quantity
+99	Plate Scan	[Positive] Remove an incorrect detected food
+100	Plate Scan	[Positive] Choose meal destination and save identified foods
+101	Plate Scan	[Negative] Save with no selected detected foods
+102	Food Library	[Positive] Load default and user-created foods
+103	Food Library	[Positive] Search by full and partial food name
+104	Food Library	[Edge] Search using different letter case and surrounding spaces
+105	Food Library	[Positive] Sort foods by name, calories, protein, and fibre
+106	Food Library	[Positive] Filter by each category
+107	Food Library	[Positive] Open Add food from Library
+108	Food Library	[Positive] Edit a user-created food
+109	Food Library	[Negative] Attempt to edit or delete a protected default food
+110	Food Library	[Positive] Delete a user-created food
+111	Food Library	[Data Integrity] Prevent duplicate foods from manual, AI, barcode, and label sources
+112	Goals	[Positive] Complete the seven-step goal wizard
+113	Goals	[Negative] Open Goals with incomplete profile
+114	Goals	[Negative] Try to continue from Stats with incomplete profile
+115	Goals	[Boundary] Enter minimum supported age, weight, and height
+116	Goals	[Boundary] Enter maximum supported age, weight, and height
+117	Goals	[Negative] Enter values below or above allowed profile ranges
+118	Goals	[Positive] Preview fat-loss recommendation
+119	Goals	[Positive] Preview muscle-build recommendation
+120	Goals	[Positive] Preview weight-gain, maintenance, and glucose-control plans
+121	Goals	[Edge] Choose aggressive pace with diabetes-focused goal
+122	Goals	[Positive] Edit recommended target values in Preview
+123	Goals	[Negative] Enter zero, negative, or unrealistic edited targets
+124	Goals	[Positive] Save a goal plan
+125	Goals	[Positive] Modify an existing saved goal
+126	Goals	[Positive] Delete an existing goal
+127	Goals	[Edge] Trigger recalculation after weight changes by 2kg or more
+128	Goals	[Data Integrity] Compare saved goal targets across Goals, Today, Coach, and Reports
+129	Profile	[Positive] Load saved profile values
+130	Profile	[Positive] Save valid profile changes
+131	Profile	[Negative] Attempt to edit login email
+132	Profile	[Negative] Save invalid name characters
+133	Profile	[Boundary] Save minimum and maximum age, weight, and height
+134	Profile	[Negative] Save out-of-range age, weight, or height
+135	Profile	[Positive] Select Vegan, Vegetarian, and Non-vegetarian preferences
+136	Profile	[Positive] Select country, then state, then city
+137	Profile	[Edge] Change country after choosing state and city
+138	Profile	[Positive] Save timezone and verify Today date
+139	Profile	[Positive] Enable Sunday health summary
+140	Profile	[Positive] Export account data
+141	Profile	[Negative] Delete account with incorrect confirmation credentials
+142	Profile	[Positive] Delete a disposable QA account
+143	Coach	[Negative] Submit Coach with no question
+144	Coach	[Positive] Ask a general nutrition question
+145	Coach	[Positive] Ask about current meal logs
+146	Coach	[Positive] Open Coach from Today recommendation
+147	Coach	[Positive] Open Coach from saved goal context
+148	Coach	[Negative] Ask for diagnosis or medication changes
+149	Coach	[Edge] Submit a very long question
+150	Coach	[Error Handling] AI provider is unavailable
+151	Recipes	[Positive] Calculate recipe nutrition from ingredients and quantities
+152	Recipes	[Negative] Add ingredient without choosing an ingredient or quantity
+153	Recipes	[Boundary] Use one serving
+154	Recipes	[Boundary] Use a large serving count
+155	Recipes	[Negative] Use zero or negative servings/ingredient quantity
+156	Recipes	[Positive] Add Other / add new ingredient manually
+157	Recipes	[Positive] Add Other ingredient using scan
+158	Recipes	[Positive] Save a complete recipe
+159	Recipes	[Negative] Save an incomplete recipe
+160	Recipes	[Negative] Save a duplicate recipe
+161	Recipes	[Negative] Core user selects Add to library for a suggested recipe
+162	Recipes	[Positive] Filter suggested recipes by All, Vegan, Veg, and Non-veg
+163	Recipes	[Positive] Open a saved recipe in My saved recipes
+164	Recipes	[Data Integrity] Saved recipes do not appear in the ingredient list
+165	Meal Templates	[Positive] Create a template from multiple foods
+166	Meal Templates	[Negative] Save template without a name or items
+167	Meal Templates	[Positive] Log a saved template
+168	Meal Templates	[Data Integrity] Template logging preserves quantities and macros
+169	Meal Templates	[Positive] Edit a template
+170	Meal Templates	[Positive] Delete a template
+171	Meal Templates	[Boundary] Reach the Core template limit
+172	Meal Templates	[Boundary] Create one template beyond the Core limit
+173	Body Tracking	[Positive] Log daily weight
+174	Body Tracking	[Positive] Edit weight logged for the same date
+175	Body Tracking	[Boundary] Log minimum and maximum allowed weight
+176	Body Tracking	[Negative] Log zero, negative, or non-numeric weight
+177	Body Tracking	[Positive] Log water intake
+178	Body Tracking	[Boundary] Log very small and large water amounts
+179	Body Tracking	[Positive] Log daily steps
+180	Body Tracking	[Negative] Log negative steps
+181	Body Tracking	[Positive] View weight, water, and steps trends
+182	Body Tracking	[Edge] View Body with no historical data
+183	Clinical Tracking	[Positive] Log fasting glucose
+184	Clinical Tracking	[Positive] Log post-meal glucose
+185	Clinical Tracking	[Boundary] Log glucose at allowed minimum and maximum
+186	Clinical Tracking	[Negative] Log zero, negative, or non-numeric glucose
+187	Clinical Tracking	[Positive] Log blood pressure and pulse
+188	Clinical Tracking	[Negative] Log diastolic greater than or equal to systolic
+189	Clinical Tracking	[Boundary] Log BP/pulse at allowed boundaries
+190	Clinical Tracking	[Positive] Log HbA1c
+191	Clinical Tracking	[Negative] Log invalid HbA1c percentage
+192	Clinical Tracking	[Positive] Log wellbeing or notes
+193	Clinical Tracking	[Data Integrity] Clinical charts use only current user's records
+194	Clinical Tracking	[Edge] Open Clinical with no data
+195	Medications	[Positive] Create a medication
+196	Medications	[Negative] Save medication without required fields
+197	Medications	[Positive] Mark medication taken for today
+198	Medications	[Edge] Mark the same medication taken twice
+199	Medications	[Positive] Undo or correct today's medication status
+200	Medications	[Positive] Edit a medication
+201	Medications	[Positive] Delete a medication
+202	Medications	[Negative] Core user opens medication logging
+203	Reports	[Positive] Generate a weekly report for a selected week
+204	Reports	[Positive] Generate a monthly report for a selected month
+205	Reports	[Positive] Generate a custom-date report
+206	Reports	[Negative] Choose a custom From date after To date
+207	Reports	[Boundary] Generate a one-day custom report
+208	Reports	[Edge] Generate a report with no data
+209	Reports	[Data Integrity] Compare report totals with source logs
+210	Reports	[Positive] Download doctor-ready PDF
+211	Reports	[Positive] Send test/weekly summary when email provider is configured
+212	Reports	[Negative] Send email without provider configuration
+213	Reports	[Edge] Switch from weekly to monthly mode
+214	Reports	[Security] Open export/report URL without authentication
+215	Mobile & Responsive UI	[Positive] Use all main pages at 390x844
+216	Mobile & Responsive UI	[Edge] Rotate between portrait and landscape
+217	Mobile & Responsive UI	[Positive] Use touch targets for tabs, icons, and buttons
+218	Mobile & Responsive UI	[Edge] Open on narrow 320px viewport
+219	Browser Compatibility	[Positive] Run core journey in Chrome/Chromium
+220	Browser Compatibility	[Positive] Run core journey in iPhone Safari
+221	Browser Compatibility	[Positive] Run core journey in Android Chrome
+222	PWA	[Positive] Install app from browser
+223	PWA	[Edge] Launch installed PWA while offline
+224	Security & Data Protection	[Security] Reject API request without token
+225	Security & Data Protection	[Security] Reject malformed or expired token
+226	Security & Data Protection	[Security] Prevent cross-user record access
+227	Security & Data Protection	[Security] Sanitize script content in names and notes
+228	Security & Data Protection	[Security] Verify password is never returned by API
+229	Security & Data Protection	[Security] Verify HTTPS and security headers
+230	Security & Data Protection	[Boundary] Trigger authentication/API rate limit
+231	Integration & Recovery	[Integration] Frontend changes persist after refresh and new session
+232	Integration & Recovery	[Error Handling] Backend is temporarily unavailable
+233	Integration & Recovery	[Error Handling] Request times out or network disconnects during save
+234	Integration & Recovery	[Data Integrity] Concurrent saves do not create unintended duplicates
+235	Performance	[Performance] Measure initial production page load
+236	Performance	[Performance] Measure plate/label/AI response time
+237	Performance	[Load] Run concurrent authenticated users
