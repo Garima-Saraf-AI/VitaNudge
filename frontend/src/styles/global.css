@@ -3963,7 +3963,7 @@ textarea {
   align-items: flex-start;
   justify-content: center;
   padding: 80px 16px 16px;
-  z-index: 500;
+  z-index: 10000;
   overflow-y: auto;
 }
 .modal-box { background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(250,251,248,.94)); border: 1px solid rgba(200,208,193,.78); border-radius: var(--rl); padding: 18px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; animation: fadeIn .2s ease; box-shadow: 0 28px 80px rgba(18,32,24,.24); }

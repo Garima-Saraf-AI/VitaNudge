@@ -14,10 +14,14 @@ export default function Barcode() {
   const [showUpgrade, setShowUpgrade] = useState(false)
   const [editMode, setEditMode] = useState(false)
   const [editedFood, setEditedFood] = useState(null)
+  const [msgTimeout, setMsgTimeout] = useState(null)
 
   function flash(text) {
+    // Clear any existing timeout to prevent message overlap
+    if (msgTimeout) clearTimeout(msgTimeout)
     setMsg(text)
-    setTimeout(() => setMsg(''), 2200)
+    const timeout = setTimeout(() => setMsg(''), 2200)
+    setMsgTimeout(timeout)
   }
 
   async function lookup(code = barcode) {

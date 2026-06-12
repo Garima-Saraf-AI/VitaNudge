@@ -124,6 +124,7 @@ export default function LabelScan({ onResult, onSave, onSaveToLibrary, saving = 
     const nextResult = { ...EMPTY_RESULT, ...editData }
     setResult(nextResult)
     setEditData(nextResult)
+    setError('') // Clear any previous errors when saving
     onResult?.(nextResult)
 
     if (onSaveToLibrary) {

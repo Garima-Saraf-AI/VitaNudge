@@ -1128,9 +1128,14 @@ export default function Goals() {
               <div className="warn-box" style={{ marginTop: '20px' }}>
                 <strong>⚠️ Profile Required</strong>
                 <p>Please complete your profile (age, weight, height) before setting up goals. This ensures accurate calorie and macro calculations.</p>
-                <p style={{ marginTop: '12px', fontSize: '13px' }}>
-                  Update your profile in the form below, then refresh this page.
-                </p>
+                <button
+                  className="btn btn-green"
+                  type="button"
+                  onClick={() => navigate('/profile')}
+                  style={{ marginTop: '16px', width: '100%' }}
+                >
+                  Complete your profile →
+                </button>
               </div>
             ) : (
               renderWizardStep()
