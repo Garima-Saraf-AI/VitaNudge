@@ -687,6 +687,7 @@ import api from '../utils/api'
 import UpgradeModal from '../components/UpgradeModal'
 import { today } from '../utils/calc'
 import PageHero from '../components/PageHero'
+import StatusToast from '../components/StatusToast'
 
 // ── tabs ─────────────────────────────────────────────
 const TABS = [
@@ -1480,17 +1481,12 @@ export default function ScanAdd() {
         metricLabel="food library"
       />
 
-      {msg && <div className="success-box">{msg}</div>}
-      {formErr && (
-        <div className="error-box" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-          <span>{formErr}</span>
-          {tab !== 'estimate' && (
-            <button className="btn btn-ghost btn-compact" type="button" onClick={() => switchScanTab('estimate')}>
-              AI estimate
-            </button>
-          )}
-        </div>
-      )}
+      <StatusToast
+        message={formErr || msg}
+        tone={formErr ? 'error' : undefined}
+        actionLabel={formErr && tab !== 'estimate' ? 'AI estimate' : undefined}
+        onAction={formErr && tab !== 'estimate' ? () => switchScanTab('estimate') : undefined}
+      />
 
       {/* ── tabs ── */}
       <div className="scan-tabs">

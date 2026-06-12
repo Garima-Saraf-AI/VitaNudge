@@ -1,0 +1,436 @@
+[
+  {
+    "row": 7,
+    "values": [
+      "Login & Registration",
+      "[Negative] Submit login with empty email and password",
+      "Production API: empty email/password returned 400 with required-field validation.",
+      "Required-field validation prevents submission.",
+      "Pass",
+      "Open Login > leave both fields empty > submit.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 12,
+    "values": [
+      "Login & Registration",
+      "[Edge] Use leading/trailing spaces and uppercase letters in email",
+      "Production: uppercase email authenticated, but the same email with leading/trailing spaces returned 401 instead of being normalized.",
+      "Email is normalized consistently and authentication behaves predictably.",
+      "Fail",
+      "Register or log in using spaces around an uppercase email address.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 18,
+    "values": [
+      "Login & Registration",
+      "[Positive] Log out from the profile menu",
+      "Production browser: Logout returned to /login; revisiting a protected URL stayed on Login.",
+      "Session token is cleared and the user returns to Login.",
+      "Pass",
+      "Open username menu > select Log out > revisit a protected URL.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 24,
+    "values": [
+      "Navigation & Access",
+      "[Positive] Verify legacy URLs redirect correctly",
+      "Production browser: /barcode, /water, /weight, /glucose, /vitals, and /weekly redirected to their current routes.",
+      "/barcode, /water, /weight, /glucose, /vitals, and /weekly redirect to their current pages.",
+      "Pass",
+      "Open each legacy URL directly while signed in.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 35,
+    "values": [
+      "Today Dashboard",
+      "[Positive] Add a food to Breakfast",
+      "Production browser, fresh account: selecting Green apple and clicking '+ Add' left totals at 0 and kept the unsaved form open.",
+      "Meal, calories, protein, fibre, and carbs update immediately.",
+      "Fail",
+      "Search Breakfast > choose a food > set quantity/unit > Add.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 42,
+    "values": [
+      "Today Dashboard",
+      "[Positive] Edit quantity and unit of a logged meal",
+      "Production browser: the edit icon on a copied meal did not open an editor or change the entry. API edit/recalculation passed.",
+      "The entry and dashboard totals recalculate and persist after refresh.",
+      "Fail",
+      "Log food > select Edit > change quantity/unit > Save > refresh.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 44,
+    "values": [
+      "Today Dashboard",
+      "[Positive] Delete a logged meal entry",
+      "Production browser: clicking the meal delete icon did not remove the entry or update totals. API delete passed.",
+      "Entry is removed and all summary values recalculate.",
+      "Fail",
+      "Log a food > select Delete > confirm if prompted.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 53,
+    "values": [
+      "Today Dashboard",
+      "[Data Integrity] Saved goal targets appear on Today",
+      "Production retest: saved Goals targets 3100 kcal / 170g protein / 260g carbs appeared exactly on Today.",
+      "Today uses the latest saved calories, protein, fibre, and carbs targets.",
+      "Pass",
+      "Save a goal plan > return to Today > compare all targets.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 54,
+    "values": [
+      "Copy Yesterday",
+      "[Positive] Open Copy yesterday when yesterday has logs",
+      "Production browser: Copy yesterday opened a review dialog listing separate Lunch and Dinner items from Thu, 11 Jun.",
+      "Review dialog lists yesterday's meals and items.",
+      "Pass",
+      "Create yesterday logs > return to Today > select Copy yesterday.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 55,
+    "values": [
+      "Copy Yesterday",
+      "[Positive] Change an item's destination meal before copying",
+      "Production browser: an item's destination changed from Lunch to Breakfast before copying.",
+      "Each selected item can be assigned to Breakfast, Lunch, Dinner, or Snack.",
+      "Pass",
+      "Open Copy yesterday > change a Dinner item destination to Lunch.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 56,
+    "values": [
+      "Copy Yesterday",
+      "[Positive] Copy only selected food items",
+      "Production browser: after clearing all, one selected item copied alone and the unselected item remained absent.",
+      "Only checked items are copied and unselected items remain absent.",
+      "Pass",
+      "Open review > clear/select individual items > confirm copy.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 57,
+    "values": [
+      "Copy Yesterday",
+      "[Negative] Confirm copy with no selected items",
+      "Production browser: Clear changed the action to 'Copy 0 items' and disabled confirmation.",
+      "Confirm action is disabled or a clear validation message is shown.",
+      "Pass",
+      "Open review > Clear > attempt confirm.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 60,
+    "values": [
+      "Add Food - Manual",
+      "[Positive] Save a manually entered food with complete nutrition",
+      "Production browser: a complete manual food saved once, showed confirmation, and cleared all form values.",
+      "Food is saved once, confirmation appears, and form values clear.",
+      "Pass",
+      "Open Add Food > Manual add > enter name and all nutrition fields > Save.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 62,
+    "values": [
+      "Add Food - Manual",
+      "[Negative] Save manual food without a name",
+      "Production browser: nutrition without a food name was blocked with 'Food name is required'.",
+      "Save is blocked with Food name is required.",
+      "Pass",
+      "Manual add > fill nutrition but leave name empty > Save.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 67,
+    "values": [
+      "Add Food - AI Estimate",
+      "[Positive] Estimate nutrition using food name",
+      "Production browser/API generated a serving and complete nutrition for recognizable food names.",
+      "Estimated serving and complete nutrition are shown for review.",
+      "Pass",
+      "Open AI estimate > enter a recognizable food and portion hint > Extract nutrition.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 72,
+    "values": [
+      "Add Food - AI Estimate",
+      "[Negative] Save an estimated duplicate food",
+      "Production browser: duplicate AI-estimated food showed only the already-in-library message and created no duplicate.",
+      "Only the duplicate message is shown and no duplicate row is created.",
+      "Pass",
+      "Estimate a food already in Library > Save.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 77,
+    "values": [
+      "Barcode",
+      "[Positive] Review and edit barcode nutrition before saving",
+      "Production retest: barcode result still offered only Save to library; no Edit values action was available.",
+      "An Edit values action is available before Save to library.",
+      "Fail",
+      "Look up a valid barcode > inspect product actions.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 79,
+    "values": [
+      "Barcode",
+      "[Negative] Save a barcode product already in Library",
+      "Production retest: duplicate barcode save still showed both 'Saved to library!' and 'This food is already in your library'.",
+      "Only the duplicate message appears; the previous success message is cleared.",
+      "Fail",
+      "Save a barcode product > look up the same barcode > Save again.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 104,
+    "values": [
+      "Food Library",
+      "[Edge] Search using different letter case and surrounding spaces",
+      "Production browser: uppercase search worked only without surrounding spaces; spaced search returned 0 foods.",
+      "Search is case-insensitive and handles whitespace.",
+      "Fail",
+      "Search for an existing food using uppercase and spaces.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 117,
+    "values": [
+      "Goals",
+      "[Negative] Enter values below or above allowed profile ranges",
+      "Production browser: out-of-range Stats values such as 19kg and 401kg could advance to the next step without a field error.",
+      "Next/save is blocked with field-specific validation.",
+      "Fail",
+      "Enter out-of-range age, weight, or height.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 124,
+    "values": [
+      "Goals",
+      "[Positive] Save a goal plan",
+      "Production retest: goal save succeeded, collapsed to the saved summary, and Today used the new targets.",
+      "Goal collapses to a saved summary and Today immediately uses saved targets.",
+      "Pass",
+      "Preview plan > Save changes > open Today.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 140,
+    "values": [
+      "Profile",
+      "[Positive] Export account data",
+      "Production API: /api/auth/export-data returned 500 for a valid authenticated Core account, so JSON export could not complete.",
+      "Authorized JSON/CSV export downloads only the current user's data.",
+      "Fail",
+      "Open Profile > Export JSON and Export meals CSV.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 141,
+    "values": [
+      "Profile",
+      "[Negative] Delete account with incorrect confirmation credentials",
+      "Production API deleted the account even when incorrect confirmation credentials were supplied; credentials are not verified.",
+      "Deletion is blocked and account/data remain accessible.",
+      "Fail",
+      "Open Delete Account > enter invalid confirmation > submit.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 151,
+    "values": [
+      "Recipes",
+      "[Positive] Calculate recipe nutrition from ingredients and quantities",
+      "Production browser: adding 100g Tofu calculated 80 kcal, 9g protein, 0.3g fibre, 2g carbs, and 4g fat per serving.",
+      "Total and per-serving macros recalculate correctly.",
+      "Pass",
+      "Open Recipes > name recipe > add ingredients/quantities > set servings.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 161,
+    "values": [
+      "Recipes",
+      "[Negative] Core user selects Add to library for a suggested recipe",
+      "Production browser: Core recipe Add to library opened the upgrade dialog at top 729px in a 720px viewport, entirely below the visible screen.",
+      "Upgrade dialog is centered and fully visible above sticky navigation.",
+      "Fail",
+      "Use Core account > Recipes > select Add to library on a suggestion.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 178,
+    "values": [
+      "Body Tracking",
+      "[Boundary] Log very small and large water amounts",
+      "Production accepted both 0.01ml and 1,000,000,000ml; there is no practical hydration maximum.",
+      "Values follow allowed boundaries without overflow.",
+      "Needs Change",
+      "Enter boundary hydration amounts.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 186,
+    "values": [
+      "Clinical Tracking",
+      "[Negative] Log zero, negative, or non-numeric glucose",
+      "Production API rejected 0, negative, 39, and 601, but accepted non-numeric 'abc' as a glucose value.",
+      "Validation prevents save.",
+      "Fail",
+      "Enter invalid glucose > Save.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 205,
+    "values": [
+      "Reports",
+      "[Positive] Generate a custom-date report",
+      "Production retest: changing Custom From/To dates did not refresh the report, which stayed on the prior 30-day range.",
+      "Only records inside the inclusive date range are summarized.",
+      "Fail",
+      "Reports > Custom > choose From and To dates.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 206,
+    "values": [
+      "Reports",
+      "[Negative] Choose a custom From date after To date",
+      "Production retest: From later than To showed no clear validation and retained the stale report.",
+      "Generate is blocked with date-range validation.",
+      "Fail",
+      "Set From later than To > Generate.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 207,
+    "values": [
+      "Reports",
+      "[Boundary] Generate a one-day custom report",
+      "Production retest: equal From/To dates did not update the report to the selected one-day range.",
+      "The selected day is included once and totals are correct.",
+      "Fail",
+      "Set From and To to the same date.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 215,
+    "values": [
+      "Mobile & Responsive UI",
+      "[Positive] Use all main pages at 390x844",
+      "Production at 390x844: Goals overflowed horizontally to 450px; the other primary pages tested had no horizontal clipping.",
+      "No controls, headings, buttons, dialogs, or navigation overlap or clip.",
+      "Fail",
+      "Set mobile viewport > inspect Today, Add Food, Coach, Reports, Tools, Profile, Goals.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 217,
+    "values": [
+      "Mobile & Responsive UI",
+      "[Positive] Use touch targets for tabs, icons, and buttons",
+      "Production mobile: several Today, Coach, and Body controls were only 32-34px high, below a comfortable touch target.",
+      "Controls are consistently sized and easy to tap.",
+      "Fail",
+      "Inspect/tap all primary and scan controls on mobile.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 218,
+    "values": [
+      "Mobile & Responsive UI",
+      "[Edge] Open on narrow 320px viewport",
+      "Production at 320x700: Today macro cards, Reports charts, and Goals content overflowed horizontally.",
+      "Longest words and buttons remain inside their containers.",
+      "Fail",
+      "Set viewport to 320px width > inspect critical pages.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 219,
+    "values": [
+      "Browser Compatibility",
+      "[Positive] Run core journey in Chrome/Chromium",
+      "Production Chromium journey: registration/login, goal save/sync, reports, and Copy Yesterday worked; direct meal add/edit/delete and custom reports still failed.",
+      "Registration, login, meal logging, goals, and reports work.",
+      "Fail",
+      "Execute smoke journey in current Chrome/Chromium.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 226,
+    "values": [
+      "Security & Data Protection",
+      "[Security] Prevent cross-user record access",
+      "Production API: Account B could not mutate Account A meal, food, or weight records; each request returned 403.",
+      "A user cannot read, edit, or delete another user's records by ID.",
+      "Pass",
+      "Create data in Account A > attempt access using Account B.",
+      "12-Jun-2026"
+    ]
+  },
+  {
+    "row": 231,
+    "values": [
+      "Integration & Recovery",
+      "[Integration] Frontend changes persist after refresh and new session",
+      "Production: profile, modified goals, and custom food persisted through a new authenticated session.",
+      "Saved profile, goals, foods, logs, and settings reload from API.",
+      "Pass",
+      "Create data > refresh > log out/in > verify.",
+      "12-Jun-2026"
+    ]
+  }
+]
+{"kind":"table","sheet":"12-Jun-2026","address":"A1:G29","rows":29,"cols":7,"values":[["VitaNudge Bug Verification - 12 Jun 2026",null,null,null,null,null,null],["Environment: Production Render | Frontend: https://vitanudge.onrender.com | API: https://vitanudge-api.onrender.com | Retested positive, negative, boundary, edge, mobile, security, and integration scenarios. No application files changed.",null,null,null,null,null,null],[null,null,null,null,null,null,null],["Bug ID","Module","Issue / Test","Steps to reproduce","Expected result","Actual result","QA result"],["BUG-001","Today / Profile","Profile-completion notification is not visible after adding the first food.","Use an incomplete profile > Today > add the first food.","A centered profile reminder should appear above all page content.","Direct Today + Add still does not create the first meal, so the profile reminder cannot trigger.","Fail"],["BUG-002","Goals","User could not find the edit-goal functionality.","Complete profile > create and save a recommended goal > return to Goals.","A clear edit action should open saved targets for modification.","Modify goal remains visible and editable; goal save now synchronizes to Today.","Pass"],["BUG-003","Today / Copy Yesterday","Copied foods need a selectable destination meal instead of always using the source meal.","Create a Dinner item yesterday > Today > Copy yesterday > review the item.","Each copied item should allow Breakfast, Lunch, Dinner, or Snack destination.","Destination dropdown offered all four meals; selective copy and changed destination both worked.","Pass"],["BUG-004","Today / Coach","Coach action and selected recommendation question should transfer from Today.","Create a macro gap > select Find options/Ask coach on Today.","Coach should open with the relevant question prefilled.","Today opened Coach with the active goal and macro-gap question prefilled.","Pass"],["BUG-005","Add Food / Barcode","Barcode result has no Edit values action, and duplicate save shows success plus duplicate messages.","Look up 3017620422003 > inspect actions > save > look up and save it again.","User can edit before save; duplicate attempt shows only the duplicate message.","No barcode Edit values action; duplicate save still showed both success and duplicate messages.","Fail"],["BUG-006","Add Food / Label","Label scan result has no Edit values action and can show conflicting validation/success states.","Scan a nutrition label > inspect extracted result > save valid/invalid results sequentially.","Extracted values are editable; only the current operation message is visible.","Deployed source contains Edit values, but image upload/extraction could not be rerun without an approved label fixture.","Blocked"],["BUG-007","Food Library","Library Add food previously opened Plate Scan.","Open Tools > Food Library > select + Add food.","The Add Food workspace should open.","Food Library + Add food opened /add-food.","Pass"],["BUG-008","Recipes / Subscription","Upgrade to Pro dialog is hidden below page chrome.","Use Core account > Recipes > select Add to library on a suggested recipe.","Upgrade dialog should be centered and fully visible immediately.","Upgrade dialog top was 729px in a 720px viewport, so it opened below the visible screen.","Fail"],["BUG-009","Login / Registration","First-time user needs visible account-creation access after an unsuccessful login.","On mobile Login, submit an unknown email/password and inspect the bottom action.","Privacy-safe error appears and Create free account remains visible and tappable.","Privacy-safe login error and Create free account remained visible on mobile.","Pass"],["BUG-010","Goals / Onboarding","Incomplete-profile Goals flow disables Next but provides no direct Profile action.","Create account without age/weight/height > open Goals > move to Stats.","Next is disabled and a clear Complete profile button opens Profile.","Next is disabled on Step 1 and Complete your profile opens Profile.","Pass"],[null,null,"when first time user tries to login  the neaasage displaying is - Incorrect email or password. Please try again or reset your password.It shoulkd be \"We couldn't sign you in. Check your details, or create an account if you're new.\"(we fixed it earlier )",null,null,null,null],[null,null,"when first time user logins , next button  in goal should be disable if user has not compeleted the profile.currently its disabling after moving to second step..",null,null,null,null],[null,null,null,null,null,null,null],[null,null,null,null,null,null,null],["BUG-011","Today / Meals","Direct Add, Edit, and Delete controls do not complete in the browser.","Today > select food > + Add; or use a copied entry > Edit/Delete.","Meal should save/edit/delete and dashboard totals should update.","Copy Yesterday can create a meal, but direct + Add, edit icon, and delete icon produced no change.","Fail"],["BUG-012","Reports","Custom date fields do not regenerate the selected report range.","Reports > Custom > change From/To, including inverted and one-day ranges.","Report refreshes to the inclusive range; inverted range is blocked.","Report remained on the previous 30-day range and showed no inverted-range error.","Fail"],["BUG-013","Goals","Out-of-range Stats values can advance.","Goals > Stats > enter 19kg or 401kg > Next.","Next is blocked with a clear range validation.","The wizard advanced to Activity without a field error.","Fail"],["BUG-014","Authentication","Email whitespace is not normalized.","Log in with spaces around a valid uppercase email.","Spaces are trimmed and authentication behaves like the normalized email.","Uppercase email passed; the same email with surrounding spaces returned 401.","Fail"],["BUG-015","Food Library","Search does not trim surrounding spaces.","Search for an existing food using uppercase plus leading/trailing spaces.","Normalized search returns the existing food.","The unspaced uppercase query matched; surrounding spaces returned 0 foods.","Fail"],["BUG-016","Meals API","Invalid edit quantity can silently retain the previous quantity.","PUT a meal quantity as 0 or non-numeric text.","Request is rejected with 400 and no ambiguous success.","0 and non-numeric values returned 200 and retained the old quantity; negative returned 400.","Fail"],["BUG-017","Clinical API","Non-numeric glucose can be stored.","POST glucose with value_mgdl='abc'.","Request is rejected as non-numeric.","API returned 201 while other out-of-range values were rejected.","Fail"],["BUG-018","Profile / Export","Authenticated JSON data export returns 500.","Profile > Export JSON or GET /api/auth/export-data.","Complete account JSON downloads/returns successfully.","Valid authenticated export returned HTTP 500.","Fail"],["BUG-019","Account Deletion","Delete account does not verify confirmation credentials.","Submit account deletion with incorrect email/password.","Deletion is rejected and the account remains active.","API returned 200, deleted the account, and subsequent login returned 401.","Fail"],["BUG-020","Mobile UI","Goals, Today, and Reports overflow at narrow widths; some touch targets are too short.","Inspect at 390x844 and 320x700.","No horizontal overflow; primary controls are comfortably tappable.","Goals overflowed at 390px; Today/Reports/Goals overflowed at 320px; several controls were 32-34px high.","Fail"],["BUG-021","Body / Hydration","Hydration accepts impractical extreme values.","POST 0.01ml and 1,000,000,000ml.","Practical documented minimum/maximum validation is applied.","Both values were accepted; no practical maximum exists.","Needs Change"]]}
+{"kind":"notice","message":"Cell search matched 0 entries."}

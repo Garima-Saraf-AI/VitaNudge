@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import AuthFrame from '../components/AuthFrame'
+import StatusToast from '../components/StatusToast'
 
 export default function Register() {
   const { register } = useAuth()
@@ -13,6 +14,43 @@ export default function Register() {
   async function handleSubmit(e) {
     e.preventDefault()
     setErr(''); setLoading(true)
+
+    // Client-side validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(form.email.trim())) {
+      setErr('Please enter a valid email address (e.g., you@email.com)')
+      setLoading(false)
+      return
+    }
+
+    // Password validation
+    if (form.password.length < 6) {
+      setErr('Password must be at least 6 characters')
+      setLoading(false)
+      return
+    }
+    if (form.password.length > 128) {
+      setErr('Password must be less than 128 characters')
+      setLoading(false)
+      return
+    }
+    if (form.password.includes(' ')) {
+      setErr('Password cannot contain spaces')
+      setLoading(false)
+      return
+    }
+    // Check for at least one letter and one number for stronger security
+    if (!/[a-zA-Z]/.test(form.password)) {
+      setErr('Password must contain at least one letter')
+      setLoading(false)
+      return
+    }
+    if (!/[0-9]/.test(form.password)) {
+      setErr('Password must contain at least one number')
+      setLoading(false)
+      return
+    }
+
     try {
       await register(form.name, form.email, form.password)
       // New users go to Goals for onboarding setup
@@ -21,8 +59,6 @@ export default function Register() {
       const errorMsg = e.error || e.message || 'Registration failed. Please try again.'
       setErr(errorMsg)
       console.error('Registration error:', e)
-      // Scroll to top to ensure error is visible
-      window.scrollTo({ top: 0, behavior: 'smooth' })
     } finally {
       setLoading(false)
     }
@@ -42,7 +78,7 @@ export default function Register() {
         </p>
       )}
     >
-        {err && <div className="error-box">{err}</div>}
+        <StatusToast message={err} tone="error" />
         <form onSubmit={handleSubmit}>
           <div className="form-grid full" style={{ marginBottom: 9 }}>
             <div className="form-group">
@@ -53,13 +89,16 @@ export default function Register() {
           <div className="form-grid full" style={{ marginBottom: 9 }}>
             <div className="form-group">
               <label>Email</label>
-              <input type="email" value={form.email} onChange={set('email')} placeholder="you@email.com" autoComplete="email" required />
+              <input type="text" value={form.email} onChange={set('email')} placeholder="you@email.com" autoComplete="email" required />
             </div>
           </div>
           <div className="form-grid full" style={{ marginBottom: 16 }}>
             <div className="form-group">
-              <label>Password (min 6 chars)</label>
-              <input type="password" value={form.password} onChange={set('password')} placeholder="Minimum 6 characters" autoComplete="new-password" required minLength={6} />
+              <label>Password</label>
+              <input type="password" value={form.password} onChange={set('password')} placeholder="Min 6 chars, include letter & number" autoComplete="new-password" required />
+              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>
+                At least 6 characters with a letter and a number
+              </div>
             </div>
           </div>
           <button className="btn btn-green btn-full" type="submit" disabled={loading}>

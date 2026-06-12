@@ -3,6 +3,7 @@ import api from '../utils/api'
 import { today } from '../utils/calc'
 import PageHero from '../components/PageHero'
 import UpgradeModal from '../components/UpgradeModal'
+import StatusToast from '../components/StatusToast'
 
 export default function Barcode() {
   const [barcode, setBarcode] = useState('')
@@ -106,8 +107,7 @@ export default function Barcode() {
 
   return (
     <div>
-      {msg && <div className="success-box">{msg}</div>}
-      {err && <div className="error-box">{err}</div>}
+      <StatusToast message={err || msg} tone={err ? 'error' : undefined} />
 
       <PageHero
         eyebrow="Barcode"

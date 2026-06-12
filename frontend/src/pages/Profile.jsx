@@ -4,6 +4,7 @@ import api from '../utils/api'
 import { useAuth } from '../hooks/useAuth'
 import PageHero from '../components/PageHero'
 import UpgradeModal from '../components/UpgradeModal'
+import StatusToast from '../components/StatusToast'
 
 const DIET_OPTIONS = [
   { value: 'vegan', label: 'Vegan' },
@@ -228,15 +229,13 @@ export default function Profile() {
 
   function flash(m) {
     setMsg(m)
-    setErr('') // Clear any errors
-    window.scrollTo({ top: 0, behavior: 'smooth' }) // Scroll to top to show message
+    setErr('')
     setTimeout(() => setMsg(''), 3500)
   }
 
   function flashError(m) {
     setErr(m)
-    setMsg('') // Clear any success messages
-    window.scrollTo({ top: 0, behavior: 'smooth' }) // Scroll to top to show error
+    setMsg('')
     setTimeout(() => setErr(''), 3500)
   }
 
@@ -266,15 +265,11 @@ export default function Profile() {
 
   return (
     <div>
-      {(msg || err) && (
-        <div className={`profile-toast ${err ? 'error' : 'success'}`} role="status">
-          <span className="profile-toast-mark" aria-hidden="true" />
-          <span className="profile-toast-copy">
-            <strong>{err ? 'Could not save profile' : 'Profile updated'}</strong>
-            <em>{err || 'Your changes have been saved.'}</em>
-          </span>
-        </div>
-      )}
+      <StatusToast
+        message={err || msg}
+        tone={err ? 'error' : 'success'}
+        title={err ? 'Could not save profile' : 'Profile updated'}
+      />
 
       <PageHero
         eyebrow="Profile"
@@ -339,7 +334,7 @@ export default function Profile() {
                 try {
                   const d = await api.post('/billing/portal')
                   if (d.portal_url) window.location.href = d.portal_url
-                } catch (e) { alert(e.error || 'Could not open billing portal') }
+                } catch (e) { flashError(e.error || 'Could not open billing portal') }
               }}>
                 Manage billing
               </button>

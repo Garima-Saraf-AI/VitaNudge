@@ -156,6 +156,8 @@ import api from '../utils/api'
 import { today, addDays, formatDate, shortDate, availableUnits } from '../utils/calc'
 import FoodSearch from '../components/FoodSearch'
 import { useAuth } from '../hooks/useAuth'
+import ModalPortal from '../components/ModalPortal'
+import StatusToast from '../components/StatusToast'
 
 const GOAL_TYPE_LABELS = {
   fat_loss: 'Fat loss', muscle: 'Build muscle', gain: 'Gain weight',
@@ -275,7 +277,7 @@ function CopyYesterdayModal({
   const selectedCount = allEntries.filter(entry => selectedIds.has(entry.id)).length
 
   return (
-    <div className="modal-bg" role="presentation">
+    <ModalPortal onClose={onCancel}>
       <div className="modal-box copy-meals-modal" role="dialog" aria-modal="true" aria-labelledby="copy-meals-title">
         <div className="ingredient-modal-head">
           <div>
@@ -349,7 +351,7 @@ function CopyYesterdayModal({
           </button>
         </div>
       </div>
-    </div>
+    </ModalPortal>
   )
 }
 
@@ -803,8 +805,7 @@ export default function Tracker() {
         </div>
       )}
 
-      {msg && <div className="success-box">{msg}</div>}
-      {err && <div className="error-box">{err}</div>}
+      <StatusToast message={err || msg} tone={err ? 'error' : undefined} />
       {copyReview && (
         <CopyYesterdayModal
           sourceDate={copyReview.sourceDate}
@@ -824,7 +825,7 @@ export default function Tracker() {
       )}
 
       {showProfileReminder && (
-        <div className="modal-bg" role="presentation">
+        <ModalPortal onClose={() => setShowProfileReminder(false)}>
           <div className="modal-box" role="dialog" aria-modal="true" style={{ maxWidth: 480 }}>
             <div className="ingredient-modal-head">
               <div>
@@ -871,7 +872,7 @@ export default function Tracker() {
               </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       <div className="dashboard-workspace">

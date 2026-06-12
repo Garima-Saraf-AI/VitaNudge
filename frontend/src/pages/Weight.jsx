@@ -5,6 +5,7 @@ import api from '../utils/api'
 import { addDays, formatDate, shortDate, today } from '../utils/calc'
 import { useAuth } from '../hooks/useAuth'
 import PageHero from '../components/PageHero'
+import StatusToast from '../components/StatusToast'
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip)
 
@@ -70,7 +71,7 @@ export default function Weight() {
 
   return (
     <div>
-      {msg && <div className="success-box">{msg}</div>}
+      <StatusToast message={msg} />
 
       <PageHero
         eyebrow="Weight"

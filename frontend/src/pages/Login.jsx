@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import AuthFrame from '../components/AuthFrame'
+import StatusToast from '../components/StatusToast'
 
 export default function Login() {
   const { login } = useAuth()
@@ -13,6 +14,21 @@ export default function Login() {
   async function handleSubmit(e) {
     e.preventDefault()
     setErr(''); setLoading(true)
+
+    // Client-side validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(form.email.trim())) {
+      setErr('Please enter a valid email address')
+      setLoading(false)
+      return
+    }
+
+    if (!form.password || form.password.length === 0) {
+      setErr('Please enter your password')
+      setLoading(false)
+      return
+    }
+
     try {
       await login(form.email, form.password)
       navigate('/')
@@ -20,8 +36,6 @@ export default function Login() {
       const errorMsg = e.error || e.message || 'Login failed. Please check your credentials.'
       setErr(errorMsg)
       console.error('Login error:', e)
-      // Scroll to top to ensure error is visible
-      window.scrollTo({ top: 0, behavior: 'smooth' })
     } finally {
       setLoading(false)
     }
@@ -39,12 +53,12 @@ export default function Login() {
         </p>
       )}
     >
-        {err && <div className="error-box">{err}</div>}
+        <StatusToast message={err} tone="error" />
         <form onSubmit={handleSubmit}>
           <div className="form-grid full" style={{ marginBottom: 9 }}>
             <div className="form-group">
               <label>Email</label>
-              <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="you@email.com" autoComplete="email" required />
+              <input type="text" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="you@email.com" autoComplete="email" required />
             </div>
           </div>
           <div className="form-grid full" style={{ marginBottom: 8 }}>

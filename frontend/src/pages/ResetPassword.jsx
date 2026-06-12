@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import api from '../utils/api'
 import AuthFrame from '../components/AuthFrame'
+import StatusToast from '../components/StatusToast'
 
 export default function ResetPassword() {
   const navigate = useNavigate()
@@ -40,13 +41,11 @@ export default function ResetPassword() {
 
     if (password.length < 6) {
       setError('Password must be at least 6 characters')
-      window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match')
-      window.scrollTo({ top: 0, behavior: 'smooth' })
       return
     }
 
@@ -56,7 +55,6 @@ export default function ResetPassword() {
       navigate('/login?reset=success')
     } catch (err) {
       setError(err.error || 'Failed to reset password. Please try again.')
-      window.scrollTo({ top: 0, behavior: 'smooth' })
       setResetting(false)
     }
   }
@@ -113,11 +111,7 @@ export default function ResetPassword() {
         </p>
       )}
     >
-      {error && (
-        <div className="error-box" style={{ marginBottom: 20 }}>
-          {error}
-        </div>
-      )}
+      <StatusToast message={error} tone="error" />
 
       <form onSubmit={handleSubmit}>
         <div className="form-grid full" style={{ marginBottom: 9 }}>

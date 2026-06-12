@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import api from '../utils/api'
 import LabelScan from './LabelScan'
+import ModalPortal from './ModalPortal'
+import StatusToast from './StatusToast'
 
 const ADD_FOOD_MODES = [
   { key: 'manual', label: 'Add manually' },
@@ -166,8 +168,17 @@ export default function CustomFoodModal({
   }
 
   return (
-    <div className="modal-bg" role="presentation">
+    <ModalPortal onClose={onClose}>
       <div className="modal-box ingredient-modal" role="dialog" aria-modal="true" aria-labelledby="custom-food-title">
+        <StatusToast
+          message={err}
+          tone="error"
+          actionLabel={err === MISSING_NUTRITION_MESSAGE && mode !== 'estimate' ? 'AI estimate' : undefined}
+          onAction={err === MISSING_NUTRITION_MESSAGE && mode !== 'estimate'
+            ? () => { setErr(''); setMode('estimate') }
+            : undefined}
+        />
+
         <div className="ingredient-modal-head">
           <div>
             <div className="modal-title" id="custom-food-title">{title}</div>
@@ -175,17 +186,6 @@ export default function CustomFoodModal({
           </div>
           <button className="modal-close-btn" type="button" aria-label="Close custom food" onClick={onClose}>&times;</button>
         </div>
-
-        {err && (
-          <div className="error-box" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
-            <span>{err}</span>
-            {err === MISSING_NUTRITION_MESSAGE && mode !== 'estimate' && (
-              <button className="btn btn-ghost btn-compact" type="button" onClick={() => { setErr(''); setMode('estimate') }}>
-                AI estimate
-              </button>
-            )}
-          </div>
-        )}
 
         <div className="ingredient-mode-tabs" role="tablist" aria-label="Add custom food mode">
           {ADD_FOOD_MODES.map(item => (
@@ -314,6 +314,6 @@ export default function CustomFoodModal({
           </button>
         </div>
       </div>
-    </div>
+    </ModalPortal>
   )
 }

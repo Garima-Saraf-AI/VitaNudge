@@ -64,13 +64,23 @@ router.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
     if (!name || !email || !password)
       return res.status(400).json({ error: 'name, email and password are required' });
-    if (password.length < 6)
-      return res.status(400).json({ error: 'Password must be at least 6 characters' });
 
-    // CRITICAL FIX: Email validation
+    // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email))
       return res.status(400).json({ error: 'Invalid email format' });
+
+    // Password validation
+    if (password.length < 6)
+      return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    if (password.length > 128)
+      return res.status(400).json({ error: 'Password must be less than 128 characters' });
+    if (password.includes(' '))
+      return res.status(400).json({ error: 'Password cannot contain spaces' });
+    if (!/[a-zA-Z]/.test(password))
+      return res.status(400).json({ error: 'Password must contain at least one letter' });
+    if (!/[0-9]/.test(password))
+      return res.status(400).json({ error: 'Password must contain at least one number' });
 
     // Validate name (same rules as profile update)
     const trimmedName = String(name).trim();

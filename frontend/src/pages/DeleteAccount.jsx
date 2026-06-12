@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import api from '../utils/api'
+import StatusToast from '../components/StatusToast'
 
 export default function DeleteAccount() {
   const navigate = useNavigate()
@@ -62,16 +63,12 @@ export default function DeleteAccount() {
 
   return (
     <div className="page">
+      <StatusToast message={error} tone="error" />
+
       <div className="page-header">
         <h1>Delete Account</h1>
         <p className="page-subtitle">Permanently remove your VitaNudge account</p>
       </div>
-
-      {error && (
-        <div className="error-box" style={{ marginBottom: 20 }}>
-          {error}
-        </div>
-      )}
 
       {step === 1 && (
         <div className="card">

@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom'
 import api from '../utils/api'
 import { useAuth } from '../hooks/useAuth'
 import { addDays, dateKey, today } from '../utils/calc'
+import StatusToast from '../components/StatusToast'
 
 const DEFAULT_GOALS = {
   goal_type: 'glucose',
@@ -400,7 +401,6 @@ export default function Goals() {
       }
 
       flash('✓ Goal targets saved successfully!')
-      window.scrollTo({ top: 0, behavior: 'smooth' })  // Scroll to top to show success
     } catch (err) {
       const errorMsg = err.error || err.message || 'Failed to save goals. Please check your inputs and try again.'
       flash('⚠️ ' + errorMsg)
@@ -974,22 +974,7 @@ export default function Goals() {
         </div>
       )}
 
-      {msg && (
-        <div className="success-box" style={{
-          padding: '16px 20px',
-          fontSize: '15px',
-          fontWeight: 600,
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          animation: 'slideDown 0.3s ease-out'
-        }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
-          {msg}
-        </div>
-      )}
+      <StatusToast message={msg} />
 
       {renderGoalTracker()}
 

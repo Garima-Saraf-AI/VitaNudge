@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import ModalPortal from './ModalPortal'
 
 const PLAN_FEATURES = {
   pro: [
@@ -21,11 +21,6 @@ const PLAN_FEATURES = {
 }
 
 export default function UpgradeModal({ feature, onClose }) {
-  // Scroll to top when modal opens to ensure visibility
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }, [])
-
   const featureMessages = {
     scan: "You've used all 5 free scans this month.",
     barcode: "You've used all 10 free barcode lookups this month.",
@@ -47,7 +42,7 @@ export default function UpgradeModal({ feature, onClose }) {
   }
 
   return (
-    <div className="modal-bg" role="presentation" onClick={e => e.target === e.currentTarget && onClose()}>
+    <ModalPortal onClose={onClose}>
       <div className="modal-box upgrade-modal" role="dialog" aria-modal="true" aria-labelledby="upgrade-title">
         <div className="upgrade-modal-head">
           <div className="upgrade-icon">⚡</div>
@@ -109,6 +104,6 @@ export default function UpgradeModal({ feature, onClose }) {
           <button className="btn-link" type="button" onClick={onClose}>Continue with free plan</button>
         </div>
       </div>
-    </div>
+    </ModalPortal>
   )
 }

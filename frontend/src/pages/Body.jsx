@@ -5,6 +5,7 @@ import api from '../utils/api'
 import { addDays, formatDate, shortDate, today, last7Days } from '../utils/calc'
 import { useAuth } from '../hooks/useAuth'
 import PageHero from '../components/PageHero'
+import StatusToast from '../components/StatusToast'
 
 ChartJS.register(LineElement, BarElement, PointElement, CategoryScale, LinearScale, Filler, Tooltip)
 
@@ -135,7 +136,7 @@ export default function Body() {
 
   return (
     <div>
-      {msg && <div className="success-box">{msg}</div>}
+      <StatusToast message={msg} />
 
       <PageHero
         eyebrow="Body"

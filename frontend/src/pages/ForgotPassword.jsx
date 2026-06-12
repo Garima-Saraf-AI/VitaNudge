@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../utils/api'
 import AuthFrame from '../components/AuthFrame'
+import StatusToast from '../components/StatusToast'
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('')
@@ -19,7 +20,6 @@ export default function ForgotPassword() {
       setSent(true)
     } catch (err) {
       setError(err.error || 'Failed to send reset email. Please try again.')
-      window.scrollTo({ top: 0, behavior: 'smooth' })
     } finally {
       setSending(false)
     }
@@ -91,11 +91,7 @@ export default function ForgotPassword() {
         </p>
       )}
     >
-      {error && (
-        <div className="error-box" style={{ marginBottom: 20 }}>
-          {error}
-        </div>
-      )}
+      <StatusToast message={error} tone="error" />
 
       <form onSubmit={handleSubmit}>
         <div className="form-grid full" style={{ marginBottom: 16 }}>

@@ -4,6 +4,7 @@ import { addDays, formatDate, shortDate, today } from '../utils/calc'
 import PageHero from '../components/PageHero'
 import { useAuth } from '../hooks/useAuth'
 import UpgradeModal from '../components/UpgradeModal'
+import StatusToast from '../components/StatusToast'
 
 export default function Medications() {
   const { user } = useAuth()
@@ -117,7 +118,7 @@ export default function Medications() {
 
   return (
     <div>
-      {msg && <div className="success-box">{msg}</div>}
+      <StatusToast message={msg} />
 
       <PageHero
         eyebrow="Medications"

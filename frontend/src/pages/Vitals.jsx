@@ -6,6 +6,7 @@ import { addDays, formatDate, shortDate, today } from '../utils/calc'
 import PageHero from '../components/PageHero'
 import { useAuth } from '../hooks/useAuth'
 import UpgradeModal from '../components/UpgradeModal'
+import StatusToast from '../components/StatusToast'
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend)
 
@@ -107,7 +108,7 @@ export default function Vitals() {
 
   return (
     <div>
-      {msg && <div className="success-box">{msg}</div>}
+      <StatusToast message={msg} />
 
       <PageHero
         eyebrow="Vitals"

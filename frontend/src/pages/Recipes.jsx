@@ -5,6 +5,7 @@ import { useAuth } from '../hooks/useAuth'
 import PageHero from '../components/PageHero'
 import CustomFoodModal from '../components/CustomFoodModal'
 import UpgradeModal from '../components/UpgradeModal'
+import StatusToast from '../components/StatusToast'
 
 const DEFAULT_GOALS = {
   goal_type: 'glucose',
@@ -401,8 +402,7 @@ export default function Recipes() {
 
   return (
     <div>
-      {msg && <div className="success-box">{msg}</div>}
-      {err && <div className="error-box">{err}</div>}
+      <StatusToast message={err || msg} tone={err ? 'error' : undefined} />
 
       <PageHero
         eyebrow="Recipes"
