@@ -229,12 +229,14 @@ export default function Profile() {
   function flash(m) {
     setMsg(m)
     setErr('') // Clear any errors
+    window.scrollTo({ top: 0, behavior: 'smooth' }) // Scroll to top to show message
     setTimeout(() => setMsg(''), 3500)
   }
 
   function flashError(m) {
     setErr(m)
     setMsg('') // Clear any success messages
+    window.scrollTo({ top: 0, behavior: 'smooth' }) // Scroll to top to show error
     setTimeout(() => setErr(''), 3500)
   }
 
