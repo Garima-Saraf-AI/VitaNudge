@@ -5,7 +5,7 @@ import { FileBlob, SpreadsheetFile } from "@oai/artifact-tool";
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
 const workbook = await SpreadsheetFile.importXlsx(
-  await FileBlob.load(path.join(dir, "TestCase_VitaNudge_Updated.xlsx"))
+  await FileBlob.load("/Users/uditgupta/Documents/TestCase_VitaNudge_Updated.xlsx")
 );
 
 const keyRanges = [
@@ -13,7 +13,7 @@ const keyRanges = [
   ["testcases", "A108:G140", "updated-goals-profile.png"],
   ["testcases", "A198:G237", "updated-bottom.png"],
   ["issues", "A1:E14", "updated-issues.png"],
-  ["11-Jun-2026", "A1:E14", "updated-date-sheet.png"]
+  ["12-Jun-2026", "A1:E14", "updated-date-sheet.png"]
 ];
 
 for (const [sheetName, range, filename] of keyRanges) {

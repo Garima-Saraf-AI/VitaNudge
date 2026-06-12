@@ -908,6 +908,8 @@ function LabelScanner({ onSaveToLibrary, saving }) {
   const [imgSrc, setImgSrc] = useState(null)
   const [scanning, setScanning] = useState(false)
   const [result, setResult] = useState(null)
+  const [editedResult, setEditedResult] = useState(null)
+  const [editMode, setEditMode] = useState(false)
   const [error, setError] = useState('')
   const [showUpgrade, setShowUpgrade] = useState(false)
   const fileRef = useRef(null)
@@ -939,6 +941,8 @@ function LabelScanner({ onSaveToLibrary, saving }) {
       })
       const data = await api.post('/scan', { imageBase64, mediaType: file.type || 'image/jpeg' })
       setResult(data.result)
+      setEditedResult(data.result) // Initialize editable copy
+      setEditMode(false)
     } catch (e) {
       if (e.upgrade_required) { setShowUpgrade(true); return }
       setError(e.error || 'Could not read label')
@@ -948,24 +952,27 @@ function LabelScanner({ onSaveToLibrary, saving }) {
   }
 
   async function saveFromLabel() {
-    if (!result) return
+    const dataToSave = editedResult || result
+    if (!dataToSave) return
     const food = {
-      name: result.name || '',
+      name: dataToSave.name || '',
       category: 'custom',
       base_unit: 'g',
       base_amount: 100,
-      serving: result.serving_size || '100g',
-      cal: Number(result.calories) || 0,
-      protein_g: Number(result.protein_g) || 0,
-      fiber_g: Number(result.fiber_g) || 0,
-      carbs_g: Number(result.carbs_g) || 0,
-      fat_g: Number(result.fat_g) || 0,
-      gi: result.gi || 'unknown',
-      notes: result.diabetic_note || '',
+      serving: dataToSave.serving_size || '100g',
+      cal: Number(dataToSave.calories) || 0,
+      protein_g: Number(dataToSave.protein_g) || 0,
+      fiber_g: Number(dataToSave.fiber_g) || 0,
+      carbs_g: Number(dataToSave.carbs_g) || 0,
+      fat_g: Number(dataToSave.fat_g) || 0,
+      gi: dataToSave.gi || 'unknown',
+      notes: dataToSave.diabetic_note || '',
     }
     await onSaveToLibrary(food)
     setImgSrc(null)
     setResult(null)
+    setEditedResult(null)
+    setEditMode(false)
   }
 
   return (
@@ -1067,7 +1074,7 @@ function LabelScanner({ onSaveToLibrary, saving }) {
               </div>
             )}
 
-            {result && (
+            {result && !editMode && (
               <div style={{
                 background: 'var(--surface2)',
                 border: '1px solid var(--border)',
@@ -1078,16 +1085,120 @@ function LabelScanner({ onSaveToLibrary, saving }) {
                   Extracted nutrition
                 </div>
                 <div style={{ display: 'grid', gap: 6, fontSize: 12, marginBottom: 12 }}>
-                  <div><strong>Name:</strong> {result.name || 'Not detected'}</div>
-                  <div><strong>Serving:</strong> {result.serving_size || 'Not detected'}</div>
-                  <div><strong>Calories:</strong> {result.calories || 0}</div>
-                  <div><strong>Protein:</strong> {result.protein_g || 0}g</div>
-                  <div><strong>Carbs:</strong> {result.carbs_g || 0}g</div>
-                  <div><strong>Fiber:</strong> {result.fiber_g || 0}g</div>
+                  <div><strong>Name:</strong> {editedResult?.name || result.name || 'Not detected'}</div>
+                  <div><strong>Serving:</strong> {editedResult?.serving_size || result.serving_size || 'Not detected'}</div>
+                  <div><strong>Calories:</strong> {editedResult?.calories || result.calories || 0}</div>
+                  <div><strong>Protein:</strong> {editedResult?.protein_g || result.protein_g || 0}g</div>
+                  <div><strong>Carbs:</strong> {editedResult?.carbs_g || result.carbs_g || 0}g</div>
+                  <div><strong>Fiber:</strong> {editedResult?.fiber_g || result.fiber_g || 0}g</div>
                 </div>
-                <button className="btn btn-green" onClick={saveFromLabel} disabled={saving} style={{ width: '100%' }}>
-                  {saving ? 'Saving...' : 'Save to library'}
-                </button>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    className="btn btn-ghost"
+                    onClick={() => setEditMode(true)}
+                    style={{ flex: 1 }}
+                  >
+                    ✏️ Edit values
+                  </button>
+                  <button
+                    className="btn btn-green"
+                    onClick={saveFromLabel}
+                    disabled={saving}
+                    style={{ flex: 1 }}
+                  >
+                    {saving ? 'Saving...' : 'Save to library'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {result && editMode && editedResult && (
+              <div style={{
+                background: 'var(--surface2)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--rs)',
+                padding: 14,
+              }}>
+                <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 10, color: 'var(--text)' }}>
+                  Edit nutrition values
+                </div>
+                <div style={{ display: 'grid', gap: 10, marginBottom: 12 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, marginBottom: 4, color: 'var(--muted)' }}>Name</label>
+                    <input
+                      type="text"
+                      value={editedResult.name || ''}
+                      onChange={(e) => setEditedResult({ ...editedResult, name: e.target.value })}
+                      style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid var(--border)', borderRadius: 'var(--rs)' }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, marginBottom: 4, color: 'var(--muted)' }}>Serving size</label>
+                    <input
+                      type="text"
+                      value={editedResult.serving_size || ''}
+                      onChange={(e) => setEditedResult({ ...editedResult, serving_size: e.target.value })}
+                      style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid var(--border)', borderRadius: 'var(--rs)' }}
+                    />
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 11, fontWeight: 700, marginBottom: 4, color: 'var(--muted)' }}>Calories</label>
+                      <input
+                        type="number"
+                        value={editedResult.calories || 0}
+                        onChange={(e) => setEditedResult({ ...editedResult, calories: e.target.value })}
+                        style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid var(--border)', borderRadius: 'var(--rs)' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 11, fontWeight: 700, marginBottom: 4, color: 'var(--muted)' }}>Protein (g)</label>
+                      <input
+                        type="number"
+                        value={editedResult.protein_g || 0}
+                        onChange={(e) => setEditedResult({ ...editedResult, protein_g: e.target.value })}
+                        style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid var(--border)', borderRadius: 'var(--rs)' }}
+                      />
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 11, fontWeight: 700, marginBottom: 4, color: 'var(--muted)' }}>Carbs (g)</label>
+                      <input
+                        type="number"
+                        value={editedResult.carbs_g || 0}
+                        onChange={(e) => setEditedResult({ ...editedResult, carbs_g: e.target.value })}
+                        style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid var(--border)', borderRadius: 'var(--rs)' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 11, fontWeight: 700, marginBottom: 4, color: 'var(--muted)' }}>Fiber (g)</label>
+                      <input
+                        type="number"
+                        value={editedResult.fiber_g || 0}
+                        onChange={(e) => setEditedResult({ ...editedResult, fiber_g: e.target.value })}
+                        style={{ width: '100%', padding: '6px 10px', fontSize: 13, border: '1px solid var(--border)', borderRadius: 'var(--rs)' }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button
+                    className="btn btn-ghost"
+                    onClick={() => { setEditMode(false); setEditedResult(result); }}
+                    style={{ flex: 1 }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn btn-green"
+                    onClick={saveFromLabel}
+                    disabled={saving}
+                    style={{ flex: 1 }}
+                  >
+                    {saving ? 'Saving...' : 'Save to library'}
+                  </button>
+                </div>
               </div>
             )}
           </>

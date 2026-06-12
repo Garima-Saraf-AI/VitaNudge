@@ -4,11 +4,17 @@ import { fileURLToPath } from "node:url";
 import { FileBlob, SpreadsheetFile } from "@oai/artifact-tool";
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
-const inputPath = path.join(dir, "source.xlsx");
-const outputPath = path.join(dir, "TestCase_VitaNudge_Updated.xlsx");
+const inputPath = "/Users/uditgupta/Documents/TestCase_VitaNudge_Updated.xlsx";
+const outputPath = inputPath;
 const workbook = await SpreadsheetFile.importXlsx(await FileBlob.load(inputPath));
 const sheet = workbook.worksheets.getItem("testcases");
 const testingDate = "12-Jun-2026";
+
+try {
+  workbook.worksheets.getItem("11-Jun-2026").name = testingDate;
+} catch {
+  // The sheet may already have today's name when the updater is rerun.
+}
 
 const rows = sheet.getRange("A1:G237").values;
 rows[1][6] = "Testing date";
