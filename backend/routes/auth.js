@@ -119,10 +119,10 @@ router.post('/login', async (req, res) => {
 
     const db = getDb();
     const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email.toLowerCase());
-    if (!user) return res.status(401).json({ error: 'Incorrect email or password. Please try again or reset your password.' });
+    if (!user) return res.status(401).json({ error: 'We couldn\'t sign you in. Check your details, or create an account if you\'re new.' });
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ error: 'Incorrect email or password. Please try again or reset your password.' });
+    if (!match) return res.status(401).json({ error: 'We couldn\'t sign you in. Check your details, or create an account if you\'re new.' });
 
     const token = signToken(user.id);
     const { password: _, ...safeUser } = user;
