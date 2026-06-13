@@ -8,5 +8,8 @@
     "test": "npm run test:frontend && npm run test:backend",
     "test:frontend": "npm --prefix frontend run test:build",
     "test:backend": "npm --prefix backend run test:regression"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
   }
 }
