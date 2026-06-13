@@ -155,6 +155,7 @@ import { useNavigate } from 'react-router-dom'
 import api from '../utils/api'
 import { today, addDays, formatDate, shortDate, availableUnits } from '../utils/calc'
 import FoodSearch from '../components/FoodSearch'
+import ModalPortal from '../components/ModalPortal'
 import { useAuth } from '../hooks/useAuth'
 
 const GOAL_TYPE_LABELS = {
@@ -406,7 +407,7 @@ export default function Tracker() {
     load()
     // Check if profile is incomplete and show reminder
     const profileIncomplete = !user?.age || !user?.weight_kg || !user?.height_cm || !user?.gender
-    if (profileIncomplete && totalEntries >= 0) { // Show after first food logged
+    if (profileIncomplete && totalEntries === 0) {
       setShowProfileReminder(true)
     }
   }
@@ -878,8 +879,11 @@ export default function Tracker() {
       )}
 
       {showProfileReminder && (
-        <div className="modal-bg" role="presentation">
-          <div className="modal-box" role="dialog" aria-modal="true" style={{ maxWidth: 480 }}>
+        <ModalPortal
+          className="profile-reminder-bg"
+          onClose={() => setShowProfileReminder(false)}
+        >
+          <div className="modal-box profile-reminder-modal" role="dialog" aria-modal="true" style={{ maxWidth: 480 }}>
             <div className="ingredient-modal-head">
               <div>
                 <div className="modal-title">Complete your profile for better recommendations</div>
@@ -925,7 +929,7 @@ export default function Tracker() {
               </div>
             </div>
           </div>
-        </div>
+        </ModalPortal>
       )}
 
       <div className="dashboard-workspace">

@@ -1,6 +1,7 @@
 const Database = require('better-sqlite3');
 const { v4: uuidv4 } = require('uuid');
 const { DB_PATH, initDatabase } = require('./init');
+const USDA_FOODS = require('./default-foods-usda.json');
 
 const DEFAULT_FOODS = [
   // ── PROTEIN FOODS ──
@@ -65,13 +66,6 @@ const DEFAULT_FOODS = [
 function seedDatabase() {
   initDatabase();
   const db = new Database(DB_PATH);
-  
-  const existing = db.prepare('SELECT COUNT(*) as c FROM foods WHERE is_default = 1').get();
-  if (existing.c > 0) {
-    console.log(`ℹ️  ${existing.c} default foods already seeded. Skipping.`);
-    db.close();
-    return;
-  }
 
   const insert = db.prepare(`
     INSERT INTO foods (id, user_id, name, category, base_unit, base_amount, serving,
@@ -79,21 +73,58 @@ function seedDatabase() {
     VALUES (?, NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
   `);
 
+  const update = db.prepare(`
+    UPDATE foods SET name = ?, category = ?, base_unit = ?, base_amount = ?, serving = ?,
+      cal = ?, protein_g = ?, fiber_g = ?, carbs_g = ?, fat_g = ?, gi = ?, notes = ?
+    WHERE id = ? AND is_default = 1
+  `);
+
+  const findById = db.prepare('SELECT id FROM foods WHERE id = ? AND is_default = 1');
+  const findByName = db.prepare(`
+    SELECT id FROM foods
+    WHERE is_default = 1 AND LOWER(TRIM(name)) = LOWER(TRIM(?))
+    LIMIT 1
+  `);
+
   const insertMany = db.transaction((foods) => {
+    let inserted = 0;
+    let updated = 0;
+    let skipped = 0;
+
     for (const f of foods) {
+      const stableId = f.fdc_id ? `usda-fdc-${f.fdc_id}` : null;
+      if (stableId && findById.get(stableId)) {
+        update.run(
+          f.name, f.category, f.base_unit, f.base_amount, f.serving,
+          f.cal, f.protein_g, f.fiber_g, f.carbs_g, f.fat_g, f.gi, f.notes,
+          stableId
+        );
+        updated += 1;
+        continue;
+      }
+
+      if (findByName.get(f.name)) {
+        skipped += 1;
+        continue;
+      }
+
       insert.run(
-        uuidv4(), f.name, f.category, f.base_unit, f.base_amount, f.serving,
+        stableId || uuidv4(), f.name, f.category, f.base_unit, f.base_amount, f.serving,
         f.cal, f.protein_g, f.fiber_g, f.carbs_g, f.fat_g, f.gi, f.notes
       );
+      inserted += 1;
     }
+
+    return { inserted, updated, skipped };
   });
 
-  insertMany(DEFAULT_FOODS);
-  console.log(`✅ Seeded ${DEFAULT_FOODS.length} default foods`);
+  const result = insertMany([...DEFAULT_FOODS, ...USDA_FOODS]);
+  const total = db.prepare('SELECT COUNT(*) AS count FROM foods WHERE is_default = 1').get().count;
+  console.log(`✅ Default food library ready: ${total} foods (${result.inserted} added, ${result.updated} refreshed, ${result.skipped} already present)`);
   db.close();
 }
 
-module.exports = { seedDatabase };
+module.exports = { seedDatabase, DEFAULT_FOODS, USDA_FOODS };
 
 if (require.main === module) {
   seedDatabase();
