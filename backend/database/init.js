@@ -28,6 +28,7 @@ function initDatabase() {
       state_region TEXT DEFAULT '',
       city        TEXT DEFAULT '',
       timezone    TEXT DEFAULT '',
+      profile_completed_at TEXT,
       created_at  TEXT DEFAULT (datetime('now')),
       updated_at  TEXT DEFAULT (datetime('now'))
     );
@@ -271,6 +272,7 @@ function initDatabase() {
     ['state_region', "ALTER TABLE users ADD COLUMN state_region TEXT DEFAULT ''"],
     ['city', "ALTER TABLE users ADD COLUMN city TEXT DEFAULT ''"],
     ['timezone', "ALTER TABLE users ADD COLUMN timezone TEXT DEFAULT ''"],
+    ['profile_completed_at', 'ALTER TABLE users ADD COLUMN profile_completed_at TEXT'],
     // Subscription / monetization columns
     ['subscription_tier', "ALTER TABLE users ADD COLUMN subscription_tier TEXT DEFAULT 'free'"],
     ['stripe_customer_id', "ALTER TABLE users ADD COLUMN stripe_customer_id TEXT DEFAULT ''"],
@@ -284,6 +286,17 @@ function initDatabase() {
   for (const [name, statement] of userMigrations) {
     if (!userColumns.has(name)) db.prepare(statement).run();
   }
+  db.prepare(`
+    UPDATE users
+    SET profile_completed_at = updated_at
+    WHERE profile_completed_at IS NULL
+      AND age IS NOT NULL
+      AND weight_kg IS NOT NULL
+      AND height_cm IS NOT NULL
+      AND updated_at IS NOT NULL
+      AND created_at IS NOT NULL
+      AND updated_at != created_at
+  `).run();
 
   // Password reset tokens table
   db.exec(`

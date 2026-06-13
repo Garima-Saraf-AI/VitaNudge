@@ -5,7 +5,6 @@ import { addDays, today } from '../utils/calc'
 import PageHero from '../components/PageHero'
 import { useAuth } from '../hooks/useAuth'
 import UpgradeModal from '../components/UpgradeModal'
-import StatusToast from '../components/StatusToast'
 
 const SUGGESTIONS = [
   'Why is my glucose high after lunch?',
@@ -66,8 +65,6 @@ export default function Coach() {
 
   return (
     <div>
-      <StatusToast message={err} tone="error" />
-
       <PageHero
         eyebrow="AI coach"
         title="Ask smarter questions about your logs."
@@ -76,6 +73,7 @@ export default function Coach() {
         metricLabel="context aware"
       />
 
+      {err && <div className="error-box">{err}</div>}
       {presetQuestion && (
         <div className="success-box">
           Selected from Today quick recommendation.

@@ -44,7 +44,8 @@ async function sendEmail({ to, subject, text, html }) {
 
 const USER_SELECT = `
   id, name, email, age, gender, weight_kg, height_cm, condition, diet_preference,
-  country, state_region, city, timezone, subscription_tier, subscription_expires_at
+  country, state_region, city, timezone, profile_completed_at,
+  subscription_tier, subscription_expires_at
 `;
 
 function cleanText(value, max = 80) {
@@ -96,8 +97,11 @@ router.post('/register', async (req, res) => {
     const userId = uuidv4();
 
     db.prepare(`
-      INSERT INTO users (id, name, email, password, diet_preference) VALUES (?, ?, ?, ?, ?)
-    `).run(userId, trimmedName, email.toLowerCase(), hash, '');
+      INSERT INTO users (
+        id, name, email, password, age, weight_kg, height_cm, condition,
+        diet_preference, country, state_region, city, timezone, profile_completed_at
+      ) VALUES (?, ?, ?, ?, NULL, NULL, NULL, '', '', '', '', '', '', NULL)
+    `).run(userId, trimmedName, email.toLowerCase(), hash);
 
     // Create default goals
     db.prepare(`
@@ -189,7 +193,8 @@ router.put('/profile', require('../middleware/auth').authMiddleware, (req, res) 
   const db = getDb();
   db.prepare(`
     UPDATE users SET name=?, age=?, gender=?, weight_kg=?, height_cm=?, condition=?, diet_preference=?,
-      country=?, state_region=?, city=?, timezone=?, updated_at=datetime('now')
+      country=?, state_region=?, city=?, timezone=?,
+      profile_completed_at=datetime('now'), updated_at=datetime('now')
     WHERE id=?
   `).run(trimmedName, numAge, safeGender, numWeight, numHeight, safeCondition, safeDietPreference, safeCountry, safeState, safeCity, safeTimeZone, req.userId);
   const user = db.prepare(`SELECT ${USER_SELECT} FROM users WHERE id = ?`).get(req.userId);

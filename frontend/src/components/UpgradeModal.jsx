@@ -30,9 +30,11 @@ export default function UpgradeModal({ feature, onClose }) {
     templates: 'You\'ve reached the 3-template limit on the free plan.',
     export: 'Data export is a Pro feature.',
     coach_pro: 'Gemini-powered AI coaching is a Pro feature.',
+    clinical: 'The Clinical dashboard requires the Clinical plan.',
   }
 
   const message = featureMessages[feature] || 'Upgrade to unlock this feature.'
+  const upgradeKicker = feature === 'clinical' ? 'Upgrade to Clinical' : 'Upgrade to Pro'
 
   // Payment provider not yet configured - manual upgrade only
   function requestUpgrade(plan) {
@@ -47,7 +49,7 @@ export default function UpgradeModal({ feature, onClose }) {
         <div className="upgrade-modal-head">
           <div className="upgrade-icon">⚡</div>
           <div>
-            <div className="upgrade-kicker">Upgrade to Pro</div>
+            <div className="upgrade-kicker">{upgradeKicker}</div>
             <h2 id="upgrade-title">Unlock the full experience</h2>
             <p>{message}</p>
           </div>

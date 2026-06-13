@@ -3,7 +3,6 @@ import api from '../utils/api'
 import { today } from '../utils/calc'
 import PageHero from '../components/PageHero'
 import UpgradeModal from '../components/UpgradeModal'
-import StatusToast from '../components/StatusToast'
 
 export default function Barcode() {
   const [barcode, setBarcode] = useState('')
@@ -109,8 +108,6 @@ export default function Barcode() {
 
   return (
     <div>
-      <StatusToast message={err || msg} tone={err ? 'error' : undefined} />
-
       <PageHero
         eyebrow="Barcode"
         title="Log packaged foods faster."
@@ -121,6 +118,8 @@ export default function Barcode() {
 
       <div className="card">
         <div className="card-title">Barcode scanner</div>
+        {msg && <div className="success-box">{msg}</div>}
+        {err && <div className="error-box">{err}</div>}
         <div className="form-grid full">
           <div className="form-group">
             <label>Barcode number</label>

@@ -91,6 +91,7 @@ export default function Profile() {
   const [fieldErrors, setFieldErrors] = useState({})
   const [billingStatus, setBillingStatus] = useState(null)
   const [showUpgrade, setShowUpgrade] = useState(false)
+  const [exportBusy, setExportBusy] = useState('')
 
   const countries = useMemo(
     () => locationApi ? locationApi.Country.getAllCountries().sort((a, b) => a.name.localeCompare(b.name)) : [],
@@ -259,9 +260,33 @@ export default function Profile() {
     }))
   }
 
+  async function downloadExport(format) {
+    if (!billingStatus?.is_pro || exportBusy) return
+    setErr('')
+    setMsg('')
+    setExportBusy(format)
+    try {
+      const blob = await api.get(`/export?format=${format}`, { responseType: 'blob' })
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = format === 'csv' ? 'vitanudge-meals.csv' : 'vitanudge-export.json'
+      document.body.appendChild(anchor)
+      anchor.click()
+      anchor.remove()
+      URL.revokeObjectURL(url)
+      flash(format === 'csv' ? 'Meals CSV downloaded.' : 'Health data downloaded.')
+    } catch (e) {
+      flashError(e.error || 'Could not export your data')
+    } finally {
+      setExportBusy('')
+    }
+  }
+
   const bmi = user?.weight_kg && user?.height_cm
     ? (user.weight_kg / ((user.height_cm / 100) ** 2)).toFixed(1)
     : '-'
+  const canExport = Boolean(billingStatus?.is_pro)
 
   return (
     <div>
@@ -345,51 +370,44 @@ export default function Profile() {
 
       {/* Export data card */}
       <div className="card">
-        <div className="card-title">Your data</div>
+        <div className="profile-data-title">
+          <div className="card-title">Your data</div>
+          <span className={`profile-feature-badge${canExport ? ' unlocked' : ''}`}>
+            {canExport ? `${billingStatus?.tier === 'clinical' ? 'Clinical' : 'Pro'} access` : 'Pro feature'}
+          </span>
+        </div>
         <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 12 }}>
           Download all your health data — meals, glucose, weight, medications, and more.
         </p>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <a
+        {!canExport && billingStatus && (
+          <p className="profile-feature-note">
+            Upgrade to Pro or Clinical to download health records.
+          </p>
+        )}
+        <div className="profile-export-actions">
+          <button
             className="btn btn-ghost"
-            href={`${(import.meta.env.VITE_API_URL || 'https://vitanudge-api.onrender.com').replace(/\/+$/, '')}/api/export?format=json`}
-            download="vitanudge-export.json"
-            onClick={e => {
-              const token = localStorage.getItem('nt_token')
-              if (!token) return
-              e.preventDefault()
-              // Fetch with auth header for download
-              fetch(`${(import.meta.env.VITE_API_URL || 'https://vitanudge-api.onrender.com').replace(/\/+$/, '')}/api/export?format=json`, {
-                headers: { Authorization: `Bearer ${token}` }
-              }).then(r => r.blob()).then(blob => {
-                const a = document.createElement('a')
-                a.href = URL.createObjectURL(blob)
-                a.download = 'vitanudge-export.json'
-                a.click()
-              })
-            }}
+            type="button"
+            disabled={!canExport || Boolean(exportBusy)}
+            onClick={() => downloadExport('json')}
+            title={canExport ? 'Download all health data as JSON' : 'Available on Pro and Clinical plans'}
           >
-            Export JSON
-          </a>
-          <a
+            {exportBusy === 'json' ? 'Exporting...' : 'Export JSON'}
+          </button>
+          <button
             className="btn btn-ghost"
-            href="#"
-            onClick={e => {
-              e.preventDefault()
-              const token = localStorage.getItem('nt_token')
-              if (!token) return
-              fetch(`${(import.meta.env.VITE_API_URL || 'https://vitanudge-api.onrender.com').replace(/\/+$/, '')}/api/export?format=csv`, {
-                headers: { Authorization: `Bearer ${token}` }
-              }).then(r => r.blob()).then(blob => {
-                const a = document.createElement('a')
-                a.href = URL.createObjectURL(blob)
-                a.download = 'vitanudge-meals.csv'
-                a.click()
-              })
-            }}
+            type="button"
+            disabled={!canExport || Boolean(exportBusy)}
+            onClick={() => downloadExport('csv')}
+            title={canExport ? 'Download meal logs as CSV' : 'Available on Pro and Clinical plans'}
           >
-            Export meals CSV
-          </a>
+            {exportBusy === 'csv' ? 'Exporting...' : 'Export meals CSV'}
+          </button>
+          {!canExport && billingStatus && (
+            <button className="btn btn-green" type="button" onClick={() => setShowUpgrade(true)}>
+              View plans
+            </button>
+          )}
         </div>
       </div>
 

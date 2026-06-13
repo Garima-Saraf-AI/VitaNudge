@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { calcMacros, availableUnits, defaultUnit, defaultQty, amtLabel } from '../utils/calc'
-import ModalPortal from './ModalPortal'
 
 export default function LogModal({ food, onConfirm, onClose }) {
   const [meal, setMeal] = useState('breakfast')
@@ -18,9 +17,9 @@ export default function LogModal({ food, onConfirm, onClose }) {
   }
 
   return (
-    <ModalPortal onClose={onClose}>
-      <div className="modal-box" role="dialog" aria-modal="true" aria-labelledby="log-food-title">
-        <div className="modal-title" id="log-food-title">Log — {food.name}</div>
+    <div className="modal-bg" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal-box">
+        <div className="modal-title">Log — {food.name}</div>
         <div className="modal-sub">Base: {food.cal}kcal · P{food.protein_g}g · F{food.fiber_g}g per {food.base_amount}{food.base_unit}</div>
 
         <div className="form-grid">
@@ -72,6 +71,6 @@ export default function LogModal({ food, onConfirm, onClose }) {
           })}>Add to log</button>
         </div>
       </div>
-    </ModalPortal>
+    </div>
   )
 }

@@ -47,7 +47,7 @@ const TOOL_SECTIONS = [
     title: 'Track Health',
     items: [
       { path: '/body',     label: 'Body',            desc: 'Weight, hydration, and daily steps in one view.', icon: <BodyIcon />,     tier: 'Core' },
-      { path: '/clinical', label: 'Clinical',        desc: 'Glucose, blood pressure, HbA1c, and wellbeing.', icon: <GlucoseIcon />,  tier: 'Core' },
+      { path: '/clinical', label: 'Clinical',        desc: 'Glucose, blood pressure, HbA1c, and wellbeing.', icon: <GlucoseIcon />,  tier: 'Clinical' },
       { path: '/meds',     label: 'Medications',     desc: 'Daily adherence tracking with streak counter.',  icon: <MedsIcon />,     tier: 'Plus' },
     ],
   },

@@ -156,8 +156,6 @@ import api from '../utils/api'
 import { today, addDays, formatDate, shortDate, availableUnits } from '../utils/calc'
 import FoodSearch from '../components/FoodSearch'
 import { useAuth } from '../hooks/useAuth'
-import ModalPortal from '../components/ModalPortal'
-import StatusToast from '../components/StatusToast'
 
 const GOAL_TYPE_LABELS = {
   fat_loss: 'Fat loss', muscle: 'Build muscle', gain: 'Gain weight',
@@ -277,7 +275,7 @@ function CopyYesterdayModal({
   const selectedCount = allEntries.filter(entry => selectedIds.has(entry.id)).length
 
   return (
-    <ModalPortal onClose={onCancel}>
+    <div className="modal-bg" role="presentation">
       <div className="modal-box copy-meals-modal" role="dialog" aria-modal="true" aria-labelledby="copy-meals-title">
         <div className="ingredient-modal-head">
           <div>
@@ -351,7 +349,7 @@ function CopyYesterdayModal({
           </button>
         </div>
       </div>
-    </ModalPortal>
+    </div>
   )
 }
 
@@ -514,7 +512,13 @@ export default function Tracker() {
 
   const G = summary?.goals  || { cal: 1700, protein_g: 110, fiber_g: 35, carbs_g: 150 }
   const T = summary?.totals || { cal: 0, protein_g: 0, fiber_g: 0, carbs_g: 0 }
-  const profileComplete = Boolean(user?.age && user?.weight_kg && user?.height_cm && user?.gender)
+  const profileComplete = Boolean(
+    user?.profile_completed_at &&
+    user?.age &&
+    user?.weight_kg &&
+    user?.height_cm &&
+    user?.gender
+  )
   const goalPlanConfirmed = Boolean(G.target_weight_kg || G.target_date || G.target_summary)
   const hasPersonalizedTargets = profileComplete && goalPlanConfirmed
   const targetLabel = hasPersonalizedTargets ? 'Goal' : 'Starter'
@@ -534,47 +538,69 @@ export default function Tracker() {
   const firstName = user?.name?.split(' ')?.[0] || 'there'
   const hour = new Date().getHours()
   const dayPart = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening'
-  const balanceStatus = totalEntries
-    ? balanceScore >= 82 ? 'On track' : balanceScore >= 62 ? 'Needs balance' : 'Needs attention'
-    : 'Ready to start'
-  const heroGuidance = totalEntries
-    ? carbsProgress > 100
-      ? 'Carbs are above target. Keep the next meal protein and fiber focused.'
-      : `${remainingCarbs}g carbs left. Protein is ${proteinProgress}% of target.`
-    : 'Start with a scan or food search to build your daily picture.'
-  const nextAction = totalEntries
-    ? carbsProgress > 100
+  const balanceStatus = !hasPersonalizedTargets
+    ? 'Setup needed'
+    : totalEntries
+      ? balanceScore >= 82 ? 'On track' : balanceScore >= 62 ? 'Needs balance' : 'Needs attention'
+      : 'Ready to start'
+  const heroGuidance = !hasPersonalizedTargets
+    ? profileComplete
+      ? 'Confirm your goal plan before using personalized meal guidance.'
+      : 'Complete your profile before using personalized meal guidance.'
+    : totalEntries
+      ? carbsProgress > 100
+        ? 'Carbs are above target. Keep the next meal protein and fiber focused.'
+        : `${remainingCarbs}g carbs left. Protein is ${proteinProgress}% of target.`
+      : 'Start with a scan or food search to build your daily picture.'
+  const nextAction = !hasPersonalizedTargets
+    ? profileComplete
       ? {
-          title: 'Balance the next meal',
-          copy: 'Prioritize protein, vegetables, and a slower carb portion.',
-          label: 'Ask coach',
-          path: '/coach',
-          question: 'My carbs are above target today. How should I balance my next meal with protein, fiber, and slower carbs?',
+          title: 'Confirm your goal plan',
+          copy: 'Review and save your recommended targets to unlock goal-based meal guidance.',
+          label: 'Set goals',
+          path: '/goals?setup=1',
         }
-      : proteinProgress < 70
+      : {
+          title: 'Complete your profile',
+          copy: 'Add your age, height, weight, and gender to calculate personal targets.',
+          label: 'Complete profile',
+          path: '/profile',
+        }
+    : totalEntries
+      ? carbsProgress > 100
         ? {
-            title: 'Raise protein next',
-            copy: `${remainingProtein}g protein left to reach today's goal.`,
-            label: 'Find options',
+            title: 'Balance the next meal',
+            copy: 'Prioritize protein, vegetables, and a slower carb portion.',
+            label: 'Ask coach',
             path: '/coach',
-            question: `I still need about ${remainingProtein}g protein today. What are good protein options that keep carbs reasonable?`,
+            question: 'My carbs are above target today. How should I balance my next meal with protein, fiber, and slower carbs?',
           }
-        : {
-            title: 'Keep this pattern',
-            copy: 'Today is balanced enough to turn into a repeatable meal template.',
-            label: 'Save template',
-            path: '/templates',
-          }
-    : {
-        title: 'Capture the first meal',
-        copy: 'A scan gives the coach enough context for useful guidance.',
-        label: 'Scan now',
-        path: '/scan',
-      }
+        : proteinProgress < 70
+          ? {
+              title: 'Raise protein next',
+              copy: `${remainingProtein}g protein left to reach today's goal.`,
+              label: 'Find options',
+              path: '/coach',
+              question: `I still need about ${remainingProtein}g protein today. What are good protein options that keep carbs reasonable?`,
+            }
+          : {
+              title: 'Keep this pattern',
+              copy: 'Today is balanced enough to turn into a repeatable meal template.',
+              label: 'Save template',
+              path: '/templates',
+            }
+      : {
+          title: 'Capture the first meal',
+          copy: 'A scan gives the coach enough context for useful guidance.',
+          label: 'Scan now',
+          path: '/scan',
+        }
   const valueSignals = [
-    { label: 'Coach context', value: totalEntries ? 'Ready' : 'Waiting' },
+    { label: 'Coach context', value: hasPersonalizedTargets ? (totalEntries ? 'Ready' : 'Waiting') : 'Setup needed' },
     { label: 'Meals today', value: `${mealsLogged}/4` },
-    { label: 'Carbs left', value: `${remainingCarbs}g` },
+    hasPersonalizedTargets
+      ? { label: 'Carbs left', value: `${remainingCarbs}g` }
+      : { label: 'Personal targets', value: 'Not set' },
   ]
   const macroCards = [
     {
@@ -831,7 +857,8 @@ export default function Tracker() {
         </div>
       )}
 
-      <StatusToast message={err || msg} tone={err ? 'error' : undefined} />
+      {msg && <div className="success-box">{msg}</div>}
+      {err && <div className="error-box">{err}</div>}
       {copyReview && (
         <CopyYesterdayModal
           sourceDate={copyReview.sourceDate}
@@ -851,7 +878,7 @@ export default function Tracker() {
       )}
 
       {showProfileReminder && (
-        <ModalPortal onClose={() => setShowProfileReminder(false)}>
+        <div className="modal-bg" role="presentation">
           <div className="modal-box" role="dialog" aria-modal="true" style={{ maxWidth: 480 }}>
             <div className="ingredient-modal-head">
               <div>
@@ -898,7 +925,7 @@ export default function Tracker() {
               </div>
             </div>
           </div>
-        </ModalPortal>
+        </div>
       )}
 
       <div className="dashboard-workspace">

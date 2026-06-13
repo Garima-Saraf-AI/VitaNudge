@@ -4,7 +4,6 @@ import api from '../utils/api'
 import LogModal from '../components/LogModal'
 import { today } from '../utils/calc'
 import PageHero from '../components/PageHero'
-import StatusToast from '../components/StatusToast'
 
 const CATS = ['all','protein','dairy','legume','grain','veg','fruit','snack','beverage','recipe','custom']
 
@@ -46,7 +45,7 @@ export default function Library() {
 
   return (
     <div>
-      <StatusToast message={msg} />
+      {msg && <div className="success-box">{msg}</div>}
 
       <PageHero
         eyebrow="Food library"

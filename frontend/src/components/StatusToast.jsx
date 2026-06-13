@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 
 const DEFAULT_TITLES = {
   success: 'Done',
-  error: 'Something needs attention',
+  error: '',
   warning: 'Check this',
   info: 'Update',
 }
@@ -30,6 +30,7 @@ export default function StatusToast({
 }) {
   const [dismissed, setDismissed] = useState(false)
   const resolvedTone = inferredTone(message, tone)
+  const resolvedTitle = title ?? DEFAULT_TITLES[resolvedTone]
 
   useEffect(() => {
     setDismissed(false)
@@ -50,7 +51,7 @@ export default function StatusToast({
     >
       <span className="status-toast-mark" aria-hidden="true" />
       <span className="status-toast-copy">
-        <strong>{title || DEFAULT_TITLES[resolvedTone]}</strong>
+        {resolvedTitle && <strong>{resolvedTitle}</strong>}
         <em>{cleanMessage(message)}</em>
       </span>
       {actionLabel && onAction && (

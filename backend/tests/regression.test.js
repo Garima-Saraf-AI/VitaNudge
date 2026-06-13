@@ -91,6 +91,10 @@ test('NutriTrack full API regression suite', async t => {
     const reg = await api('POST', '/auth/register', { name: 'Regression User', email, password }, 201, false)
     assert.ok(reg.token)
     assert.ok(reg.user.id)
+    assert.equal(reg.user.age, null)
+    assert.equal(reg.user.weight_kg, null)
+    assert.equal(reg.user.height_cm, null)
+    assert.equal(reg.user.profile_completed_at, null)
     token = reg.token
 
     // Upgrade to Clinical tier for testing all features
@@ -112,6 +116,7 @@ test('NutriTrack full API regression suite', async t => {
     assert.equal(profile.user.weight_kg, 82)
     assert.equal(profile.user.height_cm, 178)
     assert.equal(profile.user.diet_preference, 'vegan')
+    assert.ok(profile.user.profile_completed_at)
   })
 
   await t.test('goals read and update', async () => {

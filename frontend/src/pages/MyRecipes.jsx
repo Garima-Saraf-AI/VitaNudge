@@ -4,7 +4,6 @@ import api from '../utils/api'
 import { today } from '../utils/calc'
 import LogModal from '../components/LogModal'
 import PageHero from '../components/PageHero'
-import StatusToast from '../components/StatusToast'
 
 function parseRecipeNotes(notes = '') {
   const ingredientsLabel = 'Ingredients:'
@@ -85,7 +84,7 @@ export default function MyRecipes() {
 
   return (
     <div>
-      <StatusToast message={msg} />
+      {msg && <div className="success-box">{msg}</div>}
 
       <PageHero
         eyebrow="My recipes"

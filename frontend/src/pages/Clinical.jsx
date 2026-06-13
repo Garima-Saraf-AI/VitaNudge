@@ -6,7 +6,6 @@ import { addDays, formatDate, shortDate, today, last7Days, glucoseZone } from '.
 import PageHero from '../components/PageHero'
 import { useAuth } from '../hooks/useAuth'
 import UpgradeModal from '../components/UpgradeModal'
-import StatusToast from '../components/StatusToast'
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Filler, Tooltip, Legend)
 
@@ -116,10 +115,7 @@ export default function Clinical() {
   // Glucose actions
   async function addGlucose() {
     const v = parseInt(gVal)
-    if (!v || v < 40 || v > 600) {
-      flash('⚠️ Enter a glucose value between 40 and 600 mg/dL')
-      return
-    }
+    if (!v || v < 40 || v > 600) return alert('Enter 40–600 mg/dL')
     await api.post('/health/glucose', { value_mgdl: v, timing: gTiming, log_date: date })
     setGVal(''); load()
   }
@@ -162,7 +158,7 @@ export default function Clinical() {
 
   return (
     <div>
-      <StatusToast message={msg} />
+      {msg && <div className="success-box">{msg}</div>}
 
       <PageHero
         eyebrow="Clinical readings"

@@ -4,7 +4,6 @@ import { Chart as ChartJS, LineElement, PointElement, CategoryScale, LinearScale
 import api from '../utils/api'
 import { today, addDays, formatDate, shortDate, last7Days, glucoseZone } from '../utils/calc'
 import PageHero from '../components/PageHero'
-import StatusToast from '../components/StatusToast'
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Filler, Tooltip, Legend)
 
@@ -14,12 +13,6 @@ export default function Glucose() {
   const [val, setVal]     = useState('')
   const [timing, setTiming] = useState('fasting')
   const [weekly, setWeekly] = useState([])
-  const [msg, setMsg] = useState('')
-
-  function flash(text) {
-    setMsg(text)
-    setTimeout(() => setMsg(''), 2200)
-  }
 
   const load = useCallback(async () => {
     const [g, wk] = await Promise.all([
@@ -34,14 +27,9 @@ export default function Glucose() {
 
   async function addReading() {
     const v = parseInt(val)
-    if (!v || v < 40 || v > 600) {
-      flash('⚠️ Enter a glucose value between 40 and 600 mg/dL')
-      return
-    }
+    if (!v || v < 40 || v > 600) return alert('Enter 40–600 mg/dL')
     await api.post('/health/glucose', { value_mgdl: v, timing, log_date: date })
-    setVal('')
-    flash('Glucose reading saved')
-    load()
+    setVal(''); load()
   }
   async function del(id) { await api.delete(`/health/glucose/${id}`); load() }
 
@@ -53,8 +41,6 @@ export default function Glucose() {
 
   return (
     <div>
-      <StatusToast message={msg} />
-
       <PageHero
         eyebrow="Glucose"
         title="Track readings beside meals."
